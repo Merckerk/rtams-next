@@ -7,7 +7,7 @@ connectToDB();
 export const POST = async (req, res) => {
   try {
     const reqBody = await req.json();
-    const { username, email, password, isAdmin } = reqBody;
+    const { email, username, password, isAdmin } = reqBody;
 
     console.log(reqBody);
 
@@ -24,20 +24,19 @@ export const POST = async (req, res) => {
 
     //create user
     const newUser = new User({
-        username,
-        email,
-        password: hashedPassword,
-        isAdmin
+      email,
+      username,
+      password: hashedPassword,
+      isAdmin,
     });
 
     const savedUser = await newUser.save();
     console.log(savedUser); //delete in production
 
-    if(newUser.isAdmin){
-        return new Response('Successfully created admin',{status :201});
+    if (newUser.isAdmin) {
+      return new Response("Successfully created admin", { status: 201 });
     }
-    return new Response('Successfully created user',{status :201});
-
+    return new Response("Successfully created user", { status: 201 });
   } catch (error) {
     console.log(error);
     return new Response("Failed to Create admin account", { status: 500 });

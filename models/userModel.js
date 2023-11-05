@@ -1,14 +1,15 @@
-import mongoose, {Schema, model, models} from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
-const userSchema = new Schema({   //will be stored in an admin table
-  username: {
-    type: String,
-    required: [true, "Please provide a username"],
-    unique: true,
-  },
+const userSchema = new Schema({
+  //will be stored in an admin table
   email: {
     type: String,
     required: [true, "Please provide an email"],
+    unique: true,
+  },
+  username: {
+    type: String,
+    required: [true, "Please provide a username"],
     unique: true,
   },
   password: {
@@ -31,4 +32,4 @@ const userSchema = new Schema({   //will be stored in an admin table
 
 const User = models.users || model("users", userSchema);
 
-export default User
+export default User;
