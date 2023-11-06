@@ -9,7 +9,8 @@ const CreateUser = () => {
   const onCreateUser = (async) => {
     try {
     } catch (error) {
-      alert1
+      //TODO: FOR CLINT: KAHIT CONSOLE LOG MO LANG YUNG ERROR
+      //TODO: MARCKUS: ALERT OR TOAST ERROR MSG
     } finally {
       setIsLoading(false);
     }
