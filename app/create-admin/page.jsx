@@ -4,6 +4,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const CreateUser = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onCreateUser = (async) => {
+    try {
+    } catch (error) {
+      alert1
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -62,10 +73,13 @@ const CreateUser = () => {
               placeholder="Enter email"
               className="form_input"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.email}
               required
             />
-            {formik.errors.email ? <p>{formik.errors.email}</p> : null}
+            {formik.errors.email && formik.touched.email ? (
+              <p className="error_message">{formik.errors.email}</p>
+            ) : null}
           </label>
         </div>
         <div className="form-group">
@@ -80,10 +94,13 @@ const CreateUser = () => {
               placeholder="Enter username"
               className="form_input"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.username}
               required
             />
-            {formik.errors.username ? <p>{formik.errors.username}</p> : null}
+            {formik.errors.username && formik.touched.username ? (
+              <p className="error_message">{formik.errors.username}</p>
+            ) : null}
           </label>
         </div>
 
@@ -99,10 +116,13 @@ const CreateUser = () => {
               placeholder="Enter password"
               className="form_input"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.password}
               required
             />
-            {formik.errors.password ? <p>{formik.errors.password}</p> : null}
+            {formik.errors.password && formik.touched.password ? (
+              <p className="error_message">{formik.errors.password}</p>
+            ) : null}
           </label>
         </div>
         <div className="form-group">
@@ -117,10 +137,13 @@ const CreateUser = () => {
               placeholder="Enter password"
               className="form_input"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.repassword}
               required
             />
-            {formik.errors.repassword ? <p>{formik.errors.repassword}</p> : null}
+            {formik.errors.repassword && formik.touched.repassword ? (
+              <p className="error_message">{formik.errors.repassword}</p>
+            ) : null}
           </label>
         </div>
         <div className="form-group">
@@ -141,7 +164,7 @@ const CreateUser = () => {
           </label>
         </div>
         <button type="submit" className="black_btn">
-          Create User Account
+          {isLoading ? ("Processing") : ("Create User Account")}
         </button>
       </form>
     </div>
