@@ -11,6 +11,9 @@ const CreateUser = () => {
     } catch (error) {
       //TODO: FOR CLINT: KAHIT CONSOLE LOG MO LANG YUNG ERROR
       //TODO: MARCKUS: ALERT OR TOAST ERROR MSG
+
+      const { email, username, password, isAdmin } = formik.values;
+      const postValues = { email, username, password, isAdmin };
     } finally {
       setIsLoading(false);
     }
