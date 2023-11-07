@@ -19,6 +19,7 @@ const CreateUser = () => {
   const formik = useFormik({
     initialValues: {
       email: "",
+      userId: "",
       username: "",
       password: "",
       repassword: "",
@@ -26,6 +27,7 @@ const CreateUser = () => {
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid Email").required("Email Required"),
+      userId: Yup.string().required("User ID is required"),
       username: Yup.string().required("Username required"),
       password: Yup.string()
         .min(12, "Password must be atleast 12 characters")
@@ -46,8 +48,8 @@ const CreateUser = () => {
     }),
     onSubmit: () => {
       //TODO: post method here
-      const { email, username, password, isAdmin } = formik.values;
-      const postValues = { email, username, password, isAdmin };
+      const { email, userId ,username, password, isAdmin } = formik.values;
+      const postValues = { email, userId,username, password, isAdmin };
       console.log("to submit:", postValues); //delete in prod
     },
   });
@@ -80,6 +82,27 @@ const CreateUser = () => {
             />
             {formik.errors.email && formik.touched.email ? (
               <p className="error_message">{formik.errors.email}</p>
+            ) : null}
+          </label>
+        </div>
+        <div className="form-group">
+          <label>
+            <span className="font-satoshi font-semibold text-base text-gray-700">
+              ID
+            </span>
+            <input
+              type="text"
+              id="userId"
+              name="userId"
+              placeholder="Enter User ID"
+              className="form_input"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.userId}
+              required
+            />
+            {formik.errors.userId && formik.touched.userId ? (
+              <p className="error_message">{formik.errors.userId}</p>
             ) : null}
           </label>
         </div>

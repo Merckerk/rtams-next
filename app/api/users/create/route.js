@@ -7,7 +7,7 @@ connectToDB();
 export const POST = async (req, res) => {
   try {
     const reqBody = await req.json();
-    const { email, username, password, isAdmin } = reqBody;
+    const { email, userId ,username, password, isAdmin } = reqBody;
 
     console.log(reqBody);
 
@@ -25,6 +25,7 @@ export const POST = async (req, res) => {
     //create user
     const newUser = new User({
       email,
+      userId,
       username,
       password: hashedPassword,
       isAdmin,
