@@ -17,12 +17,19 @@ export const POST = async (req, res) => {
     //Check if userID exists
     const userIdCheck = await User.findOne({ userId });
 
+    //Check if username exists
+    const userNameCheck = await User.findOne({ username });
+
     if (userEmailCheck) {
       return new Response("Email already exists.", { status: 400 });
     }
 
     if (userIdCheck) {
-      return new Response("UserID already exists.", { status: 401 });
+      return new Response("UserID already exists.", { status: 400 });
+    }
+
+    if (userNameCheck) {
+      return new Response("Username already exists.", { status: 400 });
     }
 
     //hash password
@@ -44,9 +51,9 @@ export const POST = async (req, res) => {
     if (newUser.isAdmin) {
       return new Response("Created as admin", { status: 201 });
     }
-    return new Response("Successfully created user", { status: 201 });
+    return new Response("Successfully created an account.", { status: 201 });
   } catch (error) {
     console.log(error);
-    return new Response("Failed to Create admin account", { status: 500 });
+    return new Response("Failed to create an account.", { status: 500 });
   }
 };
