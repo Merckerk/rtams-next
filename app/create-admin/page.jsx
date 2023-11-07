@@ -1,19 +1,24 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
+import axios from "axios";
 import * as Yup from "yup";
 
 const CreateUser = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const onCreateUser = (async) => {
+  const onCreateUser = async () => {
     try {
+      const { email, userId, username, password, isAdmin } = formik.values;
+      const postValues = { email, userId, username, password, isAdmin };
+
+      setIsLoading(true);
+      const response = await axios.post("api/users/create", postValues);
+      console.log("Signup successful", response.data);
     } catch (error) {
       //TODO: FOR CLINT: KAHIT CONSOLE LOG MO LANG YUNG ERROR
+      console.log(error);
       //TODO: MARCKUS: ALERT OR TOAST ERROR MSG
-
-      const { email, username, password, isAdmin } = formik.values;
-      const postValues = { email, username, password, isAdmin };
     } finally {
       setIsLoading(false);
     }
@@ -33,15 +38,11 @@ const CreateUser = () => {
       userId: Yup.string().required("User ID is required"),
       username: Yup.string().required("Username required"),
       password: Yup.string()
-        .min(12, "Password must be atleast 12 characters")
-        .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-          "Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character."
-        )
         .notOneOf(
           ["password", "123456", "qwerty", "abc123"], //StrongPassword121! for default siguro idk xd
           "Common passwords are not allowed"
         )
+        .min(12, "Password must be 12 characters or longer.")
         .notOneOf([Yup.ref("username")], "Password cannot be the username")
         .required("Password is required"),
       repassword: Yup.string().oneOf(
@@ -50,10 +51,7 @@ const CreateUser = () => {
       ),
     }),
     onSubmit: () => {
-      //TODO: post method here
-      const { email, userId ,username, password, isAdmin } = formik.values;
-      const postValues = { email, userId,username, password, isAdmin };
-      console.log("to submit:", postValues); //delete in prod
+      onCreateUser();
     },
   });
 
@@ -190,8 +188,8 @@ const CreateUser = () => {
             </label>
           </label>
         </div>
-        <button type="submit" className="black_btn">
-          {isLoading ? ("Processing") : ("Create User Account")}
+        <button type="submit" className="black_btn" disabled={isLoading}>
+          {isLoading ? "Processing" : "Create User Account"}
         </button>
       </form>
     </div>

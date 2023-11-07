@@ -7,15 +7,22 @@ connectToDB();
 export const POST = async (req, res) => {
   try {
     const reqBody = await req.json();
-    const { email, userId ,username, password, isAdmin } = reqBody;
+    const { email, userId, username, password, isAdmin } = reqBody;
 
     console.log(reqBody);
 
-    //Check if user exist
-    const user = await User.findOne({ email });
+    //Check if email exists
+    const userEmailCheck = await User.findOne({ email });
 
-    if (user) {
-      return new Response("User email already exist", { status: 400 });
+    //Check if userID exists
+    const userIdCheck = await User.findOne({ userId });
+
+    if (userEmailCheck) {
+      return new Response("Email already exists.", { status: 400 });
+    }
+
+    if (userIdCheck) {
+      return new Response("UserID already exists.", { status: 401 });
     }
 
     //hash password
@@ -35,7 +42,7 @@ export const POST = async (req, res) => {
     console.log(savedUser); //delete in production
 
     if (newUser.isAdmin) {
-      return new Response("Successfully created admin", { status: 201 });
+      return new Response("Created as admin", { status: 201 });
     }
     return new Response("Successfully created user", { status: 201 });
   } catch (error) {
