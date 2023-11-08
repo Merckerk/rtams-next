@@ -2,9 +2,11 @@ import { connectToDB } from "@utils/database";
 import User from "@models/userModel";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
 
 connectToDB();
 
+//TODO: User sessions in Login
 export const POST = async (req, res) => {
   try {
     const reqBody = await req.json();
@@ -13,18 +15,12 @@ export const POST = async (req, res) => {
     //Debugging, delete in production
     console.log(reqBody);
 
-    //Check if email exists
-    const userEmail = await User.findOne({ email });
+    //Check if username exists
+    const user = await User.findOne({ username });
 
-    //Check if userID exists
-    const userID = await User.findOne({ userId });
-
-    if (!userEmail) {
-      return new Response("Email does not exist.", { status: 400 });
-    }
-
-    if (!userID) {
-      return new Response("UserID does not exist.", { status: 401 });
+    //Error handling if username does not exist
+    if (!user) {
+      return new Response("Username does not exist.", { status: 402 });
     }
 
     //Check password if correct
@@ -36,11 +32,25 @@ export const POST = async (req, res) => {
 
     //Create token data
     const tokenData = {
-      id: userID._id,
-      email: userID.email,
-      UID: userID.userId,
+      id: user._id,
+      username: user.username,
+      password: user.password,
     };
 
     //Create the token
-  } catch (error) {}
+    const token = await jwt.sign(tokenData, process.env.JWT_TOKEN, {
+      expiresIn: "1d",
+    });
+
+    const response = NextResponse.json({
+      message: "Login successful.",
+      success: true,
+    });
+    response.cookies.set("token", token, { httpOnly: true });
+
+    return response;
+  } catch (error) {
+    console.log(error); //delete in production
+    return new Response("Failed to Login.", { status: 500 });
+  }
 };
