@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import { useSelector, useDispatch } from "react-redux";
 import { getAdminUsers } from "@app/redux/features/admin-users/admin-users-slice";
 import { useEffect } from "react";
+import Link from "next/link";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -53,12 +54,14 @@ const AdminUsersTable = () => {
         </TableHead>
         <TableBody>
           {adminUsers.map((adminUser) => (
+            <Link href={`/admin-users/${adminUser.userId}`}>
             <StyledTableRow key={adminUser.username}>
               <StyledTableCell component="th" scope="row">
                 {adminUser.username}
               </StyledTableCell>
               <StyledTableCell align="right">{adminUser.email}</StyledTableCell>
             </StyledTableRow>
+            </Link>
           ))}
         </TableBody>
       </Table>
