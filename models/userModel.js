@@ -2,14 +2,14 @@ import mongoose, { Schema, model, models } from "mongoose";
 
 const userSchema = new Schema({
   //will be stored in an admin table
-  userId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   email: {
     type: String,
     required: [true, "Please provide an email"],
+    unique: true,
+  },
+  userId: {
+    type: String,
+    required: true,
     unique: true,
   },
   username: {
