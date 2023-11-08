@@ -1,6 +1,22 @@
-import FeatureCard from "@components/FeatureCard";
+"use client";
+import axios from "axios";
+import Link from "next/link";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import FeatureCard from "components/FeatureCard.jsx";
 
 const Home = () => {
+  const router = useRouter();
+  const logout = async () => {
+    try {
+      await axios.get("/api/users/logout");
+      toast.success("Logout successful");
+      router.push("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const featureCardProps = [
     {
       featureName: "Teaching Load",
@@ -47,6 +63,14 @@ const Home = () => {
         engineered to streamline all attendance related needs within the
         academe.
       </p>
+
+      <hr />
+      <button
+        onClick={logout}
+        className="bg-red-500 mt-4 hover: bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Logout
+      </button>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {featureCardProps.map((feature, index) => (
