@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 connectToDB();
 
-//TODO: User sessions in Login
+//TODO: Expand on Login Tokens
 export const POST = async (req, res) => {
   try {
     const reqBody = await req.json();
