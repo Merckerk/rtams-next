@@ -10,10 +10,11 @@ import Paper from "@mui/material/Paper";
 
 import { useSelector, useDispatch } from "react-redux";
 import { getAdminUsers } from "@app/redux/features/admin-users/admin-users-slice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,20 +37,41 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const AdminUsers = () => {
   const adminUsers = useSelector((state) => state.adminUsers.value);
+  const [adminUsersAPI, setAdminUsersAPI] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
 
-  useEffect(() => {
-    dispatch(getAdminUsers());
-  }, []);
-
   const handleEdit = (adminUser) => {
     router.push(`/admin-users?id=${adminUser._id}`);
-  }
+  };
+
+  const fetchAdminData = async () => {
+    const response = await axios.get("/api/users/displayAdminUsers");
+    console.log(response.data);
+    if (response) {
+      setAdminUsersAPI(response.data);
+    } else {
+      console.log("tite");
+    }
+  };
+
+  useEffect(() => {
+    fetchAdminData();
+  }, []);
+
+  useEffect(() => {
+    dispatch(getAdminUsers(adminUsersAPI));
+  }, [adminUsersAPI]);
+
+  useEffect(() => {
+    console.log("Admin Users: ", adminUsers);
+  }, [adminUsers]);
 
   return (
     <div className="py-4 pt-7">
-      <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">Admin Users</h1>
+      <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
+        Admin Users
+      </h1>
       <TableContainer component={Paper}>
         <Table
           className="min-w-[700px] md:min-w-screen-lg"
