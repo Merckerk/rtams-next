@@ -7,17 +7,12 @@ connectToDB();
 export const POST = async (req, res) => {
   try {
     const reqBody = await req.json();
-    const { email, userId, username, password, isAdmin } = reqBody;
+    const { image, email, userId, username, password, isAdmin} = reqBody;
 
     console.log(reqBody);
 
-    //Check if email exists
     const userEmailCheck = await User.findOne({ email });
-
-    //Check if userID exists
     const userIdCheck = await User.findOne({ userId });
-
-    //Check if username exists
     const userNameCheck = await User.findOne({ username });
 
     if (userEmailCheck) {
@@ -38,6 +33,7 @@ export const POST = async (req, res) => {
 
     //create user
     const newUser = new User({
+      image,
       email,
       userId,
       username,

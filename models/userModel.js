@@ -2,6 +2,10 @@ import mongoose, { Schema, model, models } from "mongoose";
 
 const userSchema = new Schema({
   //will be stored in an admin table
+  image: {
+    type: String,
+    default: "",
+  },
   email: {
     type: String,
     required: [true, "Please provide an email"],

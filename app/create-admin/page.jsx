@@ -7,6 +7,7 @@ import AdminCrudForm from "@components/adminUsers/adminCrudForm";
 const CreateUser = () => {
   const router = useRouter();
   const [post, setPost] = useState({
+    image: "",
     email: "",
     userId: "",
     username: "",
@@ -20,8 +21,8 @@ const CreateUser = () => {
   const onCreateUser = async () => {
     try {
       setIsLoading(true);
-      const { email, userId, username, password, isAdmin } = post;
-      const postValues = { email, userId, username, password, isAdmin };
+      const { image, email, userId, username, password, isAdmin } = post;
+      const postValues = { image, email, userId, username, password, isAdmin };
       const response = await axios.post("api/users/create", postValues);
       console.log("Signup successful", response.data); // Delete in prod
       router.push("/login");
