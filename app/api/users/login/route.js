@@ -10,7 +10,7 @@ connectToDB();
 export const POST = async (req, res) => {
   try {
     const reqBody = await req.json();
-    const { email, userId, username, password, isAdmin } = reqBody;
+    const { email, username, password } = reqBody;
 
     //Debugging, delete in production
     console.log(reqBody);
