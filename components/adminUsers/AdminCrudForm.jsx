@@ -86,7 +86,7 @@ const AdminCrudForm = ({
                 setPost({ ...post, email: e.target.value });
                 validateEmail(e.target.value);
               }}
-              value={post.email}
+              value={post?.email}
               required
             />
             {errMsg.email ? (
@@ -109,7 +109,7 @@ const AdminCrudForm = ({
                 setPost({ ...post, userId: e.target.value });
                 validateUserId(e.target.value);
               }}
-              value={post.userId}
+              value={post?.userId}
               required
             />
             {errMsg.userId ? (
@@ -132,7 +132,7 @@ const AdminCrudForm = ({
                 setPost({ ...post, username: e.target.value });
                 validateUsername(e.target.value);
               }}
-              value={post.username}
+              value={post?.username}
               required
             />
             {errMsg.username ? (
@@ -156,7 +156,7 @@ const AdminCrudForm = ({
                 setPost({ ...post, password: e.target.value });
                 validatePassword(e.target.value);
               }}
-              value={post.password}
+              value={post?.password}
               required
             />
             {errMsg.password ? (
@@ -179,7 +179,7 @@ const AdminCrudForm = ({
                 setPost({ ...post, repassword: e.target.value });
                 validateRepassword(e.target.value);
               }}
-              value={post.repassword}
+              value={post?.repassword}
               required
             />
             {errMsg.repassword ? (
@@ -197,7 +197,7 @@ const AdminCrudForm = ({
                 type="checkbox"
                 id="isAdmin"
                 name="isAdmin"
-                checked={post.isAdmin}
+                checked={post?.isAdmin}
                 onChange={(e) =>
                   setPost({ ...post, isAdmin: e.target.checked })
                 }

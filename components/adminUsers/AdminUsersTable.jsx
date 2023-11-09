@@ -27,7 +27,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
@@ -54,14 +53,13 @@ const AdminUsersTable = () => {
         </TableHead>
         <TableBody>
           {adminUsers.map((adminUser) => (
-            <Link href={`/admin-users/${adminUser.userId}`}>
-            <StyledTableRow key={adminUser.username}>
+            // <Link href={`/admin-users/${adminUser.userId}`}>
+            <StyledTableRow key={adminUser.username} onClick={() => {}}>
               <StyledTableCell component="th" scope="row">
                 {adminUser.username}
               </StyledTableCell>
               <StyledTableCell align="right">{adminUser.email}</StyledTableCell>
             </StyledTableRow>
-            </Link>
           ))}
         </TableBody>
       </Table>
@@ -70,45 +68,3 @@ const AdminUsersTable = () => {
 };
 
 export default AdminUsersTable;
-
-// "use client";
-// import { useSelector, useDispatch } from "react-redux";
-// import {
-//   increment,
-//   decrement,
-//   incrementByValue,
-// } from "@app/redux/features/admin-users/admin-users-slice";
-// import { useEffect } from "react";
-
-// const AdminUsersTable = () => {
-//   const count = useSelector((state) => state.adminUsers.value);
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     console.log('====================================');
-//     console.log(count);
-//     console.log('====================================');
-//   }, [count]);
-
-//   return (
-//     <div>
-//       <button
-//         onClick={() => {
-//           dispatch(increment());
-//         }}
-//       >
-//         increment
-//       </button>
-//       <span>{count}</span>
-//       <button
-//         onClick={() => {
-//           dispatch(decrement());
-//         }}
-//       >
-//         decrement
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default AdminUsersTable;

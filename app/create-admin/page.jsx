@@ -31,6 +31,7 @@ const CreateUser = () => {
   };
 
   useEffect(() => {
+    console.log(post);
     if (
       !post.email ||
       !post.userId ||
