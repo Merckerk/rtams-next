@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import AdminCrudForm from "@components/adminUsers/adminCrudForm";
 
 const CreateUser = () => {
+  const router = useRouter();
   const [post, setPost] = useState({
     email: "",
     userId: "",
@@ -18,10 +20,11 @@ const CreateUser = () => {
   const onCreateUser = async () => {
     try {
       setIsLoading(true);
-      const {email, userId, username, password, isAdmin} = post
-      const postValues = {email, userId, username, password, isAdmin}
+      const { email, userId, username, password, isAdmin } = post;
+      const postValues = { email, userId, username, password, isAdmin };
       const response = await axios.post("api/users/create", postValues);
-      console.log("Signup successful", response.data);
+      console.log("Signup successful", response.data); // Delete in prod
+      router.push("/login");
     } catch (error) {
       console.log(error);
       //TODO: MARCKUS: ALERT OR TOAST ERROR MSG
