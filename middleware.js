@@ -4,7 +4,7 @@ export function middleware(request) {
   const path = request.nextUrl.pathname;
 
   //Public Paths (does not require user token, user is not yet logged in)
-  const isPublicPath = path === "/login";
+  const isPublicPath = path === "/login" || path === "/create-admin";
 
   //Extracts the user's token from the browser
   const token = request.cookies.get("token")?.value || "";
