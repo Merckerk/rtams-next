@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const router = useRouter();
@@ -17,9 +18,11 @@ const Login = () => {
       setIsLoading(true);
       const response = await axios.post("api/users/login", postValues);
       console.log("Login successful", response.data);
+      toast.success("Login successful!");
       router.push("/");
     } catch (error) {
       console.log("Login failed.", error);
+      toast.error(error);
     } finally {
       setIsLoading(false);
     }

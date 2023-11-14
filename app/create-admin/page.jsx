@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import AdminCrudForm from "@components/adminUsers/adminCrudForm";
+import toast from "react-hot-toast";
 
 const CreateUser = () => {
   const router = useRouter();
@@ -25,10 +26,12 @@ const CreateUser = () => {
       const postValues = { image, email, userId, username, password, isAdmin };
       const response = await axios.post("api/users/create", postValues);
       console.log("Signup successful", response.data); // Delete in prod
+      toast.success("Successfully created an admin user!");
       router.push("/login");
     } catch (error) {
       console.log(error);
       //TODO: MARCKUS: ALERT OR TOAST ERROR MSG
+      toast.error(error);
     } finally {
       setIsLoading(false);
     }
