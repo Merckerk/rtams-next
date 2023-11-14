@@ -48,7 +48,7 @@ const UpdateAdmin = () => {
     if (!userId) return alert("User ID not found.");
 
     try {
-      const response = await fetch(`/api/prompt/${userId}`, {
+      const response = await fetch(`/api/users/${userId}`, {
         method: "PATCH",
         body: JSON.stringify({
           image: post.image,
@@ -69,7 +69,9 @@ const UpdateAdmin = () => {
     }
   };
 
-  useEffect(() => {console.log(post)}, [post]);
+  useEffect(() => {
+    console.log(post);
+  }, [post]);
 
   return (
     <AdminCrudForm

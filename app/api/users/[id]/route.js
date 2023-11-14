@@ -1,5 +1,6 @@
 import User from "@models/userModel";
 import { connectToDB } from "@utils/database";
+import bcryptjs from "bcryptjs";
 
 export const GET = async (req, { params }) => {
   try {
@@ -24,17 +25,18 @@ export const PATCH = async (req, { params }) => {
     // Find and update the user with the new data
     const existingUser = await User.findById(params.id);
 
-    if(!existingUser) return new Response("User not found", {status: 404});
+    if (!existingUser) return new Response("User not found", { status: 404 });
 
     //re-hash password here
-    
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
     // Response if user is updated successfully
     existingUser.image = image;
     existingUser.email = email;
     existingUser.userId = userId;
     existingUser.username = username;
-    existingUser.password = password;
-    existingUser.isAdmin =isAdmin;
+    existingUser.password = hashedPassword;
+    existingUser.isAdmin = isAdmin;
 
     await existingUser.save();
     return new Response(JSON.stringify(existingUser), { status: 200 });
