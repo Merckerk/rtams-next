@@ -9,7 +9,6 @@ const AdminCrudForm = ({
   post,
   setPost,
   loading,
-  areFieldsValid,
   handleSubmit,
 }) => {
   const [image, setImage] = useState("");
@@ -258,7 +257,7 @@ const AdminCrudForm = ({
         </div>
         <button
           className="black_btn"
-          disabled={loading || areFieldsValid}
+          disabled={loading}
           onClick={handleSubmit}
         >
           {loading ? "Processing" : "Create User Account"}

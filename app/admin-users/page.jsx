@@ -42,7 +42,7 @@ const AdminUsers = () => {
   const router = useRouter();
 
   const handleEdit = (adminUser) => {
-    router.push(`/admin-users?id=${adminUser._id}`);
+    router.push(`/update-admin?userid=${adminUser._id}`);
   };
 
   const fetchAdminData = async () => {

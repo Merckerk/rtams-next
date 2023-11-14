@@ -58,7 +58,6 @@ const CreateUser = () => {
       post={post}
       setPost={setPost}
       loading={isLoading}
-      areFieldsValid={areFieldsValid}
       handleSubmit={onCreateUser}
     />
   );
