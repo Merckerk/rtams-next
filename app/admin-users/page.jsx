@@ -51,7 +51,7 @@ const AdminUsers = () => {
     if (response) {
       setAdminUsersAPI(response.data);
     } else {
-      console.log("tite");
+      console.log("tite");  //TODO: REMOVE HAHAHAHAHAHA
     }
   };
 
@@ -85,7 +85,7 @@ const AdminUsers = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {adminUsers.map((adminUser) => (
+            {adminUsersAPI.map((adminUser) => (
               <StyledTableRow key={adminUser.username}>
                 <StyledTableCell component="th" scope="row">
                   {adminUser.username}
