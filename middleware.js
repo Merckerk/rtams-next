@@ -22,5 +22,5 @@ export function middleware(request) {
 
 //Paths protected from non-verified user access
 export const config = {
-  matcher: ["/login", "/create-admin", "/"],
+  matcher: ["/login", "/create-admin", "/admin-users", "/"],
 };
