@@ -16,6 +16,9 @@ export function middleware(request) {
 
   //If user is not yet verified and tries to go in a private path (homepage), redirects them to /login
   if (!isPublicPath && !token) {
+    console.log(
+      "This page is protected. Please log in to a valid account to continue."
+    );
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 }
