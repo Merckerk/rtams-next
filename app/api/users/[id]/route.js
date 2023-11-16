@@ -1,7 +1,9 @@
 import User from "@models/userModel";
 import { connectToDB } from "@utils/database";
 import bcryptjs from "bcryptjs";
+import { connect } from "mongoose";
 
+// GET user
 export const GET = async (req, { params }) => {
   try {
     connectToDB();
@@ -17,6 +19,7 @@ export const GET = async (req, { params }) => {
   }
 };
 
+// EDIT/UPDATE user
 export const PATCH = async (req, { params }) => {
   const { image, email, userId, username, password, isAdmin } =
     await req.json();
@@ -43,5 +46,18 @@ export const PATCH = async (req, { params }) => {
   } catch (error) {
     console.log(error);
     return new Response("Failed to update user.", { status: 500 });
+  }
+};
+
+// DELETE user
+export const DELETE = async (req, { params }) => {
+  try {
+    await connectToDB();
+
+    await User.findByIdAndRemove(params.id);
+
+    return new Response("User deleted successfully.", { status: 200 });
+  } catch (error) {
+    return new Response("Failed to delete the user.", { status: 500 });
   }
 };
