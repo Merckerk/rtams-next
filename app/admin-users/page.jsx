@@ -55,6 +55,21 @@ const AdminUsers = () => {
     }
   };
 
+  const deleteUser = async (userId) => {
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok){
+        const filteredUsers = adminUsersAPI.filter((users) => users._id !== userId);
+        setAdminUsersAPI(filteredUsers);
+      }
+    } catch (error) {
+      console.error('Error deleting the user', error);
+    }
+  };
+
   useEffect(() => {
     fetchAdminData();
   }, []);
@@ -81,25 +96,33 @@ const AdminUsers = () => {
             <TableRow>
               <StyledTableCell>Username</StyledTableCell>
               <StyledTableCell align="left">Email</StyledTableCell>
-              <StyledTableCell align="left">Actions</StyledTableCell>
+              <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {adminUsersAPI.map((adminUser) => (
-              <StyledTableRow key={adminUser.username}>
+              <StyledTableRow key={adminUser._id}>
                 <StyledTableCell component="th" scope="row">
                   {adminUser.username}
                 </StyledTableCell>
                 <StyledTableCell align="left">
                   {adminUser.email}
                 </StyledTableCell>
-                <StyledTableCell align="left">
+                <StyledTableCell align="center">
                   <button
                     variant="outlined"
                     color="primary"
+                    style={{ marginRight: '30px' }}
                     onClick={() => handleEdit(adminUser)}
                   >
                     Edit
+                  </button>
+                  <button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => deleteUser(adminUser._id)}
+                  >
+                    Delete
                   </button>
                 </StyledTableCell>
               </StyledTableRow>

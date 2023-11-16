@@ -10,6 +10,7 @@ const AdminCrudForm = ({
   setPost,
   loading,
   handleSubmit,
+  handleDelete = () => {},
 }) => {
   const [errMsg, setErrMsg] = useState({
     email: "",
@@ -111,7 +112,6 @@ const AdminCrudForm = ({
             className="form_input"
             onChange={convertToBase64}
             value={post?.photo}
-            required
           />
           {errMsg.photo ? (
             <p className="error_message">{errMsg.photo}</p>
@@ -258,8 +258,17 @@ const AdminCrudForm = ({
           disabled={loading}
           onClick={handleSubmit}
         >
-          {loading ? "Processing" : "Create User Account"}
+          {loading ? "Processing" : `${type} User`}
         </button>
+        {type == "Edit" ? (
+          <button
+          className="red_btn"
+          disabled={loading}
+          onClick={handleDelete}
+        >
+          {loading ? "Processing" : "Delete User"}
+        </button>
+        ) : null}
       </form>
     </div>
   );
