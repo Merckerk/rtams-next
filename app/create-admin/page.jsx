@@ -17,6 +17,7 @@ const CreateUser = () => {
     isAdmin: false,
   });
   const [isLoading, setIsLoading] = useState(false);
+  //TODO: MAKE THIS FUNCTIONAL
   const [areFieldsValid, setAreFieldsValid] = useState(false);
 
   const onCreateUser = async () => {
@@ -25,12 +26,9 @@ const CreateUser = () => {
       const { image, email, userId, username, password, isAdmin } = post;
       const postValues = { image, email, userId, username, password, isAdmin };
       const response = await axios.post("api/users/create", postValues);
-      console.log("Signup successful", response.data); // Delete in prod
       toast.success("Successfully created an admin user!");
       router.push("/login");
     } catch (error) {
-      console.log(error);
-      //TODO: MARCKUS: ALERT OR TOAST ERROR MSG
       toast.error(error);
     } finally {
       setIsLoading(false);
@@ -38,7 +36,6 @@ const CreateUser = () => {
   };
 
   useEffect(() => {
-    console.log(post);
     if (
       !post.email ||
       !post.userId ||

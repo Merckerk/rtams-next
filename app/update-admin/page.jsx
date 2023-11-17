@@ -90,10 +90,6 @@ const UpdateAdmin = () => {
     }
   }
 
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
-
   return (
     <AdminCrudForm
       type="Edit"

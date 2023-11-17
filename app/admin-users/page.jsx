@@ -47,11 +47,9 @@ const AdminUsers = () => {
 
   const fetchAdminData = async () => {
     const response = await axios.get("/api/users/displayAdminUsers");
-    console.log(response.data);
     if (response) {
       setAdminUsersAPI(response.data);
     } else {
-      console.log("tite");  //TODO: REMOVE HAHAHAHAHAHA
     }
   };
 
@@ -77,10 +75,6 @@ const AdminUsers = () => {
   useEffect(() => {
     dispatch(getAdminUsers(adminUsersAPI));
   }, [adminUsersAPI]);
-
-  useEffect(() => {
-    console.log("Admin Users: ", adminUsers);
-  }, [adminUsers]);
 
   return (
     <div className="py-4 pt-7">

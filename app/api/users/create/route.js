@@ -9,8 +9,6 @@ export const POST = async (req, res) => {
     const reqBody = await req.json();
     const { image, email, userId, username, password, isAdmin} = reqBody;
 
-    console.log(reqBody);
-
     const userEmailCheck = await User.findOne({ email });
     const userIdCheck = await User.findOne({ userId });
     const userNameCheck = await User.findOne({ username });
@@ -42,7 +40,6 @@ export const POST = async (req, res) => {
     });
 
     const savedUser = await newUser.save();
-    console.log(savedUser); //delete in production
 
     if (newUser.isAdmin) {
       return new Response("Created as admin", { status: 201 });

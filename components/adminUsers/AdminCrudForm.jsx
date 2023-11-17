@@ -72,7 +72,6 @@ const AdminCrudForm = ({
     var reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
     reader.onload = () => {
-      console.log(reader.result); //TODO: REMOVE IN PROD
       setPost({ ...post, image: reader.result });
     };
     reader.onerror = (error) => {

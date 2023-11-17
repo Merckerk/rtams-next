@@ -17,8 +17,6 @@ const Login = () => {
 
       setIsLoading(true);
       const response = await axios.post("api/users/login", postValues);
-      console.log("Login successful", response.data);
-      toast.success("Login successful!");
       router.push("/");
     } catch (error) {
       console.log("Login failed.", error);
@@ -42,10 +40,6 @@ const Login = () => {
       onLoginUser();
     },
   });
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]); //delete in prod
 
   return (
     <div className="w-full h-screen flex items-center justify-center">
