@@ -34,7 +34,7 @@ export const POST = async (req, res) => {
     const tokenData = {
       id: user._id,
       username: user.username,
-      password: user.password,
+      isAdmin: user.isAdmin,
     };
 
     //Create the token
