@@ -1,24 +1,24 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
-const classSchema = new Schema({
-  className: {
-    // Name of the subject
+const courseSchema = new Schema({
+  courseName: {
+    // Name of the course
     type: String,
     required: true,
   },
-  classCode: {
+  courseCode: {
     // Subject code
     type: String,
     required: true,
     unique: true,
   },
   professor: {
-    // Professor assigned to the class
+    // Professor assigned to the course
     type: Schema.Types.ObjectId,
     ref: "users",
   },
   students: [
-    // Students enrolled in the class
+    // Students enrolled in the course
     {
       type: Schema.Types.ObjectId,
       ref: "users",
@@ -31,17 +31,7 @@ const classSchema = new Schema({
       type: [String],
       required: true,
     },
-    startTime: {
-      // Start time of the class
-      type: String,
-      required: true,
-    },
-    endTime: {
-      // Time when the class ends
-      type: String,
-      required: true,
-    },
   },
 });
 
-const Class = model("classes", classSchema);
+const Course = model("classes", courseSchema);
