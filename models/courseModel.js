@@ -24,13 +24,11 @@ const courseSchema = new Schema({
       ref: "users",
     },
   ],
-  schedule: {
-    // Class schedule
-    days: {
-      // Days when the class occurs, e.g. [Monday, Wednesday, Friday]
-      type: [String],
-      required: true,
-    },
+  // Class schedule
+  days: {
+    // Days when the class occurs, e.g. [Monday, Wednesday, Friday]
+    type: [String],
+    required: true,
   },
 });
 
