@@ -58,13 +58,15 @@ const AdminUsers = () => {
       const response = await fetch(`/api/users/${userId}`, {
         method: "DELETE",
       });
-  
-      if (response.ok){
-        const filteredUsers = adminUsersAPI.filter((users) => users._id !== userId);
+
+      if (response.ok) {
+        const filteredUsers = adminUsersAPI.filter(
+          (users) => users._id !== userId
+        );
         setAdminUsersAPI(filteredUsers);
       }
     } catch (error) {
-      console.error('Error deleting the user', error);
+      console.error("Error deleting the user", error);
     }
   };
 
@@ -78,9 +80,20 @@ const AdminUsers = () => {
 
   return (
     <div className="py-4 pt-7">
-      <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
-        Admin Users
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
+          Admin Users
+        </h1>
+        <button
+          className="pb-7 black_btn"
+          onClick={() => {
+            router.push("/create-admin");
+          }}
+        >
+          Add User
+        </button>
+      </div>
+
       <TableContainer component={Paper}>
         <Table
           className="min-w-[700px] md:min-w-screen-lg"
@@ -106,7 +119,7 @@ const AdminUsers = () => {
                   <button
                     variant="outlined"
                     color="primary"
-                    style={{ marginRight: '30px' }}
+                    style={{ marginRight: "30px" }}
                     onClick={() => handleEdit(adminUser)}
                   >
                     Edit
