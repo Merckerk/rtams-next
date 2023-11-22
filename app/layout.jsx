@@ -1,4 +1,6 @@
 import "@styles/globals.css";
+import { Providers } from "./redux/provider";
+import { NavBar } from "@components";
 
 export const metadata = {
   title: "RTAMS",
@@ -6,16 +8,19 @@ export const metadata = {
     "A Real-Time Attendance Monitoring System for the CpE Department",
 };
 
-const RootLayout = ({children}) => {
+const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <body>
         <div className="main">
           <div className="gradient" />
         </div>
-        <main className="app">
+        <Providers>
+          <main className="app">
+            <NavBar />
             {children}
-        </main>
+          </main>
+        </Providers>
       </body>
     </html>
   );
