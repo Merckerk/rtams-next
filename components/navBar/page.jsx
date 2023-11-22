@@ -53,9 +53,6 @@ const NavBar = () => {
             ) : null}
 
             <Link href={"/profile"}>
-              {/* 
-                //TODO: decode token, edit user for now 
-                */}
               {!image ? (
                 <Image
                   src="/assets/images/defaultProfilePicture.jpg"
