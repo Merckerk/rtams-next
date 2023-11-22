@@ -20,32 +20,6 @@ const Home = () => {
       description: "View and Edit RTAMS Users.",
       routeName: "admin-users",
     },
-    {
-      featureName: "My Profile",
-      description: "Change profile settings",
-      routeName: "my-profile",
-    },
-    {
-      featureName: "My Dashboard",
-      description: "View upcoming classes, events, and attendance statistics",
-      routeName: "my-dashboard",
-    },
-    {
-      featureName: "Email Blast",
-      description: "Send an Email Blast to my Students or Co-Workers",
-      routeName: "email-blast",
-    },
-    {
-      featureName: "Calendar",
-      description:
-        "Keep track of important academic events, such as meetings, exams, and deadlines",
-      routeName: "calendar",
-    },
-    {
-      featureName: "Help Area",
-      description: "Ask the developers for help",
-      routeName: "help-area",
-    },
   ];
 
   return (
