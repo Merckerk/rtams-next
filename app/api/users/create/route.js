@@ -2,12 +2,11 @@ import { connectToDB } from "@utils/database";
 import User from "@models/userModel";
 import bcryptjs from "bcryptjs";
 
-connectToDB();
-
 export const POST = async (req, res) => {
   try {
+    await connectToDB();
     const reqBody = await req.json();
-    const { image, email, userId, username, password, isAdmin} = reqBody;
+    const { image, email, userId, username, password, isAdmin } = reqBody;
 
     const userEmailCheck = await User.findOne({ email });
     const userIdCheck = await User.findOne({ userId });

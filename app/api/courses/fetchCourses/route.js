@@ -1,4 +1,4 @@
-import Course from "@models/userModel"; //TODO: TITE
+import Course from "@models/courseModel"; //TODO: TITE
 import { connectToDB } from "@utils/database";
 
 export const GET = async (req, res) => {
