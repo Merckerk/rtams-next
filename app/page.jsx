@@ -14,6 +14,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  //TODO: MAKE ENUMS
   const featureCardProps = [
     {
       featureName: "RTAMS Users",

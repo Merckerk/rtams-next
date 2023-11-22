@@ -14,13 +14,13 @@ const courseSchema = new Schema({
   },
   professor: {
     // Professor assigned to the course
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "users",
   },
   students: [
     // Students enrolled in the course
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
   ],
@@ -32,4 +32,6 @@ const courseSchema = new Schema({
   },
 });
 
+
+//TODO: TITE
 const Course = model("classes", courseSchema);

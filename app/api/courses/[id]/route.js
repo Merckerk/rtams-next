@@ -2,7 +2,8 @@ import Course from "@models/courseModel";
 import { connectToDB } from "@utils/database";
 
 // GET course
-export const GET = async (req, { params }) => {
+export const GET = async (req, { params }) => { //TODO: TITE LIPAT SA OTHER ROUTE
+  //TODO: TITE PALITAN NG FIND BY ID
   try {
     await connectToDB();
 
@@ -32,7 +33,7 @@ export const PATCH = async (req, { params }) => {
     if (!existingCourse)
       return new Response("Course not found.", { status: 404 });
 
-    existingCourse.userId = userId;
+    existingCourse.userId = userId; //TODO: TITE
     existingCourse.course = course;
     existingCourse.students = students;
     existingCourse.days = days;
