@@ -1,12 +1,11 @@
 import User from "@models/userModel";
 import { connectToDB } from "@utils/database";
 import bcryptjs from "bcryptjs";
-import { connect } from "mongoose";
 
 // GET user
 export const GET = async (req, { params }) => {
   try {
-    connectToDB();
+    await connectToDB();
 
     //Find the user according to user_id sent by client
     const user = await User.findById(params.id);
