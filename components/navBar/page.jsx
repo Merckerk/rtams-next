@@ -46,9 +46,6 @@ const NavBar = () => {
       <div className="sm:flex hidden">
         {isLoggedIn ? (
           <div className="flex gap-3 md:gap-5">
-            <Link href="/create-admin" className="black_btn">
-              Users
-            </Link>
             {image ? (
               <button type="button" onClick={logout} className="outline_btn">
                 Sign Out
