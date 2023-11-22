@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation"
 import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
@@ -19,7 +19,6 @@ const NavBar = () => {
   const logout = async () => {
     try {
       await axios.get("/api/users/logout");
-      toast.success("Logout successful.");
       dispatch(setLoggedInImage(""));
       console.log("After dispatch");
       router.push("/login");
@@ -28,6 +27,7 @@ const NavBar = () => {
       console.log(error);
     }
   };
+
   return (
     <nav className="flex-between w-full mb-16 pt-3">
       <Link href="/" className="flex gap-2 flex-center">

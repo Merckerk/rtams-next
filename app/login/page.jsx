@@ -51,7 +51,6 @@ const Login = () => {
       password: Yup.string().required("Password is required."),
     }),
     onSubmit: () => {
-      //Login using postValues
       onLoginUser();
     },
   });

@@ -21,6 +21,11 @@ const Home = () => {
       description: "View and Edit RTAMS Users.",
       routeName: "admin-users",
     },
+    {
+      featureName: "Courses",
+      description: "View, add and edit Courses.",
+      routeName: "courses",
+    },
   ];
 
   return (
