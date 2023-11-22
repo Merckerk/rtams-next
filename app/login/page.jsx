@@ -5,9 +5,16 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
 
 const Login = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const userImage = useSelector((state) => {
+    state.loggedInUser.loggedInImage;
+  });
+
   const [isLoading, setIsLoading] = useState(false);
 
   const onLoginUser = async () => {
@@ -17,6 +24,10 @@ const Login = () => {
 
       setIsLoading(true);
       const response = await axios.post("api/users/login", postValues);
+      if (response.data.success) {
+        const { image } = response.data.user;
+        dispatch(setLoggedInImage(image));
+      }
       router.push("/");
     } catch (error) {
       console.log("Login failed.", error);
@@ -25,6 +36,10 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("userImage",userImage);
+  }, [userImage]);
 
   const formik = useFormik({
     initialValues: {

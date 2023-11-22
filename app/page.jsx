@@ -6,13 +6,18 @@ import { useRouter } from "next/navigation";
 
 import FeatureCard from "@components/FeatureCard";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
+
 
 const Home = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const logout = async () => {
     try {
       await axios.get("/api/users/logout");
       toast.success("Logout successful.");
+      dispatch(setLoggedInImage(""));
       router.push("/login");
     } catch (error) {
       console.log(error);

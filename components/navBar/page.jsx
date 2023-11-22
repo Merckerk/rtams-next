@@ -3,8 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoggedInUsername } from "@app/redux/features/loggedInUser/loggedInUserSlice";
+import axios from "axios";
 
 const NavBar = () => {
+  const image = useSelector((state) => state.loggedInUser.loggedInImage);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const signOut = () => {};
@@ -37,13 +41,25 @@ const NavBar = () => {
               {/* 
                 //TODO: decode token, edit user for now 
                 */}
-              <Image
-                src="/assets/images/defaultProfilePicture.jpg"
-                width={37}
-                height={37}
-                className="rounded-full"
-                alt="profile icon"
-              ></Image>
+              {!image ? (
+                <Image
+                  src="/assets/images/defaultProfilePicture.jpg"
+                  width={37}
+                  height={37}
+                  className="rounded-full"
+                  alt="profile icon"
+                  style={{ maxWidth: '37px', maxHeight: '37px' }}
+                ></Image>
+              ) : (
+                <Image
+                  src={image}
+                  width={37}
+                  height={37}
+                  className="rounded-full"
+                  alt="profile icon"
+                  style={{ maxWidth: '37px', maxHeight: '37px' }}
+                ></Image>
+              )}
             </Link>
           </div>
         ) : (

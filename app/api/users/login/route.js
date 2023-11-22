@@ -42,12 +42,19 @@ export const POST = async (req, res) => {
     const response = NextResponse.json({
       message: "Login successful.",
       success: true,
+      user: {
+        id: user._id,
+        image: user.image,
+        username: user.username,
+        isAdmin: user.isAdmin
+      }
     });
     response.cookies.set("token", token, { httpOnly: true });
 
     return response;
   } catch (error) {
     console.log(error); //delete in production
+    
     return new Response("Failed to Login.", { status: 500 });
   }
 };
