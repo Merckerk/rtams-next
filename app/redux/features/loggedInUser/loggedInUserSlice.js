@@ -12,6 +12,7 @@ export const loggedInUser = createSlice({
   reducers: {
     setLoggedInImage: (state, action) => {
       state.loggedInImage = action.payload;
+      console.log("Reducer state:", state);
     },
   },
 });

@@ -13,22 +13,12 @@ import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserS
 const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const logout = async () => {
-    try {
-      await axios.get("/api/users/logout");
-      toast.success("Logout successful.");
-      dispatch(setLoggedInImage(""));
-      router.push("/login");
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const featureCardProps = [
     {
-      featureName: "Teaching Load",
-      description: "View your load and teaching schedules.",
-      routeName: "teaching-load",
+      featureName: "RTAMS Users",
+      description: "View and Edit RTAMS Users.",
+      routeName: "admin-users",
     },
     {
       featureName: "My Profile",
@@ -58,17 +48,6 @@ const Home = () => {
     },
   ];
 
-  const [currentUser, setCurrentUser] = useState("nothing");
-
-  const fetchCurrentUser = async () => {
-    const res = await axios.get("/api/users/currentUser");
-    setCurrentUser(res.data.userInfo.username);
-  };
-
-  useEffect(() => {
-    fetchCurrentUser();
-  }, []);
-
   return (
     <section className="w-full flex-center flex-col">
       <h1 className="head_text text-center">
@@ -84,17 +63,7 @@ const Home = () => {
 
       <hr />
 
-      <h3>Welcome! You are currently logged in as:</h3>
-      <h2 className="p-1 rounded bg-green-500">
-        <center> {currentUser} </center>
-      </h2>
-
-      <button
-        onClick={logout}
-        className="bg-red-500 mt-4 hover: bg-red-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Logout
-      </button>
+      
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {featureCardProps.map((feature, index) => (

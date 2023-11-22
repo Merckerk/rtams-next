@@ -4,14 +4,30 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setLoggedInUsername } from "@app/redux/features/loggedInUser/loggedInUserSlice";
+import { useRouter } from "next/navigation"
+import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const NavBar = () => {
-  const image = useSelector((state) => state.loggedInUser.loggedInImage);
+  const dispatch = useDispatch();
+  const router = useRouter()
+  
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const image = useSelector((state) => state.loggedInUser.loggedInImage);
 
-  const signOut = () => {};
+  const logout = async () => {
+    try {
+      await axios.get("/api/users/logout");
+      toast.success("Logout successful.");
+      dispatch(setLoggedInImage(""));
+      console.log("After dispatch");
+      router.push("/login");
+      console.log("After router.push");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <nav className="flex-between w-full mb-16 pt-3">
       <Link href="/" className="flex gap-2 flex-center">
@@ -33,9 +49,11 @@ const NavBar = () => {
             <Link href="/create-admin" className="black_btn">
               Users
             </Link>
-            <button type="button" onClick={signOut} className="outline_btn">
-              Sign Out
-            </button>
+            {image ? (
+              <button type="button" onClick={logout} className="outline_btn">
+                Sign Out
+              </button>
+            ) : null}
 
             <Link href={"/profile"}>
               {/* 
@@ -48,7 +66,7 @@ const NavBar = () => {
                   height={37}
                   className="rounded-full"
                   alt="profile icon"
-                  style={{ maxWidth: '37px', maxHeight: '37px' }}
+                  style={{ maxWidth: "37px", maxHeight: "37px" }}
                 ></Image>
               ) : (
                 <Image
@@ -57,7 +75,7 @@ const NavBar = () => {
                   height={37}
                   className="rounded-full"
                   alt="profile icon"
-                  style={{ maxWidth: '37px', maxHeight: '37px' }}
+                  style={{ maxWidth: "37px", maxHeight: "37px" }}
                 ></Image>
               )}
             </Link>
