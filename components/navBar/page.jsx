@@ -4,15 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
 const NavBar = () => {
   const dispatch = useDispatch();
-  const router = useRouter()
-  
+  const router = useRouter();
+
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const image = useSelector((state) => state.loggedInUser.loggedInImage);
 
@@ -41,16 +41,12 @@ const NavBar = () => {
         <p className="logo_text">RTAMS</p>
       </Link>
 
-      {/* Mobile navigation */}
-
       <div className="sm:flex hidden">
         {isLoggedIn ? (
           <div className="flex gap-3 md:gap-5">
-            {image ? (
-              <button type="button" onClick={logout} className="outline_btn">
-                Sign Out
-              </button>
-            ) : null}
+            <button type="button" onClick={logout} className="outline_btn">
+              Sign Out
+            </button>
 
             <Link href={"/profile"}>
               {!image ? (

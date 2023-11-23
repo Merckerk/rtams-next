@@ -1,6 +1,6 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
-const term = {
+const term = {  
   "2023-2024": "2023-2024",
   "2024-2025": "2024-2025",
   "2025-2026": "2025-2026",
