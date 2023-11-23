@@ -80,8 +80,8 @@ const AdminCrudForm = ({
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center">
-      <form className="mt-10 w-full max-w-2xl flex flex-col gap-7 glassmorphism">
+    <div className="container mx-auto mt-5 mb-8">
+      <form className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism">
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
           {type} User
         </h1>
