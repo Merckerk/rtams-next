@@ -203,7 +203,7 @@ const AdminCrudForm = ({
           required
         />
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>
             <span className="font-satoshi font-semibold text-base text-gray-700">
               Is Admin:
@@ -221,7 +221,7 @@ const AdminCrudForm = ({
               <span className="toggle"></span>
             </label>
           </label>
-        </div>
+        </div> */}
 
         <button className="black_btn" disabled={loading} onClick={handleSubmit}>
           {loading ? "Processing" : `${type} User`}
