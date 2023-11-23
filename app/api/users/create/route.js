@@ -41,9 +41,6 @@ export const POST = async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    if (newUser.isAdmin) {
-      return new Response("Created as admin", { status: 201 });
-    }
     return new Response("Successfully created an account.", { status: 201 });
   } catch (error) {
     console.log(error);
