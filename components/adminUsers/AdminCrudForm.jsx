@@ -80,8 +80,8 @@ const AdminCrudForm = ({
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center">
-      <form className="mt-10 w-full max-w-2xl flex flex-col gap-7 glassmorphism">
+    <div className="container mx-auto mt-1 mb-5">
+      <form className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism">
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
           {type} User
         </h1>
@@ -99,7 +99,12 @@ const AdminCrudForm = ({
                 alt="Default Profile"
               />
             ) : (
-              <img width={100} height={100} src={post.image} alt="User Profile" />
+              <img
+                width={100}
+                height={100}
+                src={post.image}
+                alt="User Profile"
+              />
             )}
           </label>
 
@@ -252,21 +257,13 @@ const AdminCrudForm = ({
             </label>
           </label>
         </div>
-        <button
-          className="black_btn"
-          disabled={loading}
-          onClick={handleSubmit}
-        >
+        <button className="black_btn" disabled={loading} onClick={handleSubmit}>
           {loading ? "Processing" : `${type} User`}
         </button>
         {type == "Edit" ? (
-          <button
-          className="red_btn"
-          disabled={loading}
-          onClick={handleDelete}
-        >
-          {loading ? "Processing" : "Delete User"}
-        </button>
+          <button className="red_btn" disabled={loading} onClick={handleDelete}>
+            {loading ? "Processing" : "Delete User"}
+          </button>
         ) : null}
       </form>
     </div>

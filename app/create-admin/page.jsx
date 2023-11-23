@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import AdminCrudForm from "@components/adminUsers/adminCrudForm";
+import AdminCrudForm from "@components/adminUsers/AdminCrudForm";
 import toast from "react-hot-toast";
 
 const CreateUser = () => {
