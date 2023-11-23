@@ -229,26 +229,6 @@ const AdminCrudForm = ({
           required
         />
 
-        {/* <div className="form-group">
-          <label>
-            <span className="font-satoshi font-semibold text-base text-gray-700">
-              Is Admin:
-            </span>
-            <label className="toggle-container ml-2">
-              <input
-                type="checkbox"
-                id="isAdmin"
-                name="isAdmin"
-                checked={post?.isAdmin}
-                onChange={(e) =>
-                  setPost({ ...post, isAdmin: e.target.checked })
-                }
-              />
-              <span className="toggle"></span>
-            </label>
-          </label>
-        </div> */}
-
         <button className="black_btn" disabled={loading} onClick={handleSubmit}>
           {loading ? "Processing" : `${type} User`}
         </button>
