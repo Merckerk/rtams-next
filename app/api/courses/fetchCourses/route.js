@@ -1,4 +1,4 @@
-import Course from "@models/courseModel"; //TODO: TITE
+import Course from "@models/courseModel";
 import { connectToDB } from "@utils/database";
 
 export const GET = async (req, res) => {
@@ -12,6 +12,8 @@ export const GET = async (req, res) => {
     // return the results
     return new Response(JSON.stringify(Courses));
   } catch (error) {
-    //TODO: TITE
+    return new Response("Failed to fetch courses from the database.", {
+      status: 500,
+    });
   }
 };

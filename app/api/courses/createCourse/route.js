@@ -7,7 +7,7 @@ export const POST = async (req, res) => {
 
     const reqBody = await req.json();
 
-    const { courseName, courseCode, professor, students, days, term } = reqBody;
+    const { courseName, courseCode } = reqBody;
 
     const courseNameCheck = await Course.findOne({ courseName });
     const courseCodeCheck = await Course.findOne({ courseCode });
@@ -23,10 +23,6 @@ export const POST = async (req, res) => {
     const newCourse = new Course({
       courseName,
       courseCode,
-      professor,
-      students,
-      days,
-      term,
     });
 
     const savedCourse = await newCourse.save();

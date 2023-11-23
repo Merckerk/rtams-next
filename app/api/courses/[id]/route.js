@@ -18,8 +18,7 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE course
 export const PATCH = async (req, { params }) => {
-  const { courseName, courseCode, professor, students, days, term } =
-    await req.json();
+  const { courseName, courseCode } = await req.json();
   try {
     // connect to mongoDB
     await connectToDB();
@@ -32,10 +31,6 @@ export const PATCH = async (req, { params }) => {
 
     existingCourse.courseName = courseName;
     existingCourse.courseCode = courseCode;
-    existingCourse.professor = professor;
-    existingCourse.students = students;
-    existingCourse.days = days;
-    existingCourse.term = term;
 
     await existingCourse.save();
 

@@ -20,7 +20,7 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE user
 export const PATCH = async (req, { params }) => {
-  const { image, email, userId, username, password, isAdmin } =
+  const { image, email, userId, username, password, name, load } =
     await req.json();
   try {
     await connectToDB();
@@ -35,10 +35,11 @@ export const PATCH = async (req, { params }) => {
     // Response if user is updated successfully
     existingUser.image = image;
     existingUser.email = email;
+    existingUser.name = name;
     existingUser.userId = userId;
     existingUser.username = username;
     existingUser.password = hashedPassword;
-    existingUser.isAdmin = isAdmin;
+    existingUser.load = load;
 
     await existingUser.save();
     return new Response(JSON.stringify(existingUser), { status: 200 });
