@@ -12,9 +12,6 @@ export const POST = async (req, res) => {
     const reqBody = await req.json();
     const { username, password } = reqBody;
 
-    //Debugging, delete in production
-    console.log(reqBody);
-
     //Check if username exists
     const user = await User.findOne({ username });
 
@@ -34,7 +31,7 @@ export const POST = async (req, res) => {
     const tokenData = {
       id: user._id,
       username: user.username,
-      password: user.password,
+      isAdmin: user.isAdmin,
     };
 
     //Create the token

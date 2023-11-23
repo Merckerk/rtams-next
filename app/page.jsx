@@ -57,7 +57,6 @@ const Home = () => {
 
   const fetchCurrentUser = async () => {
     const res = await axios.get("/api/users/currentUser");
-    console.log(res.data);
     setCurrentUser(res.data.userInfo.username);
   };
 

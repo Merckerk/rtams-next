@@ -71,9 +71,24 @@ const UpdateAdmin = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
+  const onDeleteUser = async () => {
+    const hasConfirmed = confirm("Are you sure you want to delete this user?");
+
+    if (hasConfirmed) {
+      try {
+        const response = await fetch(`/api/users/${userId}`, {
+          method: "DELETE",
+        });
+        
+        if(response.ok) {
+          router.push('/admin-users');
+        }
+
+      } catch(error){
+        console.log('Error deleting the user', error);
+      }
+    }
+  }
 
   return (
     <AdminCrudForm
@@ -82,6 +97,7 @@ const UpdateAdmin = () => {
       setPost={setPost}
       loading={loading}
       handleSubmit={onUpdateUser}
+      handleDelete={onDeleteUser}
     />
   );
 };

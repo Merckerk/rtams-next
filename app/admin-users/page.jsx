@@ -47,11 +47,24 @@ const AdminUsers = () => {
 
   const fetchAdminData = async () => {
     const response = await axios.get("/api/users/displayAdminUsers");
-    console.log(response.data);
     if (response) {
       setAdminUsersAPI(response.data);
     } else {
-      console.log("tite");  //TODO: REMOVE HAHAHAHAHAHA
+    }
+  };
+
+  const deleteUser = async (userId) => {
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok){
+        const filteredUsers = adminUsersAPI.filter((users) => users._id !== userId);
+        setAdminUsersAPI(filteredUsers);
+      }
+    } catch (error) {
+      console.error('Error deleting the user', error);
     }
   };
 
@@ -62,10 +75,6 @@ const AdminUsers = () => {
   useEffect(() => {
     dispatch(getAdminUsers(adminUsersAPI));
   }, [adminUsersAPI]);
-
-  useEffect(() => {
-    console.log("Admin Users: ", adminUsers);
-  }, [adminUsers]);
 
   return (
     <div className="py-4 pt-7">
@@ -81,25 +90,33 @@ const AdminUsers = () => {
             <TableRow>
               <StyledTableCell>Username</StyledTableCell>
               <StyledTableCell align="left">Email</StyledTableCell>
-              <StyledTableCell align="left">Actions</StyledTableCell>
+              <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {adminUsersAPI.map((adminUser) => (
-              <StyledTableRow key={adminUser.username}>
+              <StyledTableRow key={adminUser._id}>
                 <StyledTableCell component="th" scope="row">
                   {adminUser.username}
                 </StyledTableCell>
                 <StyledTableCell align="left">
                   {adminUser.email}
                 </StyledTableCell>
-                <StyledTableCell align="left">
+                <StyledTableCell align="center">
                   <button
                     variant="outlined"
                     color="primary"
+                    style={{ marginRight: '30px' }}
                     onClick={() => handleEdit(adminUser)}
                   >
                     Edit
+                  </button>
+                  <button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => deleteUser(adminUser._id)}
+                  >
+                    Delete
                   </button>
                 </StyledTableCell>
               </StyledTableRow>
