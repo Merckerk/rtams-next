@@ -10,11 +10,12 @@ const CreateUser = () => {
   const [post, setPost] = useState({
     image: "",
     email: "",
+    name: "",
     userId: "",
     username: "",
     password: "",
     repassword: "",
-    isAdmin: false,
+    load: []
   });
   const [isLoading, setIsLoading] = useState(false);
   //TODO: MAKE THIS FUNCTIONAL
@@ -23,8 +24,8 @@ const CreateUser = () => {
   const onCreateUser = async () => {
     try {
       setIsLoading(true);
-      const { image, email, userId, username, password, isAdmin } = post;
-      const postValues = { image, email, userId, username, password, isAdmin };
+      const { image, email, name, userId, username, password, load } = post;
+      const postValues = { image, email, name, userId, username, password, load };
       const response = await axios.post("api/users/create", postValues);
       toast.success("Successfully created an admin user!");
       router.push("/login");
@@ -36,8 +37,10 @@ const CreateUser = () => {
   };
 
   useEffect(() => {
+    console.log(post);
     if (
       !post.email ||
+      !post.name ||
       !post.userId ||
       !post.username ||
       !post.password ||

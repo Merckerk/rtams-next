@@ -26,6 +26,11 @@ const Home = () => {
       description: "View, add and edit Courses.",
       routeName: "courses",
     },
+    {
+      featureName: "Teaching Load",
+      description: "Create, View, Edit, and Delete a teaching load on a professor.",
+      routeName: "teaching-load",
+    },
   ];
 
   return (

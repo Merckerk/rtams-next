@@ -36,98 +36,99 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Courses = () => {
-  const adminUsers = useSelector((state) => state.adminUsers.value);
-  const [adminUsersAPI, setAdminUsersAPI] = useState([]);
-  const dispatch = useDispatch();
+  const [coursesAPI, setCoursesAPI] = useState([]);
+
   const router = useRouter();
 
-  const handleEdit = (adminUser) => {
-    router.push(`/update-admin?userid=${adminUser._id}`);
+  const handleEdit = (course) => {
+    router.push(`/update-course?courseid=${course._id}`);
   };
 
-  const fetchAdminData = async () => {
-    const response = await axios.get("/api/users/displayAdminUsers");
+  const fetchCoursesData = async () => {
+    const response = await axios.get("/api/courses/fetchCourses");
     if (response) {
-      setAdminUsersAPI(response.data);
+      setCoursesAPI(response.data);
     } else {
     }
   };
 
-  const deleteUser = async (userId) => {
-    try {
-      const response = await fetch(`/api/users/${userId}`, {
-        method: "DELETE",
-      });
+  const deleteCourse = async (userId) => {
+    const hasConfirmed = confirm(
+      "Are you sure you want to delete this course?"
+    );
 
-      if (response.ok) {
-        const filteredUsers = adminUsersAPI.filter(
-          (users) => users._id !== userId
-        );
-        setAdminUsersAPI(filteredUsers);
+    if (hasConfirmed) {
+      try {
+        const response = await fetch(`/api/courses/${userId}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          const filteredCourses = coursesAPI.filter(
+            (users) => users._id !== userId
+          );
+          setCoursesAPI(filteredCourses);
+        }
+      } catch (error) {
+        console.error("Error deleting the course", error);
       }
-    } catch (error) {
-      console.error("Error deleting the user", error);
     }
   };
 
   useEffect(() => {
-    fetchAdminData();
+    fetchCoursesData();
   }, []);
-
-  useEffect(() => {
-    dispatch(getAdminUsers(adminUsersAPI));
-  }, [adminUsersAPI]);
 
   return (
     <div className="py-4 pt-7">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
-          Admin Users
+          Courses
         </h1>
         <button
           className="pb-7 black_btn"
           onClick={() => {
-            router.push("/create-admin");
+            router.push("/create-course");
           }}
         >
-          Add User
+          Add Course
         </button>
       </div>
 
       <TableContainer component={Paper}>
         <Table
           className="min-w-[700px] md:min-w-screen-lg"
-          aria-label="admin users table"
+          aria-label="Courses table"
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell>Username</StyledTableCell>
-              <StyledTableCell align="left">Email</StyledTableCell>
+              <StyledTableCell>Course Code</StyledTableCell>
+              <StyledTableCell align="left">Course Name</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {adminUsersAPI.map((adminUser) => (
-              <StyledTableRow key={adminUser._id}>
+            {coursesAPI.map((course) => (
+              <StyledTableRow key={course._id}>
                 <StyledTableCell component="th" scope="row">
-                  {adminUser.username}
+                  {course.courseCode}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {adminUser.email}
+                  {course.courseName}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <button
                     variant="outlined"
                     color="primary"
                     style={{ marginRight: "30px" }}
-                    onClick={() => handleEdit(adminUser)}
+                    onClick={() => handleEdit(course)}
                   >
                     Edit
                   </button>
                   <button
                     variant="outlined"
                     color="primary"
-                    onClick={() => deleteUser(adminUser._id)}
+                    onClick={() => deleteCourse(course._id)}
                   >
                     Delete
                   </button>

@@ -54,21 +54,26 @@ const AdminUsers = () => {
   };
 
   const deleteUser = async (userId) => {
-    try {
-      const response = await fetch(`/api/users/${userId}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        const filteredUsers = adminUsersAPI.filter(
-          (users) => users._id !== userId
-        );
-        setAdminUsersAPI(filteredUsers);
+    const hasConfirmed = confirm("Are you sure you want to delete this user?");
+  
+    if (hasConfirmed) {
+      try {
+        const response = await fetch(`/api/users/${userId}`, {
+          method: "DELETE",
+        });
+  
+        if (response.ok) {
+          const filteredUsers = adminUsersAPI.filter(
+            (users) => users._id !== userId
+          );
+          setAdminUsersAPI(filteredUsers);
+        }
+      } catch (error) {
+        console.error("Error deleting the user", error);
       }
-    } catch (error) {
-      console.error("Error deleting the user", error);
     }
   };
+  
 
   useEffect(() => {
     fetchAdminData();

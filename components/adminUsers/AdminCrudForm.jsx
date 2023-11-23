@@ -15,6 +15,7 @@ const AdminCrudForm = ({
 }) => {
   const [errMsg, setErrMsg] = useState({
     email: "",
+    name: "",
     userId: "",
     username: "",
     password: "",
@@ -26,6 +27,15 @@ const AdminCrudForm = ({
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
       email: isValid ? "" : "Invalid email",
+    }));
+    return isValid;
+  };
+
+  const validateName = (value) => {
+    const isValid = !!value;
+    setErrMsg((prevErrMsg) => ({
+      ...prevErrMsg,
+      name: isValid ? "" : "User ID is required",
     }));
     return isValid;
   };
@@ -84,7 +94,7 @@ const AdminCrudForm = ({
     <div className="container mx-auto mt-5 mb-8">
       <form className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism">
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
-          {type} User
+          {type} User Profile
         </h1>
 
         <div className="form-group">
@@ -139,6 +149,22 @@ const AdminCrudForm = ({
           required
         />
         
+        <ReusableInput
+          label="Name"
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter User name"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, name: e.target.value });
+            validateName(e.target.value);
+          }}
+          value={post?.name}
+          errorMessage={errMsg.name}
+          required
+        />
+
         <ReusableInput
           label="ID"
           type="text"
