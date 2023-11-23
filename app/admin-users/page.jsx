@@ -8,11 +8,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAdminUsers } from "@app/redux/features/admin-users/admin-users-slice";
 import { useEffect, useState } from "react";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -36,14 +35,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const AdminUsers = () => {
-  const adminUsers = useSelector((state) => state.adminUsers.value);
   const [adminUsersAPI, setAdminUsersAPI] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const handleEdit = (adminUser) => {
-    router.push(`/update-admin?userid=${adminUser._id}`);
-  };
 
   const fetchAdminData = async () => {
     const response = await axios.get("/api/users/displayAdminUsers");
@@ -51,6 +45,10 @@ const AdminUsers = () => {
       setAdminUsersAPI(response.data);
     } else {
     }
+  };
+  
+  const handleEdit = (adminUser) => {
+    router.push(`/update-admin?userid=${adminUser._id}`);
   };
 
   const deleteUser = async (userId) => {
@@ -73,6 +71,10 @@ const AdminUsers = () => {
       }
     }
   };
+
+  const handleLoad = (userId) => {
+    router.push(`teaching-load?userid=${userId._id}`)
+  }
   
 
   useEffect(() => {
@@ -132,9 +134,17 @@ const AdminUsers = () => {
                   <button
                     variant="outlined"
                     color="primary"
+                    style={{ marginRight: "30px" }}   
                     onClick={() => deleteUser(adminUser._id)}
                   >
                     Delete
+                  </button>
+                  <button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => handleLoad(adminUser._id)}
+                  >
+                    Load
                   </button>
                 </StyledTableCell>
               </StyledTableRow>
