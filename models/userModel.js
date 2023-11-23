@@ -11,6 +11,10 @@ const userSchema = new Schema({
     required: [true, "Please provide an email"],
     unique: true,
   },
+  name: {
+    type: String,
+    required: [true, "Please provide a name"],
+  },
   userId: {
     type: String,
     required: true,
@@ -24,10 +28,6 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, "Please provide a password"],
-  },
-  name: {
-    type: String,
-    required: [true, "Please provide a name"],
   },
   load: [
     {
