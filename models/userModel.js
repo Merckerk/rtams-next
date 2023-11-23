@@ -25,14 +25,16 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Please provide a password"],
   },
-  isVerified: {
-    type: Boolean,
-    dafault: false,
+  name: {
+    type: String,
+    required: [true, "Please provide a name"],
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
+  load: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "courses",
+    },
+  ],
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,
