@@ -142,7 +142,7 @@ const AdminUsers = () => {
                   <button
                     variant="outlined"
                     color="primary"
-                    onClick={() => handleLoad(adminUser._id)}
+                    onClick={() => handleLoad(adminUser)}
                   >
                     Load
                   </button>

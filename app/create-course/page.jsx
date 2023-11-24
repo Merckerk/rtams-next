@@ -22,7 +22,7 @@ const CreateCourse = () => {
       const postValues = { courseCode, courseName };
       const response = await axios.post("api/courses/createCourse", postValues)
       toast.success("Successfully created a Course!");
-      router.push("/");
+      router.push("/courses");
     } catch (error) {
       toast.error(error);
     } finally {
