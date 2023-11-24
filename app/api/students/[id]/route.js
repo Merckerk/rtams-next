@@ -18,8 +18,16 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE student
 export const PATCH = async (req, { params }) => {
-  const { studentNumber, nfcUID, image, email, username, password, section } =
-    await req.json();
+  const {
+    studentNumber,
+    nfcUID,
+    image,
+    email,
+    name,
+    username,
+    password,
+    section,
+  } = await req.json();
 
   try {
     await connectToDB();
@@ -36,6 +44,7 @@ export const PATCH = async (req, { params }) => {
     existingStudent.nfcUID = nfcUID;
     existingStudent.image = image;
     existingStudent.email = email;
+    existingStudent.name = name;
     existingStudent.username = username;
     existingStudent.password = hashedPassword;
     existingStudent.section = section;

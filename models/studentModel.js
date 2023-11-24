@@ -28,6 +28,10 @@ const studentSchema = new Schema({
     required: [true, "Please provide an email address."],
     unique: true,
   },
+  name: {
+    type: String,
+    required: [true, "Please enter your name."],
+  },
   username: {
     type: String,
     required: [true, "Please provide a username."],
