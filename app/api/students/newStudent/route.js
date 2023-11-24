@@ -7,8 +7,16 @@ export const POST = async (req, res) => {
   try {
     await connectToDB();
     const reqBody = await req.json();
-    const { studentNumber, nfcUID, image, email, username, password, section } =
-      reqBody;
+    const {
+      studentNumber,
+      nfcUID,
+      image,
+      email,
+      name,
+      username,
+      password,
+      section,
+    } = reqBody;
 
     const studentNumberCheck = await Student.findOne({ studentNumber });
     const studentEmailCheck = await Student.findOne({ email });
@@ -41,6 +49,7 @@ export const POST = async (req, res) => {
       nfcUID,
       image,
       email,
+      name,
       username,
       password: hashedPassword,
       section,
