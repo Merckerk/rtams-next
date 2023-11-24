@@ -2,10 +2,11 @@ import User from "@models/userModel";
 import { connectToDB } from "@utils/database";
 
 export const PATCH = async (req, { params }) => {
-  const { load } = await req.json();
   try {
     await connectToDB();
 
+    const { load } = await req.json();
+    
     const user = await User.findById(params.id);
     if (!user) return new Response("User not found", { status: 404 });
 
