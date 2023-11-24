@@ -10,8 +10,8 @@ export const PATCH = async (req, { params }) => {
     const user = await User.findById(params.id);
     if (!user) return new Response("User not found", { status: 404 });
 
-    user.load = load;
-
+    user.load = user.load || [];
+    user.load = [...load];
     const savedUser = await user.save();
     return new Response(JSON.stringify(savedUser), { status: 200 });
   } catch (error) {

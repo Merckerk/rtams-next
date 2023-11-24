@@ -61,33 +61,32 @@ const TeachingLoad = () => {
       course.courseName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const fetchData = async () => {
+    try {
+      const [coursesResponse, userDetailsResponse] = await Promise.all([
+        axios.get("/api/courses/fetchCourses"),
+        fetch(`/api/users/${userId}`),
+      ]);
+
+      const coursesData = coursesResponse.data;
+      const userData = await userDetailsResponse.json();
+
+      setCoursesAPI(coursesData);
+      setUserDetailsAPI({
+        image: userData.image,
+        name: userData.name,
+        email: userData.email,
+        load: userData.load,
+      });
+
+      setEditedLoad(userData?.load);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [coursesResponse, userDetailsResponse] = await Promise.all([
-          axios.get("/api/courses/fetchCourses"),
-          fetch(`/api/users/${userId}`),
-        ]);
-
-        const coursesData = coursesResponse.data;
-        const userData = await userDetailsResponse.json();
-
-        setCoursesAPI(coursesData);
-        setUserDetailsAPI({
-          image: userData.image,
-          name: userData.name,
-          email: userData.email,
-          load: userData.load,
-        });
-
-        setEditedLoad(userData?.load);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [userId]);
 
@@ -101,7 +100,7 @@ const TeachingLoad = () => {
 
       console.log("Load changes saved:", response.data);
 
-      router.push("/admin-users");
+      fetchData();
     } catch (error) {
       console.error("Error saving load changes:", error);
     } finally {
