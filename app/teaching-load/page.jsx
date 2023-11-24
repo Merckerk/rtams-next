@@ -51,6 +51,7 @@ const TeachingLoad = () => {
   const [userDetailsAPI, setUserDetailsAPI] = useState({
     image: "",
     name: "",
+    username: "",
     email: "",
     load: [],
   });
@@ -75,6 +76,7 @@ const TeachingLoad = () => {
       setUserDetailsAPI({
         image: userData.image,
         name: userData.name,
+        username: userData.username,
         email: userData.email,
         load: userData.load,
       });
@@ -156,7 +158,7 @@ const TeachingLoad = () => {
             Teaching Load
           </h1>
           <span className="font-satoshi font-semibold text-base text-gray-700">
-            {userDetailsAPI.name}
+            {userDetailsAPI.name || userDetailsAPI.username}
           </span>
         </div>
       </div>
