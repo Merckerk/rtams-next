@@ -45,9 +45,9 @@ const TeachingLoad = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const [coursesAPI, setCoursesAPI] = useState([]); //all courses
+  const [coursesAPI, setCoursesAPI] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [editedLoad, setEditedLoad] = useState([]); //courses to be edited (ids of courses)
+  const [editedLoad, setEditedLoad] = useState([]);
   const [userDetailsAPI, setUserDetailsAPI] = useState({
     image: "",
     name: "",
@@ -120,10 +120,8 @@ const TeachingLoad = () => {
   const isCourseInEditedLoad = (courseId) => editedLoad.includes(courseId);
 
   const handleCheckboxChange = (courseId) => {
-    // Check if the course is already in the editedLoad array
     const isCourseInLoad = editedLoad.includes(courseId);
 
-    // If the course is in the array, remove it; otherwise, add it
     if (isCourseInLoad) {
       setEditedLoad((prevLoad) => prevLoad.filter((id) => id !== courseId));
     } else {
@@ -153,7 +151,7 @@ const TeachingLoad = () => {
             className="rounded-full"
           />
         )}
-        <div>
+        <div className="ml-5">
           <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
             Teaching Load
           </h1>
