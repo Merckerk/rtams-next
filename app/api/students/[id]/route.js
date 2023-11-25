@@ -19,14 +19,15 @@ export const GET = async (req, { params }) => {
 // EDIT/UPDATE student
 export const PATCH = async (req, { params }) => {
   const {
+    image,
     studentNumber,
     nfcUID,
-    image,
     email,
     name,
     username,
     password,
     section,
+    load,
   } = await req.json();
 
   try {
@@ -34,24 +35,28 @@ export const PATCH = async (req, { params }) => {
 
     const existingStudent = await Student.findById(params.id);
 
-    if (!existingStudent)
+    if (!existingStudent) {
+      console.log("student doesn't exist");
       return new Response("Student not found", { status: 404 });
+    }
 
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = !password ? "" : await bcryptjs.hash(password, salt);
 
+    existingStudent.image = image;
     existingStudent.studentNumber = studentNumber;
     existingStudent.nfcUID = nfcUID;
-    existingStudent.image = image;
     existingStudent.email = email;
     existingStudent.name = name;
     existingStudent.username = username;
-    existingStudent.password = hashedPassword || existingUser.password;
+    existingStudent.password = hashedPassword || existingStudent.password;
     existingStudent.section = section;
+    existingStudent.load = load;
 
     await existingStudent.save();
-    return new response(JSON.stringify(existingStudent), { status: 200 });
+    return new Response(JSON.stringify(existingStudent), { status: 200 });
   } catch (error) {
+    console.log("Error in patch endpoint");
     return new Response("Failed to update student information.", {
       status: 500,
     });
