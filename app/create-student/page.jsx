@@ -31,6 +31,7 @@ const CreateStudent = () => {
         studentNumber,
         nfcUID,
         email,
+        name,
         username,
         password,
         section,
@@ -41,12 +42,13 @@ const CreateStudent = () => {
         studentNumber,
         nfcUID,
         email,
+        name,
         username,
         password,
         section,
         load,
       };
-      const response = await axios.post("api/student/newStudent", postValues);
+      const response = await axios.post("api/students/newStudent", postValues);
       if (response) {
         toast.success("Successfully created a student!", response);
         router.push("/students");

@@ -24,32 +24,25 @@ export const POST = async (req, res) => {
     const studentUsernameCheck = await Student.findOne({ username });
 
     if (studentNumberCheck) {
-      return res
-        .status(400)
-        .json({ message: "Student Number already exists." });
+      return new Response("Student No already exist", { status: 400 });
     }
-
     if (studentEmailCheck) {
-      return res.status(400).json({ message: "Email already exists." });
+      return new Response("Student Email already exist", { status: 400 });
     }
-
     if (studentNFCCheck) {
-      return res
-        .status(400)
-        .json({ message: "Your NFC UID already exists in the database." });
+      return new Response("Student NFC ID already exist", { status: 400 });
     }
-
     if (studentUsernameCheck) {
-      return res.status(400).json({ message: "Username already exists." });
+      return new Response("Student Username already exist", { status: 400 });
     }
 
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
     const newStudent = new Student({
+      image,
       studentNumber,
       nfcUID,
-      image,
       email,
       name,
       username,
@@ -58,14 +51,10 @@ export const POST = async (req, res) => {
       load,
     });
 
-    const savedUser = await newStudent.save();
-    return res
-      .status(201)
-      .json({ message: "Student created successfully", user: savedUser });
+    const savedStudent = await newStudent.save();
+    return new Response("Successfully created a student.", { status: 201 });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: `Failed to create a Student account. ${error.message || 'Internal Server Error'}`,
-    });
+    console.log(error);
+    return new Response("Failed to create a student", { status: 500 });
   }
 };

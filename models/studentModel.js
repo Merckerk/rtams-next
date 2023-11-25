@@ -38,7 +38,12 @@ const studentSchema = new Schema({
     type: String,
     enum: Object.values(Section),
   },
-  
+  load: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "courses",
+    },
+  ],
 });
 
 const Student = models.students || model("students", studentSchema);
