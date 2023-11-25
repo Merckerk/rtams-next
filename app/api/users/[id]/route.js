@@ -35,14 +35,15 @@ export const PATCH = async (req, { params }) => {
 
     //re-hash password here
     const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(password, salt);
+    const hashedPassword = !password ? '' : await bcryptjs.hash(password, salt);
+
     // Response if user is updated successfully
     existingUser.image = image;
     existingUser.email = email;
     existingUser.name = name;
     existingUser.userId = userId;
     existingUser.username = username;
-    existingUser.password = hashedPassword;
+    existingUser.password = hashedPassword || existingUser.password;
     existingUser.load = load;
 
     await existingUser.save();

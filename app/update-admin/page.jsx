@@ -16,7 +16,6 @@ const UpdateAdmin = () => {
     name: "",
     userId: "",
     username: "",
-    oldPassword: "",
     password: "",
     repassword: "",
     load: []
@@ -32,7 +31,6 @@ const UpdateAdmin = () => {
       name: data.name,
       userId: data.userId,
       username: data.username,
-      oldPassword: data.password,
       password: "",
       repassword: "",
       load: []
@@ -54,10 +52,6 @@ const UpdateAdmin = () => {
     if (!userId) return alert("User ID not found.");
 
     try {
-      if (!post.password) {
-        setPost({...post, password: oldPassword});
-      }
-
       const response = await fetch(`/api/users/${userId}`, {
         method: "PATCH",
         body: JSON.stringify({
