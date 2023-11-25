@@ -1,14 +1,11 @@
 import mongoose, { Schema, model, models } from "mongoose";
-
-const Section = {
-  "4-1": "4-1",
-  "4-2": "4-2",
-  "4-3": "4-3",
-  "4-4": "4-4",
-  "4-5": "4-5",
-};
+import Section from "@enums/section";
 
 const studentSchema = new Schema({
+  image: {
+    type: String,
+    default: "",
+  },
   studentNumber: {
     type: String,
     required: true,
@@ -18,10 +15,6 @@ const studentSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-  },
-  image: {
-    type: String,
-    default: "",
   },
   email: {
     type: String,
