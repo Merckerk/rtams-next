@@ -29,6 +29,10 @@ export const PATCH = async (req, { params }) => {
 
     if (!existingUser) return new Response("User not found", { status: 404 });
 
+    if (existingUser.userId == "owners") {
+      return new Response("Cannot edit/update this user.", { status: 500 });
+    }
+
     //re-hash password here
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
@@ -40,9 +44,6 @@ export const PATCH = async (req, { params }) => {
     existingUser.username = username;
     existingUser.password = hashedPassword;
     existingUser.load = load;
-
-    if (existingUser.userId == "owners")
-      return new Response("Cannot edit/update this user.", { status: 500 });
 
     await existingUser.save();
     return new Response(JSON.stringify(existingUser), { status: 200 });
