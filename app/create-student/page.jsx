@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import AdminCrudForm from "@components/adminUsers/AdminCrudForm";
+import StudentCrudForm from "@components/students/StudentCrudForm";
 import toast from "react-hot-toast";
 
 const CreateStudent = () => {
@@ -17,19 +17,42 @@ const CreateStudent = () => {
     password: "",
     repassword: "",
     section: "",
+    load: [],
   });
   const [isLoading, setIsLoading] = useState(false);
   //TODO: MAKE THIS FUNCTIONAL
   const [areFieldsValid, setAreFieldsValid] = useState(false);
 
-  const onCreateUser = async () => {
+  const onCreateStudent = async () => {
     try {
       setIsLoading(true);
-      const { image, email, name, userId, username, password, load } = post;
-      const postValues = { image, email, name, userId, username, password, load };
-      const response = await axios.post("api/users/create", postValues);
-      toast.success("Successfully created an admin user!");
-      router.push("/login");
+      const {
+        image,
+        studentNumber,
+        nfcUID,
+        email,
+        username,
+        password,
+        section,
+        load,
+      } = post;
+      const postValues = {
+        image,
+        studentNumber,
+        nfcUID,
+        email,
+        username,
+        password,
+        section,
+        load,
+      };
+      const response = await axios.post("api/student/newStudent", postValues);
+      if (response) {
+        toast.success("Successfully created a student!", response);
+        router.push("/students");
+      } else {
+        toast.error("Failed to create student");
+      }
     } catch (error) {
       toast.error(error);
     } finally {
@@ -41,9 +64,9 @@ const CreateStudent = () => {
     console.log(post);
     if (
       !post.email ||
+      !post.studentNumber ||
+      !post.nfcUID ||
       !post.name ||
-      !post.userId ||
-      !post.username ||
       !post.password ||
       !post.repassword
     ) {
@@ -54,12 +77,12 @@ const CreateStudent = () => {
   }, [post]);
 
   return (
-    <AdminCrudForm
+    <StudentCrudForm
       type="Create"
       post={post}
       setPost={setPost}
       loading={isLoading}
-      handleSubmit={onCreateUser}
+      handleSubmit={onCreateStudent}
     />
   );
 };

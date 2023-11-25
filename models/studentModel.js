@@ -38,6 +38,7 @@ const studentSchema = new Schema({
     type: String,
     enum: Object.values(Section),
   },
+  
 });
 
 const Student = models.students || model("students", studentSchema);
