@@ -38,7 +38,7 @@ export const PATCH = async (req, { params }) => {
       return new Response("Student not found", { status: 404 });
 
     const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(password, salt);
+    const hashedPassword = !password ? "" : await bcryptjs.hash(password, salt);
 
     existingStudent.studentNumber = studentNumber;
     existingStudent.nfcUID = nfcUID;
@@ -46,7 +46,7 @@ export const PATCH = async (req, { params }) => {
     existingStudent.email = email;
     existingStudent.name = name;
     existingStudent.username = username;
-    existingStudent.password = hashedPassword;
+    existingStudent.password = hashedPassword || existingUser.password;
     existingStudent.section = section;
 
     await existingStudent.save();

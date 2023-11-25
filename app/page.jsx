@@ -18,8 +18,13 @@ const Home = () => {
   const featureCardProps = [
     {
       featureName: "RTAMS Users",
-      description: "View and Edit RTAMS Users.",
+      description: "Add, View and Edit RTAMS Users.",
       routeName: "admin-users",
+    },
+    {
+      featureName: "Students",
+      description: "Add, View and Edit Students.",
+      routeName: "students",
     },
     {
       featureName: "Courses",
