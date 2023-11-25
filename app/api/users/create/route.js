@@ -2,12 +2,11 @@ import { connectToDB } from "@utils/database";
 import User from "@models/userModel";
 import bcryptjs from "bcryptjs";
 
-connectToDB();
-
 export const POST = async (req, res) => {
   try {
+    await connectToDB();
     const reqBody = await req.json();
-    const { image, email, userId, username, password, isAdmin} = reqBody;
+    const { image, email, name, userId, username, password, load } = reqBody;
 
     const userEmailCheck = await User.findOne({ email });
     const userIdCheck = await User.findOne({ userId });
@@ -33,17 +32,15 @@ export const POST = async (req, res) => {
     const newUser = new User({
       image,
       email,
+      name,
       userId,
       username,
       password: hashedPassword,
-      isAdmin,
+      load,
     });
 
     const savedUser = await newUser.save();
 
-    if (newUser.isAdmin) {
-      return new Response("Created as admin", { status: 201 });
-    }
     return new Response("Successfully created an account.", { status: 201 });
   } catch (error) {
     console.log(error);

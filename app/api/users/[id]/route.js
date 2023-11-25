@@ -20,7 +20,7 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE user
 export const PATCH = async (req, { params }) => {
-  const { image, email, userId, username, password, isAdmin } =
+  const { image, email, userId, username, password, name, load } =
     await req.json();
   try {
     await connectToDB();
@@ -29,16 +29,22 @@ export const PATCH = async (req, { params }) => {
 
     if (!existingUser) return new Response("User not found", { status: 404 });
 
+    if (existingUser.userId == "owners") {
+      return new Response("Cannot edit/update this user.", { status: 500 });
+    }
+
     //re-hash password here
     const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(password, salt);
+    const hashedPassword = !password ? '' : await bcryptjs.hash(password, salt);
+
     // Response if user is updated successfully
     existingUser.image = image;
     existingUser.email = email;
+    existingUser.name = name;
     existingUser.userId = userId;
     existingUser.username = username;
-    existingUser.password = hashedPassword;
-    existingUser.isAdmin = isAdmin;
+    existingUser.password = hashedPassword || existingUser.password;
+    existingUser.load = load;
 
     await existingUser.save();
     return new Response(JSON.stringify(existingUser), { status: 200 });
@@ -52,6 +58,9 @@ export const PATCH = async (req, { params }) => {
 export const DELETE = async (req, { params }) => {
   try {
     await connectToDB();
+
+    if (User.findById(params.id).userId == "owners")
+      return new Response("Cannot delete this user.", { status: 500 });
 
     await User.findByIdAndRemove(params.id);
 

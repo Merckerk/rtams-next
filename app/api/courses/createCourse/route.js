@@ -1,16 +1,32 @@
 import { connectToDB } from "@utils/database";
 import Course from "@models/courseModel";
-export const POST = async (req) => {
-  const { userId, course, students, days } = await req.json();
+export const POST = async (req, res) => {
   try {
     // connect to mongoDB
     await connectToDB();
 
-    // pass variables above, then save in the db
-    const newCourse = new Course({ professor: userId, course, students, days });
-    await newCourse.save();
+    const reqBody = await req.json();
 
-    // return response
+    const { courseName, courseCode } = reqBody;
+
+    const courseNameCheck = await Course.findOne({ courseName });
+    const courseCodeCheck = await Course.findOne({ courseCode });
+
+    if (courseNameCheck) {
+      return new Response("Course Name already exists.", { status: 400 });
+    }
+
+    if (courseCodeCheck) {
+      return new Response("Course Name already exists.", { status: 400 });
+    }
+
+    const newCourse = new Course({
+      courseName,
+      courseCode,
+    });
+
+    const savedCourse = await newCourse.save();
+
     return new Response(JSON.stringify(newCourse), { status: 201 });
   } catch (error) {
     return new Response("Failed to create a new Course.", { status: 500 });

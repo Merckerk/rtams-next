@@ -8,8 +8,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import { useDispatch } from "react-redux";
-import { getAdminUsers } from "@app/redux/features/admin-users/admin-users-slice";
 import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
@@ -34,70 +32,65 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const AdminUsers = () => {
-  const [adminUsersAPI, setAdminUsersAPI] = useState([]);
-  const dispatch = useDispatch();
+const Students = () => {
+  const [students, setStudents] = useState([]);
   const router = useRouter();
 
-  const fetchAdminData = async () => {
-    const response = await axios.get("/api/users/displayAdminUsers");
+  const fetchStudentData = async () => {
+    const response = await axios.get("/api/students/fetchStudents");
     if (response) {
-      setAdminUsersAPI(response.data);
+      setStudents(response.data);
     } else {
+        console.log("failed to fetch students")
     }
   };
   
-  const handleEdit = (adminUser) => {
-    router.push(`/update-admin?userid=${adminUser._id}`);
+  const handleEdit = (student) => {
+    router.push(`/update-student?studentid=${student._id}`);
   };
 
-  const deleteUser = async (userId) => {
-    const hasConfirmed = confirm("Are you sure you want to delete this user?");
+  const deleteStudent = async (studentId) => {
+    const hasConfirmed = confirm("Are you sure you want to delete this student?");
   
     if (hasConfirmed) {
       try {
-        const response = await fetch(`/api/users/${userId}`, {
+        const response = await fetch(`/api/users/${studentId}`, {
           method: "DELETE",
         });
   
         if (response.ok) {
-          const filteredUsers = adminUsersAPI.filter(
-            (users) => users._id !== userId
+          const filteredStudents = students.filter(
+            (student) => student._id !== studentId
           );
-          setAdminUsersAPI(filteredUsers);
+          setStudents(filteredStudents);
         }
       } catch (error) {
-        console.error("Error deleting the user", error);
+        console.error("Error deleting the student", error);
       }
     }
   };
 
-  const handleLoad = (userId) => {
-    router.push(`teaching-load?userid=${userId._id}`)
+  const handleLoad = (studentId) => {
+    router.push(`teaching-load?studentid=${studentId._id}`)
   }
-  
 
   useEffect(() => {
-    fetchAdminData();
+    fetchStudentData();
   }, []);
-
-  useEffect(() => {
-    dispatch(getAdminUsers(adminUsersAPI));
-  }, [adminUsersAPI]);
 
   return (
     <div className="py-4 pt-7">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
-          Admin Users
+          Students
         </h1>
         <button
           className="pb-7 black_btn"
           onClick={() => {
-            router.push("/create-admin");
+            router.push("/create-student");
           }}
         >
-          Add User
+          Add Student
         </button>
       </div>
 
@@ -108,26 +101,26 @@ const AdminUsers = () => {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell>Username</StyledTableCell>
-              <StyledTableCell align="left">Email</StyledTableCell>
+              <StyledTableCell>Student Number</StyledTableCell>
+              <StyledTableCell align="left">Name</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {adminUsersAPI.map((adminUser) => (
-              <StyledTableRow key={adminUser._id}>
+            {students.map((student) => (
+              <StyledTableRow key={student._id}>
                 <StyledTableCell component="th" scope="row">
-                  {adminUser.username}
+                  {student.studentNumber}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {adminUser.email}
+                  {student.name}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <button
                     variant="outlined"
                     color="primary"
                     style={{ marginRight: "30px" }}
-                    onClick={() => handleEdit(adminUser)}
+                    onClick={() => handleEdit(student)}
                   >
                     Edit
                   </button>
@@ -135,14 +128,14 @@ const AdminUsers = () => {
                     variant="outlined"
                     color="primary"
                     style={{ marginRight: "30px" }}   
-                    onClick={() => deleteUser(adminUser._id)}
+                    onClick={() => deleteStudent(student._id)}
                   >
                     Delete
                   </button>
                   <button
                     variant="outlined"
                     color="primary"
-                    onClick={() => handleLoad(adminUser)}
+                    onClick={() => handleLoad(student)}
                   >
                     Load
                   </button>
@@ -156,4 +149,4 @@ const AdminUsers = () => {
   );
 };
 
-export default AdminUsers;
+export default Students;

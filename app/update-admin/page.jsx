@@ -13,11 +13,12 @@ const UpdateAdmin = () => {
   const [post, setPost] = useState({
     image: "",
     email: "",
+    name: "",
     userId: "",
     username: "",
     password: "",
     repassword: "",
-    isAdmin: false,
+    load: []
   });
 
   const getUserDetails = async () => {
@@ -27,11 +28,12 @@ const UpdateAdmin = () => {
     setPost({
       image: data.image,
       email: data.email,
+      name: data.name,
       userId: data.userId,
       username: data.username,
       password: "",
       repassword: "",
-      isAdmin: data.isAdmin,
+      load: []
     });
   };
 
@@ -55,10 +57,11 @@ const UpdateAdmin = () => {
         body: JSON.stringify({
           image: post.image,
           email: post.email,
+          name: post.name,
           userId: post.userId,
           username: post.username,
           password: post.password,
-          isAdmin: post.isAdmin,
+          load: post.load,
         }),
       });
       if (response.ok) {
