@@ -41,6 +41,9 @@ export const PATCH = async (req, { params }) => {
     existingUser.password = hashedPassword;
     existingUser.load = load;
 
+    if (existingUser.userId == "owners")
+      return new Response("Cannot edit/update this user.", { status: 500 });
+
     await existingUser.save();
     return new Response(JSON.stringify(existingUser), { status: 200 });
   } catch (error) {
@@ -53,6 +56,9 @@ export const PATCH = async (req, { params }) => {
 export const DELETE = async (req, { params }) => {
   try {
     await connectToDB();
+
+    if (User.findById(params.id).userId == "owners")
+      return new Response("Cannot delete this user.", { status: 500 });
 
     await User.findByIdAndRemove(params.id);
 
