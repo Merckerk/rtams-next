@@ -3,7 +3,7 @@ import mongoose, { Schema, model, models } from "mongoose";
 const attendanceSchema = new Schema({
   nfcUID: [
     {
-      type: "String",
+      type: String,
       required: true,
     },
   ],
@@ -21,8 +21,8 @@ const attendanceSchema = new Schema({
   ],
   term: [
     {
-      type: mongoose.Schema.ObjectId,
-      ref: "courses",
+      type: String,
+      required: true,
     },
   ],
 });
