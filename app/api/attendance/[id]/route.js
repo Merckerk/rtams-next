@@ -1,6 +1,7 @@
 import AttendanceReport from "@models/attendanceModel";
 import { connectToDB } from "@utils/database";
 
+// GET reports
 export const GET = async (req, { params }) => {
   try {
     await connectToDB();
@@ -11,6 +12,7 @@ export const GET = async (req, { params }) => {
   } catch (error) {}
 };
 
+// EDIT/UPDATE reports
 export const PATCH = async (req, { params }) => {
   const { studentNumber, name, section, nfcUID, dateTime, courseCode, term } =
     await req.json();
@@ -38,6 +40,7 @@ export const PATCH = async (req, { params }) => {
   }
 };
 
+// DELETE reports
 export const DELETE = async (req, { params }) => {
   try {
     await connectToDB();
