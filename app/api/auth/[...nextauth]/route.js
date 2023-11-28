@@ -35,7 +35,10 @@ const authOptions = {
             console.log("valid password");
           }
 
-          return user;
+          const userWithoutImage = { ...user.toObject() };
+          delete userWithoutImage.image;
+
+          return userWithoutImage;
           
         } catch (error) {
           console.error('Error during authorization:', error);
