@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
 
-
 const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -31,6 +30,11 @@ const Home = () => {
       description: "View, add and edit Courses.",
       routeName: "courses",
     },
+    {
+      featureName: "Attendances",
+      description: "View, add, and edit Attendances.",
+      routeName: "attendances",
+    },
   ];
 
   return (
@@ -47,8 +51,6 @@ const Home = () => {
       </p>
 
       <hr />
-
-      
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {featureCardProps.map((feature, index) => (
