@@ -71,7 +71,7 @@ const Students = () => {
   };
 
   const handleLoad = (studentId) => {
-    router.push(`teaching-load?studentid=${studentId._id}`)
+    router.push(`student-load?studentid=${studentId._id}`)
   }
 
   useEffect(() => {
