@@ -1,4 +1,4 @@
-import AttendanceReport from "@models/attendanceModel";
+import Attendances from "@models/attendanceModel";
 import { connectToDB } from "@utils/database";
 
 // GET reports
@@ -6,7 +6,7 @@ export const GET = async (req, { params }) => {
   try {
     await connectToDB();
 
-    const report = await AttendanceReport.findById(params.id);
+    const report = await Attendances.findById(params.id);
     if (!report)
       return new Response("No attendance report found", { status: 404 });
   } catch (error) {}
@@ -19,7 +19,7 @@ export const PATCH = async (req, { params }) => {
   try {
     await connectToDB();
 
-    const existingReport = await AttendanceReport.findById(params.id);
+    const existingReport = await Attendances.findById(params.id);
 
     if (!existingReport)
       return new Response("Attendance Report not found.", { status: 404 });
@@ -45,7 +45,7 @@ export const DELETE = async (req, { params }) => {
   try {
     await connectToDB();
 
-    await AttendanceReport.findByIdAndRemove(params.id);
+    await Attendances.findByIdAndRemove(params.id);
 
     return new Response("Attendance Report deleted successfully.", {
       status: 200,

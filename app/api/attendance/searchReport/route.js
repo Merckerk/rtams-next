@@ -1,11 +1,11 @@
-import AttendanceReport from "@models/attendanceModel";
+import Attendances from "@models/attendanceModel";
 import { connectToDB } from "@utils/database";
 
 export const GET = async (req, { params }) => {
   try {
     await connectToDB();
 
-    const report = await AttendanceReport.findById({
+    const report = await Attendances.findById({
       name: params.id,
       dateTime: params.id,
     }).populate("name", "dateTime");

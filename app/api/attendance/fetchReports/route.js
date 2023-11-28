@@ -1,11 +1,11 @@
-import AttendanceReport from "@models/attendanceModel";
+import Attendances from "@models/attendanceModel";
 import { connectToDB } from "@utils/database";
 
 export const GET = async (req, res) => {
   try {
     await connectToDB();
 
-    const attendanceReports = AttendanceReport.find();
+    const attendanceReports = Attendances.find();
 
     return new Response(JSON.stringify(attendanceReports));
   } catch (error) {

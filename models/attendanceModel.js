@@ -1,28 +1,10 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
 const attendanceSchema = new Schema({
-  studentNumber: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "students",
-    },
-  ],
-  name: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "students",
-    },
-  ],
-  section: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "students",
-    },
-  ],
   nfcUID: [
     {
-      type: mongoose.Schema.ObjectId,
-      ref: "students",
+      type: "String",
+      required: true,
     },
   ],
   dateTime: [
@@ -45,7 +27,7 @@ const attendanceSchema = new Schema({
   ],
 });
 
-const AttendanceReport =
+const Attendances =
   models.attendances || model("attendances", attendanceSchema);
 
-export default AttendanceReport;
+export default Attendances;

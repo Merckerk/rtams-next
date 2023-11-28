@@ -1,5 +1,5 @@
 import { connectToDB } from "@utils/database";
-import AttendanceReport from "@models/attendanceModel";
+import Attendances from "@models/attendanceModel";
 
 export const POST = async (req, res) => {
   try {
@@ -10,7 +10,7 @@ export const POST = async (req, res) => {
     const { studentNumber, name, section, nfcUID, dateTime, courseCode, term } =
       reqBody;
 
-    const newAttendanceReport = new AttendanceReport({
+    const newReport = new Attendances({
       studentNumber,
       name,
       section,
@@ -20,7 +20,7 @@ export const POST = async (req, res) => {
       term,
     });
 
-    const savedAttendanceReport = await newAttendanceReport.save();
+    const savedReport = await newReport.save();
 
     return new Response(JSON.stringify(newAttendanceReport), { status: 201 });
   } catch (error) {
