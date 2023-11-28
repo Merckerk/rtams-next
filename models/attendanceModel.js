@@ -46,6 +46,6 @@ const attendanceSchema = new Schema({
 });
 
 const AttendanceReport =
-  models.attendance || model("attendance", attendanceSchema);
+  models.attendances || model("attendances", attendanceSchema);
 
 export default AttendanceReport;
