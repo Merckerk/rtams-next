@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
+import { signIn } from "next-auth/react";
 
 const Login = () => {
   const router = useRouter();
@@ -16,29 +17,28 @@ const Login = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const onLoginUser = async () => {
+  const onLoginUser = async (username, password) => {
+
     try {
-      const { username, password } = formik.values;
-      const postValues = { username, password };
+      const res = await signIn("credentials", {
+        username,
+        password,
+        redirect: false,
+      });
 
-      setIsLoading(true);
-      const response = await axios.post("api/users/login", postValues);
-      if (response.data.success) {
-        const { image } = response.data.user;
-        dispatch(setLoggedInImage(image));
+      if (res.error) {
+        setError("Invalid Credentials");
+        return;
       }
-      router.push("/");
+      router.replace("/");
     } catch (error) {
-      console.log("Login failed.", error);
-      toast.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+      console.log(error)}
   };
 
   useEffect(() => {
-    console.log("userImage",userImage);
+    console.log("userImage", userImage);
   }, [userImage]);
 
   const formik = useFormik({
@@ -51,7 +51,7 @@ const Login = () => {
       password: Yup.string().required("Password is required."),
     }),
     onSubmit: () => {
-      onLoginUser();
+      onLoginUser(formik.values.username, formik.values.password);
     },
   });
 

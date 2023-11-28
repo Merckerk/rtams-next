@@ -8,8 +8,11 @@ import { useRouter } from "next/navigation";
 import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 const NavBar = () => {
+  const { data: session } = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -44,31 +47,22 @@ const NavBar = () => {
       <div className="sm:flex hidden">
         {isLoggedIn ? (
           <div className="flex gap-3 md:gap-5">
-            <button type="button" onClick={logout} className="outline_btn">
+            <button
+              type="button"
+              onClick={() => {
+                signOut();
+              }}
+              className="outline_btn"
+            >
               Sign Out
             </button>
 
             <Link href={"/profile"}>
-              {!image ? (
-                <Image
-                  src="/assets/images/defaultProfilePicture.jpg"
-                  width={37}
-                  height={37}
-                  className="rounded-full"
-                  alt="profile icon"
-                  style={{ maxWidth: "37px", maxHeight: "37px" }}
-                ></Image>
-              ) : (
-                <Image
-                  src={image}
-                  width={37}
-                  height={37}
-                  className="rounded-full"
-                  alt="profile icon"
-                  style={{ maxWidth: "37px", maxHeight: "37px" }}
-                ></Image>
-              )}
+            <span className="font-satoshi font-semibold text-base text-gray-700">
+              {session?.user?.name || session?.user?.username || "nothing"}
+            </span>
             </Link>
+
           </div>
         ) : (
           <></>
