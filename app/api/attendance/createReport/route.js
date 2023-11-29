@@ -7,12 +7,17 @@ export const POST = async (req, res) => {
 
     const reqBody = await req.json();
 
-    const { nfcUID, date, courseCode } = reqBody;
+    const { nfcUID, courseCode } = reqBody;
+
+    const currentDate = new Date();
+    
+    const currentTime = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
 
     const newReport = new Attendances({
       nfcUID,
       courseCode,
-      date,
+      date: currentDate,
+      time: currentTime,
     });
 
     const savedReport = await newReport.save();

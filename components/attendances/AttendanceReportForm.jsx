@@ -1,6 +1,7 @@
 "use client";
 
 import ReusableInput from "@components/reusableInput/ReusableInput";
+import axios from "axios";
 
 import { useEffect, useState } from "react";
 
@@ -17,6 +18,23 @@ const AttendanceReportForm = ({
     nfcUID: "",
     date: "",
   });
+  const [coursesAPI, setCoursesAPI] = useState([]);
+
+  const fetchCoursesData = async () => {
+    const response = await axios.get("/api/courses/fetchCourses");
+    if (response) {
+      setCoursesAPI(response.data);
+    } else {
+    }
+  };
+
+  useEffect(() => {
+    fetchCoursesData();
+  }, []);
+
+  useEffect(() => {
+    console.log("courses:", coursesAPI);
+  }, [coursesAPI]);
 
   const validateCourseCode = (value) => {
     const isValid = !!value;
@@ -32,15 +50,6 @@ const AttendanceReportForm = ({
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
       nfcUID: isValid ? "" : "The NFC UID is required",
-    }));
-    return isValid;
-  };
-
-  const validateDate = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      date: isValid ? "" : "Date is required",
     }));
     return isValid;
   };
@@ -68,37 +77,35 @@ const AttendanceReportForm = ({
           required
         />
 
-        <ReusableInput
-          label="Course Code"
-          type="text"
-          id="coursecode"
-          name="coursecode"
-          placeholder="Enter Course Code"
-          className="form_input"
-          onChange={(e) => {
-            setPost({ ...post, courseCode: e.target.value });
-            validateCourseCode(e.target.value);
-          }}
-          value={post?.courseCode}
-          errorMessage={errMsg.courseCode}
-          required
-        />
+        <div className="form_group">
+          <label htmlFor="coursecode" className="form_label font-satoshi font-semibold text-base text-gray-700">
+            Course Code
+          </label>
+          <select
+            id="coursecode"
+            name="coursecode"
+            className="form_input"
+            onChange={(e) => {
+              setPost({ ...post, courseCode: e.target.value });
+              validateCourseCode(e.target.value);
+            }}
+            value={post?.courseCode}
+            required
+          >
+            {/* Default option */}
+            <option value="" disabled>
+              Select Course Code
+            </option>
 
-        <ReusableInput
-          label="Date"
-          type="date"
-          id="dateTime"
-          name="coursecode"
-          placeholder="Enter Date"
-          className="form_input"
-          onChange={(e) => {
-            setPost({ ...post, date: e.target.value });
-            validateDate(e.target.value);
-          }}
-          value={post?.date}
-          errorMessage={errMsg.date}
-          required
-        />
+            {/* Map over coursesAPI to create options */}
+            {coursesAPI.map((course) => (
+              <option key={course._id} value={course._id}>
+                {course.courseCode} - {course.courseName}
+              </option>
+            ))}
+          </select>
+          <span className="error_message">{errMsg.courseCode}</span>
+        </div>
 
         <button className="black_btn" disabled={loading} onClick={handleSubmit}>
           {loading ? "Processing" : `${type} Attendance Report`}
