@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import AttendanceReportForm from "@components/attendances/AttendanceReportForm";
 import toast from "react-hot-toast";
+import StudentsTable from "@components/attendances/StudentsTable";
 
 const createAttendance = () => {
   const router = useRouter();
@@ -14,6 +15,32 @@ const createAttendance = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [areFieldsValid, setAreFieldsValid] = useState(false);
+  const [studentsAPI, setStudentsAPI] = useState([]);
+
+  const getAllStudents = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("/api/students/fetchStudents");
+      if (response) {
+        console.log("response:", response);
+        setStudentsAPI(response.data);
+      } else {
+        alert("please refresh. error");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllStudents();
+  }, []);
+
+  useEffect(() => {
+    console.log("students:", studentsAPI);
+  }, [studentsAPI]);
 
   const onCreateReport = async () => {
     try {
@@ -33,7 +60,7 @@ const createAttendance = () => {
     }
   };
   useEffect(() => {
-    console.log("post values:",post);
+    console.log("post values:", post);
     if (!post.nfcUID || !post.courseCode) {
       setAreFieldsValid(true);
     } else {
@@ -42,13 +69,17 @@ const createAttendance = () => {
   }, [post]);
 
   return (
-    <AttendanceReportForm
-      type="Create"
-      post={post}
-      setPost={setPost}
-      loading={isLoading}
-      handleSubmit={onCreateReport}
-    />
+    <>
+      <AttendanceReportForm
+        type="Create"
+        post={post}
+        setPost={setPost}
+        loading={isLoading}
+        handleSubmit={onCreateReport}
+      />
+
+      <StudentsTable students={studentsAPI} handleCreateAttendance={() => {}} />
+    </>
   );
 };
 
