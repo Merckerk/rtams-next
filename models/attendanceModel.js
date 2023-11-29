@@ -1,9 +1,13 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
 const attendanceSchema = new Schema({
-  nfcUID: {
-    type: String,
-    // required: true,
+  student: {
+    type: mongoose.Schema.ObjectId,
+    ref: "students",
+  },
+  courseCode: {
+    type: mongoose.Schema.ObjectId,
+    ref: "courses",
   },
   date: {
     type: Date,
@@ -13,9 +17,11 @@ const attendanceSchema = new Schema({
     type: String,
     required: true,
   },
-  courseCode: {
-    type: mongoose.Schema.ObjectId,
-    ref: "courses",
+  term: {
+    type: String,
+  },
+  section: {
+    type: String,
   },
 });
 
