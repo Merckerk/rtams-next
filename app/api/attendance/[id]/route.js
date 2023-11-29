@@ -14,8 +14,7 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE reports
 export const PATCH = async (req, { params }) => {
-  const { studentNumber, name, section, nfcUID, dateTime, courseCode, term } =
-    await req.json();
+  const { nfcUID, date, courseCode } = await req.json();
   try {
     await connectToDB();
 
@@ -24,13 +23,9 @@ export const PATCH = async (req, { params }) => {
     if (!existingReport)
       return new Response("Attendance Report not found.", { status: 404 });
 
-    existingReport.studentNumber = studentNumber;
-    existingReport.name = name;
-    existingReport.section = section;
     existingReport.nfcUID = nfcUID;
-    existingReport.dateTime = dateTime;
+    existingReport.date = date;
     existingReport.courseCode = courseCode;
-    existingReport.term = term;
 
     await existingReport.save();
 

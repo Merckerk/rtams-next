@@ -6,9 +6,8 @@ export const GET = async (req, { params }) => {
     await connectToDB();
 
     const report = await Attendances.findById({
-      name: params.id,
-      dateTime: params.id,
-    }).populate("name", "dateTime");
+      date: params.id,
+    }).populate("date");
 
     if (!report)
       return new Response("Attendance Report not found.", { status: 404 });

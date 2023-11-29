@@ -7,7 +7,7 @@ const attendanceSchema = new Schema({
       required: true,
     },
   ],
-  dateTime: [
+  date: [
     {
       type: Date,
       required: true,
@@ -17,12 +17,6 @@ const attendanceSchema = new Schema({
     {
       type: mongoose.Schema.ObjectId,
       ref: "courses",
-    },
-  ],
-  term: [
-    {
-      type: String,
-      required: true,
     },
   ],
 });
