@@ -2,35 +2,31 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import AttendanceReportForm from "@components/attendances/AttendanceReportForm"; // Update the import path
+import AttendanceReportForm from "@components/attendances/AttendanceReportForm";
 import toast from "react-hot-toast";
 
-const CreateAttendanceReport = () => {
-  const router = useRouter();
-  const [attendanceData, setAttendanceData] = useState({
+const createAttendance = () => {
+  const router = useRouter;
+  const [post, setPost] = useState({
     nfcUID: "",
-    dateTime: "",
     courseCode: "",
-    term: "",
+    date: "",
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [areFieldsValid, setAreFieldsValid] = useState(false);
 
-  const onCreateAttendanceReport = async () => {
+  const onCreateReport = async () => {
     try {
       setIsLoading(true);
-      const { nfcUID, dateTime, courseCode, term } = post;
-      const postValues = { nfcUID, dateTime, courseCode, term };
-      const [isLoading, setIsLoading] = useState(false);
-
-      // Make the API call to create an attendance report
+      const { nfcUID, courseCode, date } = post;
+      const postValues = { nfcUID, courseCode, date };
       const response = await axios.post(
         "api/attendance/createReport",
-        attendanceData
+        postValues
       );
-
-      toast.success("Successfully created an attendance report!");
-      router.push("/attendance-reports");
+      toast.success("Successfully created an attendance entry!");
+      router.push("/attendances");
     } catch (error) {
       toast.error(error);
     } finally {
@@ -39,28 +35,22 @@ const CreateAttendanceReport = () => {
   };
 
   useEffect(() => {
-    if (
-      !attendanceData.nfcUID ||
-      !attendanceData.dateTime ||
-      !attendanceData.status ||
-      !attendanceData.courseCode ||
-      !attendanceData.term
-    ) {
+    if (!post.nfcUID || !post.courseCode) {
       setAreFieldsValid(true);
     } else {
-      setAreFieldsValid(false);
+      setAreFieldsValid(true);
     }
-  }, [attendanceData]);
+  }, [post]);
 
   return (
     <AttendanceReportForm
       type="Create"
-      attendanceData={attendanceData}
-      setAttendanceData={setAttendanceData}
+      post={post}
+      setPost={setPost}
       loading={isLoading}
-      handleSubmit={onCreateAttendanceReport}
+      handleSubmit={onCreateReport}
     />
   );
 };
 
-export default CreateAttendanceReport;
+export default createAttendance;

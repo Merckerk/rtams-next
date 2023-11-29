@@ -1,24 +1,18 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
 const attendanceSchema = new Schema({
-  nfcUID: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  date: [
-    {
-      type: Date,
-      required: true,
-    },
-  ],
-  courseCode: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "courses",
-    },
-  ],
+  nfcUID: {
+    type: String,
+    // required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  courseCode: {
+    type: mongoose.Schema.ObjectId,
+    ref: "courses",
+  },
 });
 
 const Attendances =

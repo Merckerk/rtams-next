@@ -33,18 +33,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const AttendanceReports = () => {
-  const [attendanceReports, setAttendanceReports] = useState([]);
+  const [post, setPost] = useState([]);
   const router = useRouter();
 
   const handleEdit = (report) => {
     router.push(`/update-attendance-report?reportid=${report._id}`);
   };
 
-  const fetchAttendanceReports = async () => {
+  const fetchReports = async () => {
     try {
       const response = await axios.get("/api/attendance/fetchReports");
       if (response) {
-        setAttendanceReports(response.data);
+        setPost(response.data);
       } else {
         // Handle error if needed
       }
@@ -53,7 +53,7 @@ const AttendanceReports = () => {
     }
   };
 
-  const deleteAttendanceReport = async (reportId) => {
+  const deleteReport = async (reportId) => {
     const hasConfirmed = confirm(
       "Are you sure you want to delete this attendance report?"
     );
@@ -65,10 +65,10 @@ const AttendanceReports = () => {
         });
 
         if (response.ok) {
-          const filteredReports = attendanceReports.filter(
+          const filteredReports = post.filter(
             (report) => report._id !== reportId
           );
-          setAttendanceReports(filteredReports);
+          setPost(filteredReports);
         }
       } catch (error) {
         console.error("Error deleting the attendance report", error);
@@ -77,7 +77,7 @@ const AttendanceReports = () => {
   };
 
   useEffect(() => {
-    fetchAttendanceReports();
+    fetchReports();
   }, []);
 
   return (
@@ -103,20 +103,18 @@ const AttendanceReports = () => {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell>Student Name</StyledTableCell>
+              <StyledTableCell>NFC UID</StyledTableCell>
               <StyledTableCell align="left">Date</StyledTableCell>
-              <StyledTableCell align="left">Status</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {attendanceReports.map((report) => (
+            {post.map((report) => (
               <StyledTableRow key={report._id}>
                 <StyledTableCell component="th" scope="row">
                   {report.studentName}
                 </StyledTableCell>
                 <StyledTableCell align="left">{report.date}</StyledTableCell>
-                <StyledTableCell align="left">{report.status}</StyledTableCell>
                 <StyledTableCell align="center">
                   <button
                     variant="outlined"
@@ -129,7 +127,7 @@ const AttendanceReports = () => {
                   <button
                     variant="outlined"
                     color="primary"
-                    onClick={() => deleteAttendanceReport(report._id)}
+                    onClick={() => deleteReport(report._id)}
                   >
                     Delete
                   </button>

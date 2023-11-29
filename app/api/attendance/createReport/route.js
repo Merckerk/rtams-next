@@ -17,7 +17,7 @@ export const POST = async (req, res) => {
 
     const savedReport = await newReport.save();
 
-    return new Response(JSON.stringify(newAttendanceReport), { status: 201 });
+    return new Response(JSON.stringify(newReport), { status: 201 });
   } catch (error) {
     return new Response("Failed to generate an attendance report.", {
       status: 500,

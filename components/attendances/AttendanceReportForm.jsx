@@ -13,11 +13,9 @@ const AttendanceReportForm = ({
   handleDelete = () => {},
 }) => {
   const [errMsg, setErrMsg] = useState({
-    studentNumber: "",
     courseCode: "",
-    name: "",
-    section: "",
     nfcUID: "",
+    date: "",
   });
 
   const validateCourseCode = (value) => {
@@ -25,15 +23,6 @@ const AttendanceReportForm = ({
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
       courseCode: isValid ? "" : "Course Code is required",
-    }));
-    return isValid;
-  };
-
-  const validateStudentNumber = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      studentNumber: isValid ? "" : "Student Number is required",
     }));
     return isValid;
   };
@@ -47,29 +36,11 @@ const AttendanceReportForm = ({
     return isValid;
   };
 
-  const validateName = (value) => {
+  const validateDate = (value) => {
     const isValid = !!value;
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
-      name: isValid ? "" : "Name is required",
-    }));
-    return isValid;
-  };
-
-  const validateSection = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      section: isValid ? "" : "Section is required",
-    }));
-    return isValid;
-  };
-
-  const validateDateTime = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      dateTime: isValid ? "" : "Date is required",
+      date: isValid ? "" : "Date is required",
     }));
     return isValid;
   };
@@ -80,22 +51,6 @@ const AttendanceReportForm = ({
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
           {type} Attendance Report
         </h1>
-
-        <ReusableInput
-          label="Student Number"
-          type="text"
-          id="studentNumber"
-          name="studentNumber"
-          placeholder="Enter Student Number"
-          className="form_input"
-          onChange={(e) => {
-            setPost({ ...post, studentNumber: e.target.value });
-            validateStudentNumber(e.target.value);
-          }}
-          value={post?.studentNumber}
-          errorMessage={errMsg.studentNumber}
-          required
-        />
 
         <ReusableInput
           label="NFC UID"
@@ -110,22 +65,6 @@ const AttendanceReportForm = ({
           }}
           value={post?.nfcUID}
           errorMessage={errMsg.nfcUID}
-          required
-        />
-
-        <ReusableInput
-          label="Name"
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Enter Your Name"
-          className="form_input"
-          onChange={(e) => {
-            setPost({ ...post, name: e.target.value });
-            validateName(e.target.value);
-          }}
-          value={post?.name}
-          errorMessage={errMsg.name}
           required
         />
 
@@ -153,48 +92,16 @@ const AttendanceReportForm = ({
           placeholder="Enter Date"
           className="form_input"
           onChange={(e) => {
-            setPost({ ...post, courseCode: e.target.value });
-            validateCourseCode(e.target.value);
+            setPost({ ...post, date: e.target.value });
+            validateDate(e.target.value);
           }}
-          value={post?.courseCode}
-          errorMessage={errMsg.courseCode}
-          required
-        />
-
-        <ReusableInput
-          label="Section"
-          type="text"
-          id="section"
-          name="section"
-          placeholder="Enter Section"
-          className="form_input"
-          onChange={(e) => {
-            setPost({ ...post, section: e.target.value });
-            validateSection(e.target.value);
-          }}
-          value={post?.section}
-          errorMessage={errMsg.section}
-          required
-        />
-
-        <ReusableInput
-          label="Term"
-          type="text"
-          id="term"
-          name="term"
-          placeholder="Enter School Year/Term"
-          className="form_input"
-          onChange={(e) => {
-            setPost({ ...post, term: e.target.value });
-            validateCourseName(e.target.value);
-          }}
-          value={post?.term}
-          errorMessage={errMsg.term}
+          value={post?.date}
+          errorMessage={errMsg.date}
           required
         />
 
         <button className="black_btn" disabled={loading} onClick={handleSubmit}>
-          {loading ? "Processing" : `${type} Course`}
+          {loading ? "Processing" : `${type} Attendance Report`}
         </button>
         {type == "Edit" ? (
           <button className="red_btn" disabled={loading} onClick={handleDelete}>
