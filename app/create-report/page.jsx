@@ -19,6 +19,7 @@ const createAttendance = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [areFieldsValid, setAreFieldsValid] = useState(false);
   const [studentsAPI, setStudentsAPI] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
 
   const getAllStudents = async () => {
     try {
@@ -27,6 +28,7 @@ const createAttendance = () => {
       if (response) {
         console.log("response:", response);
         setStudentsAPI(response.data);
+        setFilteredStudents(response.data);
       } else {
         alert("please refresh. error");
       }
@@ -54,10 +56,10 @@ const createAttendance = () => {
         "api/attendance/createReport",
         postValues
       );
-      if (response){
+      if (response) {
         toast.success("Successfully created an attendance entry!");
         router.push("/attendances");
-      } else{
+      } else {
         alert("Attendance sending failed");
       }
     } catch (error) {
@@ -72,16 +74,16 @@ const createAttendance = () => {
       setIsLoading(true);
       const { nfcUids, courseCode, term, section } = post;
       const postValues = { nfcUids, courseCode, term, section };
-      
+
       const response = await axios.post(
         "api/attendance/createMultipleReports",
         postValues
       );
 
-      if (response){
+      if (response) {
         toast.success("Successfully created multiple attendance entries!");
         router.push("/attendances");
-      } else{
+      } else {
         alert("Attendance sending failed");
       }
     } catch (error) {
@@ -102,6 +104,10 @@ const createAttendance = () => {
 
   return (
     <>
+      {/* 
+    //TODO: SUSPENSE THIS PLS 
+    //TODO: CLEAR FIELDS OPTION
+    */}
       <AttendanceReportForm
         type="Create"
         post={post}
@@ -110,7 +116,11 @@ const createAttendance = () => {
         handleSubmit={onCreateReport}
       />
 
-      <StudentsTable students={studentsAPI} handleCreateAttendance={() => {}} editedStudents={[]} />
+      <StudentsTable
+        students={filteredStudents}
+        setStudents={setFilteredStudents}
+        post={post}
+      />
     </>
   );
 };

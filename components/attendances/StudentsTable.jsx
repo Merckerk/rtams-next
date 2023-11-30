@@ -18,18 +18,25 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const StudentsTable = ({ students, handleCreateAttendance, editedStudents }) => {
+const StudentsTable = ({ students, setStudents, post }) => {
 
-  const isStudentInAttended = (student) => editedStudents.includes(student);
-  const handleCheckboxChange = (student) => {
-    const isCourseInLoad = editedStudents.includes(student);
+  useEffect(() => {
+    const filtered = students.filter((student) => {
+      const courseCodeMatch = post.courseCode
+        ? student.load.includes(post.courseCode)
+        : true;
+      const sectionMatch = post.section
+        ? student.section === post.section
+        : true;
+      return courseCodeMatch && sectionMatch;
+    });
 
-    if (isCourseInLoad) {
-      setEditedLoad((prevLoad) => prevLoad.filter((id) => id !== courseId));
-    } else {
-      setEditedLoad((prevLoad) => [...prevLoad, courseId]);
-    }
-  };
+    setStudents(filtered);
+  }, [post]);
+
+  useEffect(() => {
+    console.log("students:", students);
+  }, [students]);
 
   return (
     <div className="py-4 pt-7">
@@ -37,10 +44,7 @@ const StudentsTable = ({ students, handleCreateAttendance, editedStudents }) => 
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
           Students
         </h1>
-        <button
-          className="pb-7 black_btn"
-          onClick={handleCreateAttendance}
-        >
+        <button className="pb-7 black_btn" onClick={() => {}}>
           Update Attendance
         </button>
       </div>
@@ -69,11 +73,11 @@ const StudentsTable = ({ students, handleCreateAttendance, editedStudents }) => 
                 </StyledTableCell>
                 <StyledTableCell align="left">TO BE FILLED</StyledTableCell>
                 <StyledTableCell align="center">
-                <FormControlLabel
+                  <FormControlLabel
                     control={
                       <Checkbox
-                        checked={isStudentInAttended(student._id)}
-                        onChange={() => handleCheckboxChange(student._id)}
+                        checked={false}
+                        onChange={() => {}}
                       />
                     }
                   />
