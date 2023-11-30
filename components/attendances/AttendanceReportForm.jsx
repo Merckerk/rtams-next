@@ -2,6 +2,8 @@
 
 import ReusableInput from "@components/reusableInput/ReusableInput";
 import axios from "axios";
+import Section from "@enums/section";
+import Term from "@enums/term";
 
 import { useEffect, useState } from "react";
 
@@ -78,7 +80,10 @@ const AttendanceReportForm = ({
         />
 
         <div className="form_group">
-          <label htmlFor="coursecode" className="form_label font-satoshi font-semibold text-base text-gray-700">
+          <label
+            htmlFor="coursecode"
+            className="form_label font-satoshi font-semibold text-base text-gray-700"
+          >
             Course Code
           </label>
           <select
@@ -101,6 +106,72 @@ const AttendanceReportForm = ({
             {coursesAPI.map((course) => (
               <option key={course._id} value={course._id}>
                 {course.courseCode} - {course.courseName}
+              </option>
+            ))}
+          </select>
+          <span className="error_message">{errMsg.courseCode}</span>
+        </div>
+
+        <div className="form_group">
+          <label
+            htmlFor="section"
+            className="form_label font-satoshi font-semibold text-base text-gray-700"
+          >
+            Section
+          </label>
+          <select
+            id="section"
+            name="section"
+            className="form_input"
+            onChange={(e) => {
+              setPost({ ...post, section: e.target.value });
+              validateCourseCode(e.target.value);
+            }}
+            value={post?.section}
+            required
+          >
+            {/* Default option */}
+            <option value="" disabled>
+              Select Section
+            </option>
+
+            {/* Map over coursesAPI to create options */}
+            {Object.entries(Section).map(([key, value]) => (
+              <option key={key} value={value}>
+                {key}
+              </option>
+            ))}
+          </select>
+          <span className="error_message">{errMsg.section}</span>
+        </div>
+        
+        <div className="form_group">
+          <label
+            htmlFor="coursecode"
+            className="form_label font-satoshi font-semibold text-base text-gray-700"
+          >
+            Term
+          </label>
+          <select
+            id="term"
+            name="term"
+            className="form_input"
+            onChange={(e) => {
+              setPost({ ...post, term: e.target.value });
+              validateCourseCode(e.target.value);
+            }}
+            value={post?.term}
+            required
+          >
+            {/* Default option */}
+            <option value="" disabled>
+              Select Term
+            </option>
+
+            {/* Map over coursesAPI to create options */}
+            {Object.entries(Term).map(([key, value]) => (
+              <option key={key} value={value}>
+                {key}
               </option>
             ))}
           </select>

@@ -11,6 +11,9 @@ const createAttendance = () => {
   const [post, setPost] = useState({
     nfcUID: "",
     courseCode: "",
+    section: "",
+    term: "",
+    nfcUids: [],
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -45,20 +48,49 @@ const createAttendance = () => {
   const onCreateReport = async () => {
     try {
       setIsLoading(true);
-      const { nfcUID, courseCode } = post;
-      const postValues = { nfcUID, courseCode };
+      const { nfcUID, courseCode, section, term } = post;
+      const postValues = { nfcUID, courseCode, section, term };
       const response = await axios.post(
         "api/attendance/createReport",
         postValues
       );
-      toast.success("Successfully created an attendance entry!");
-      router.push("/attendances");
+      if (response){
+        toast.success("Successfully created an attendance entry!");
+        router.push("/attendances");
+      } else{
+        alert("Attendance sending failed");
+      }
     } catch (error) {
       toast.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const onCreateMultipleReports = async () => {
+    try {
+      setIsLoading(true);
+      const { nfcUids, courseCode, term, section } = post;
+      const postValues = { nfcUids, courseCode, term, section };
+      
+      const response = await axios.post(
+        "api/attendance/createMultipleReports",
+        postValues
+      );
+
+      if (response){
+        toast.success("Successfully created multiple attendance entries!");
+        router.push("/attendances");
+      } else{
+        alert("Attendance sending failed");
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     console.log("post values:", post);
     if (!post.nfcUID || !post.courseCode) {
@@ -78,7 +110,7 @@ const createAttendance = () => {
         handleSubmit={onCreateReport}
       />
 
-      <StudentsTable students={studentsAPI} handleCreateAttendance={() => {}} />
+      <StudentsTable students={studentsAPI} handleCreateAttendance={() => {}} editedStudents={[]} />
     </>
   );
 };

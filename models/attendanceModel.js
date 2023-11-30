@@ -11,17 +11,19 @@ const attendanceSchema = new Schema({
   },
   date: {
     type: Date,
-    required: true,
+    required: [true, "date is required"],
   },
   time: {
     type: String,
-    required: true,
+    required: [true, "time is required"],
   },
   term: {
     type: String,
+    required: [true, "term is required"],
   },
   section: {
     type: String,
+    required: [true, "section is required"],
   },
 });
 
