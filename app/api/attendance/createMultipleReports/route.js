@@ -11,7 +11,12 @@ export const POST = async (req, res) => {
 
     // Fetch the corresponding studentIds based on provided nfcUIDs
     const students = await Student.find({ nfcUID: { $in: nfcUIDs } });
-    const studentIdMap = new Map(students.map((student) => [student.nfcUID, student._id]));
+    const filteredStudents = students.filter((student) =>
+      student.load.includes(courseCode)
+    );
+    const studentIdMap = new Map(
+      filteredStudents.map((student) => [student.nfcUID, student._id])
+    );
 
     const currentDate = new Date();
     const formattedDate = new Date(
@@ -35,7 +40,6 @@ export const POST = async (req, res) => {
     const savedReports = await Promise.all(
       newReports.map(async (report) => {
         try {
-
           const existingAttendance = await Attendances.findOne({
             student: report.student._id,
             courseCode,
@@ -46,10 +50,12 @@ export const POST = async (req, res) => {
             console.log("Attendance is existing already.");
             return {
               status: 409,
-              body: { error: "Attendance report already exists for the same student, course, and date." },
+              body: {
+                error:
+                  "Attendance report already exists for the same student, course, and date.",
+              },
             };
           }
-          
 
           const newReport = new Attendances(report);
           return await newReport.save();

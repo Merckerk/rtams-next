@@ -95,11 +95,17 @@ const createAttendance = () => {
 
   useEffect(() => {
     console.log("post values:", post);
-    if (!post.nfcUID || !post.courseCode) {
-      setAreFieldsValid(true);
-    } else {
-      setAreFieldsValid(true);
-    }
+    const filtered = studentsAPI.filter((student) => {
+      const courseCodeMatch = post.courseCode
+        ? student.load.includes(post.courseCode)
+        : true;
+      const sectionMatch = post.section
+        ? student.section === post.section
+        : true;
+      return courseCodeMatch && sectionMatch;
+    });
+
+    setFilteredStudents(filtered);
   }, [post]);
 
   return (

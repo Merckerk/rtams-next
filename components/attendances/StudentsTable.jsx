@@ -20,23 +20,7 @@ import axios from "axios";
 
 const StudentsTable = ({ students, setStudents, post }) => {
 
-  useEffect(() => {
-    const filtered = students.filter((student) => {
-      const courseCodeMatch = post.courseCode
-        ? student.load.includes(post.courseCode)
-        : true;
-      const sectionMatch = post.section
-        ? student.section === post.section
-        : true;
-      return courseCodeMatch && sectionMatch;
-    });
-
-    setStudents(filtered);
-  }, [post]);
-
-  useEffect(() => {
-    console.log("students:", students);
-  }, [students]);
+  
 
   return (
     <div className="py-4 pt-7">
