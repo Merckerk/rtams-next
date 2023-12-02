@@ -35,6 +35,11 @@ const Home = () => {
       description: "View, add, and edit Attendances.",
       routeName: "attendances",
     },
+    {
+      featureName: "Attendance Metrics",
+      description: "View Attendance Metrics.",
+      routeName: "attendance-metrics",
+    },
   ];
 
   return (
