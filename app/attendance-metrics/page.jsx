@@ -6,6 +6,7 @@ import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 
 import Section from "@enums/section";
+import Course from "@enums/course";
 
 const AttendanceMetrics = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -17,12 +18,20 @@ const AttendanceMetrics = () => {
   //   { value: "section2", label: "Section 2" },
   // ];
 
-  const courses = [
-    { value: "course1", label: "Course 1" },
-    { value: "course2", label: "Course 2" },
-  ];
+  // const courses = [
+  //   { value: "course1", label: "Course 1" },
+  //   { value: "course2", label: "Course 2" },
+  // ];
 
-  const sections = Object.entries(Section).map(([key, value]) => ({ value: key, label: value }));
+  const sections = Object.entries(Section).map(([key, value]) => ({
+    value: key,
+    label: value,
+  }));
+
+  const courses = Object.entries(Course).map(([key, value]) => ({
+    value: key,
+    label: value,
+  }));
 
   useEffect(() => {
     console.log(
@@ -73,7 +82,7 @@ const AttendanceMetrics = () => {
               Select Course:
             </label>
             <Select
-              options={sections}
+              options={courses}
               value={selectedCourse}
               onChange={(option) => setSelectedCourse(option)}
               isSearchable
