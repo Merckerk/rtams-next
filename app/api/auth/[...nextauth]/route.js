@@ -12,7 +12,7 @@ const authOptions = {
       async authorize(credentials) {
         console.log("recieved creds", credentials);
         const { username, password } = credentials;
-        
+
         try {
           await connectToDB();
           const user = await User.findOne({ username });
@@ -31,7 +31,7 @@ const authOptions = {
           if (!validPassword) {
             console.log("Invalid password");
             return null;
-          }else{
+          } else {
             console.log("valid password");
           }
 
@@ -39,14 +39,14 @@ const authOptions = {
           delete userWithoutImage.image;
 
           return userWithoutImage;
-          
         } catch (error) {
-          console.error('Error during authorization:', error);
+          console.error("Error during authorization:", error);
           return null;
         }
       },
     }),
   ],
+
   session: {
     strategy: "jwt",
   },
