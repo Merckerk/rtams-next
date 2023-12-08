@@ -1,27 +1,7 @@
-import { NextResponse } from "next/server";
-
-export function middleware(request) {
-  const path = request.nextUrl.pathname;
-
-  const publicPath = path === "/login";
-
-  const token = request.cookies.get("next-auth.csrf-token")?.value || "";
-
-  if (publicPath && token) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
-  }
-
-  if (!publicPath && !token) {
-    console.log(
-      "This page is protected. Please log in to a valid account to continue."
-    );
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
-  }
-}
+export { default } from "next-auth/middleware";
 
 export const config = {
   matcher: [
-    "/login",
     "/create-admin",
     "/admin-users",
     "/students",
