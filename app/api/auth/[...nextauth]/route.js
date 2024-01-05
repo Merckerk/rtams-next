@@ -32,7 +32,7 @@ const authOptions = {
             console.log("Invalid password");
             return null;
           } else {
-            console.log("valid password");
+            console.log("Valid password");
           }
 
           const userWithoutImage = { ...user.toObject() };
