@@ -12,8 +12,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-
-
 const AttendanceReports = () => {
   const [post, setPost] = useState([]);
   const router = useRouter();
@@ -23,17 +21,17 @@ const AttendanceReports = () => {
   };
 
   const fetchReports = async () => {
-    try {
-      const response = await axios.get("/api/attendance/fetchReports");
-      if (response) {
-        setPost(response.data);
-      } else {
-        // Handle error if needed
-      }
-    } catch (error) {
-      console.error("Error fetching attendance reports", error);
+    const response = await axios.get("/api/attendance/fetchReports");
+    if (response) {
+      setPost(response.data);
+    } else {
+      console.log("Failed to fetch reports.");
     }
   };
+
+  useEffect(() => {
+    console.log(post);
+  }, [post]);
 
   const deleteReport = async (reportId) => {
     const hasConfirmed = confirm(

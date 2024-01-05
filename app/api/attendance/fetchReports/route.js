@@ -5,7 +5,7 @@ export const GET = async (req, res) => {
   try {
     await connectToDB();
 
-    const attendanceReports = Attendances.find();
+    const attendanceReports = await Attendances.find();
 
     return new Response(JSON.stringify(attendanceReports));
   } catch (error) {
