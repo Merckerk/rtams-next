@@ -14,6 +14,7 @@ import Link from "next/link";
 
 const AttendanceReports = () => {
   const [post, setPost] = useState([]);
+  const [students, setStudents] = useState([]);
   const router = useRouter();
 
   const handleEdit = (report) => {
@@ -21,9 +22,16 @@ const AttendanceReports = () => {
   };
 
   const fetchReports = async () => {
-    const response = await axios.get("/api/attendance/fetchReports");
-    if (response) {
-      setPost(response.data);
+    const reportsResponse = await axios.get("/api/attendance/fetchReports");
+    const studentsResponse = await axios.get("api/students/fetchStudents");
+    if (reportsResponse && studentsResponse) {
+      const studentMap = studentsResponse.data.reduce((acc, student) => {
+        acc[student._id] = student.name;
+        return acc;
+      }, {});
+
+      setPost(reportsResponse.data);
+      setStudents(studentMap);
     } else {
       console.log("Failed to fetch reports.");
     }
@@ -84,6 +92,7 @@ const AttendanceReports = () => {
           <TableHead>
             <TableRow>
               <StyledTableCell>NFC UID</StyledTableCell>
+              <StyledTableCell>Student Name</StyledTableCell>
               <StyledTableCell align="left">Date</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
@@ -92,7 +101,10 @@ const AttendanceReports = () => {
             {post.map((report) => (
               <StyledTableRow key={report._id}>
                 <StyledTableCell component="th" scope="row">
-                  {report.studentName}
+                  {report.nfcUID}
+                </StyledTableCell>
+                <StyledTableCell component="th" scope="row">
+                  {students[report.student]}
                 </StyledTableCell>
                 <StyledTableCell align="left">{report.date}</StyledTableCell>
                 <StyledTableCell align="center">
