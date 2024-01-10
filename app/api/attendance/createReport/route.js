@@ -25,6 +25,9 @@ export const POST = async (req, res) => {
     );
     const currentTime = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
 
+    var timeIn;
+    var timeOut
+
     // Check if there is an existing attendance for the same student, course, and date
     const existingAttendance = await Attendances.findOne({
       student: student._id,
@@ -32,14 +35,32 @@ export const POST = async (req, res) => {
       date: formattedDate,
     });
 
+    // existingAttendance = {
+    //   student: student._id,
+    //   studentName: student.name
+    //   courseCode
+    //   date: formattedDate
+    //   ...
+    //   timeIn,
+    //   timeOut,
+    // }
+
     if (existingAttendance) {
-      console.log("attendance is existing already.");
-      return new Response(
-        "Attendance report already exists for the same student, course, and date.",
-        {
-          status: 409, // Conflict
-        }
-      );
+      if(!existingAttendance.isTimeIn && !existingAttendance.timeOut){
+        timeIn = currentTime;
+      }
+      else if(existingAttendance.timeIn && !existingAttendance.timeOut){
+        timeOut = currentTime;
+      }
+      else if(existingAttendance.timeIn && existingAttendance.timeOut){
+        console.log("attendance is existing already.");
+        return new Response(
+          "Attendance report already exists for the same student, course, and date.",
+          {
+            status: 409, // Conflict
+          }
+        );
+      }
     }
 
     // If no existing attendance, create a new attendance report
@@ -50,6 +71,7 @@ export const POST = async (req, res) => {
       time: currentTime,
       term,
       section,
+      // isTimeIn: isTimeIn,
     });
 
     const savedReport = await newReport.save();

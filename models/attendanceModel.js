@@ -25,6 +25,13 @@ const attendanceSchema = new Schema({
     type: String,
     required: [true, "section is required"],
   },
+  timeIn:{
+    type: Date,
+    required: [true, "time in req"]
+  },
+  timeOut:{
+    type: Date
+  }
 });
 
 const Attendances =
