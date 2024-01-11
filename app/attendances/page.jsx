@@ -14,7 +14,6 @@ import Link from "next/link";
 
 const AttendanceReports = () => {
   const [post, setPost] = useState([]);
-  const [students, setStudents] = useState([]);
   const router = useRouter();
 
   const handleEdit = (report) => {
@@ -22,24 +21,17 @@ const AttendanceReports = () => {
   };
 
   const fetchReports = async () => {
-    const reportsResponse = await axios.get("/api/attendance/fetchReports");
-    const studentsResponse = await axios.get("api/students/fetchStudents");
-    if (reportsResponse && studentsResponse) {
-      const studentMap = studentsResponse.data.reduce((acc, student) => {
-        acc[student._id] = student.name;
-        return acc;
-      }, {});
-
-      setPost(reportsResponse.data);
-      setStudents(studentMap);
-    } else {
-      console.log("Failed to fetch reports.");
+    try {
+      const response = await axios.get("/api/attendance/fetchReports");
+      if (response) {
+        setPost(response.data);
+      } else {
+        // Handle error if needed
+      }
+    } catch (error) {
+      console.error("Error fetching attendance reports", error);
     }
   };
-
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
 
   const deleteReport = async (reportId) => {
     const hasConfirmed = confirm(
@@ -104,7 +96,7 @@ const AttendanceReports = () => {
                   {report.nfcUID}
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
-                  {students[report.student]}
+                  {report.studentName}
                 </StyledTableCell>
                 <StyledTableCell align="left">{report.date}</StyledTableCell>
                 <StyledTableCell align="center">
