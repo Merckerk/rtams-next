@@ -32,7 +32,7 @@ const Login = () => {
         setError("Invalid Credentials");
         return;
       }
-      router.replace("/");
+      setTimeout(() => router.replace("/"), 500);
     } catch (error) {
       console.log(error)}
   };
