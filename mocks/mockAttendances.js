@@ -1,4 +1,4 @@
-[
+const attendanceMock = [
   {
     "_id": { "$oid": "65a76900fc13ae79abfa2249" },
     "student": { "$oid": "65a76900fc13ae79abfa224a" },
@@ -8000,3 +8000,5 @@
     "timeIn": "23:31"
   }
 ]
+
+export default attendanceMock;
