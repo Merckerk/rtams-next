@@ -154,6 +154,13 @@ const AttendanceMetrics = () => {
         {/* </div> */}
         {/* </div> */}
 
+        <button
+          className="pb-7 black_btn"
+          onClick={() => {}}
+        >
+          Get Metrics
+        </button>
+
         <TableContainer component={Paper}>
           <Table
             className="min-w-[700px] md:min-w-screen-lg"
