@@ -27,7 +27,7 @@ const StudentAttendance = () => {
 
   const isPresent = (studentName, studentsOnDate) => {
     return studentsOnDate.includes(studentName);
-  };  
+  };
 
   useEffect(() => {
     getAttendancesAndStudents();
@@ -71,7 +71,7 @@ const StudentAttendance = () => {
             <TableRow>
               <StyledTableCell>Student Name</StyledTableCell>
               {Object.keys(attendanceMap).map((date) => (
-                <StyledTableCell key={date} align="center">
+                <StyledTableCell key={date} align="left">
                   {date}
                 </StyledTableCell>
               ))}
@@ -89,9 +89,18 @@ const StudentAttendance = () => {
                   <StyledTableCell align="center" key={date}>
                     {
                       // isPresent(student.name, attendanceMap[date])
-                    attendanceMap[date].includes(student.name)
-                      ? "Present"
-                      : "Absent"}
+                      attendanceMap[date].includes(student.name) ? (
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                          <span>Present</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                        <span>Absent</span>
+                        </div>
+                      )
+                    }
                   </StyledTableCell>
                 ))}
               </StyledTableRow>
