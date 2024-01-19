@@ -39,7 +39,7 @@ const StudentAttendance = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-  
+
       const [attendanceResponse, studentsResponse] = await Promise.all([
         axios.get(`/api/attendance/fetchCourseReports`, {
           params: {
@@ -55,23 +55,25 @@ const StudentAttendance = () => {
           },
         }),
       ]);
-  
-      if (attendanceResponse.status === 200 && studentsResponse.status === 200) {
+
+      if (
+        attendanceResponse.status === 200 &&
+        studentsResponse.status === 200
+      ) {
         console.log("attendance Response:", attendanceResponse);
         console.log("students Response:", studentsResponse);
         setAttendancesAPI(attendanceResponse.data);
         setStudentsAPI(studentsResponse.data);
-      } else{
+      } else {
         console.log("Error fetching both data");
       }
-  
     } catch (error) {
       console.log("Error fetching data", error);
     } finally {
       setLoading(false);
     }
   };
-  
+
   const getAttendancesAndStudents = async () => {
     //TODO: REPLACE WITH API INTEGRATION LATER
     setEnrolledStudents(studentMock);
@@ -112,9 +114,9 @@ const StudentAttendance = () => {
 
   useEffect(() => {
     // Create a hashmap for attendance dates and students attended
-    if (attendances && enrolledStudents) {
+    if (attendancesAPI && studentsAPI) {
       const map = {};
-      attendances.forEach((attendance) => {
+      attendancesAPI.forEach((attendance) => {
         const date = attendance.date.split("T")[0]; // Extracting date part only
         if (!map[date]) {
           map[date] = [];
@@ -124,7 +126,7 @@ const StudentAttendance = () => {
       //TODO: SORT BY DATE
       setAttendanceMap(map);
     }
-  }, [attendances, enrolledStudents]);
+  }, [attendancesAPI, studentsAPI]);
 
   useEffect(() => {
     console.log("attendances:", attendances);
@@ -137,8 +139,8 @@ const StudentAttendance = () => {
   }, [payload]);
 
   useEffect(() => {
-    console.log("studentsAPI:",studentsAPI);
-    console.log("attendancesAPI:",attendancesAPI);
+    console.log("studentsAPI:", studentsAPI);
+    console.log("attendancesAPI:", attendancesAPI);
   }, [studentsAPI, attendancesAPI]);
 
   return (
@@ -262,52 +264,55 @@ const StudentAttendance = () => {
           </button>
         </div>
       </div>
-      <TableContainer component={Paper}>
-        <Table
-          className="min-w-[700px] md:min-w-screen-lg"
-          aria-label="admin users table"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Student Name</StyledTableCell>
-              {Object.keys(attendanceMap).map((date) => (
-                <StyledTableCell key={date} align="left">
-                  {date}
-                </StyledTableCell>
-              ))}
-            </TableRow>
-          </TableHead>
 
-          <TableBody>
-            {enrolledStudents.map((student) => (
-              <StyledTableRow key={student._id}>
-                <StyledTableCell component="th" scope="row">
-                  {student.name}
-                </StyledTableCell>
-                {/* Loop through each date in the attendanceMap */}
+      {attendancesAPI && studentsAPI && (
+        <TableContainer component={Paper}>
+          <Table
+            className="min-w-[700px] md:min-w-screen-lg"
+            aria-label="admin users table"
+          >
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Student Name</StyledTableCell>
                 {Object.keys(attendanceMap).map((date) => (
-                  <StyledTableCell align="center" key={date}>
-                    {
-                      // isPresent(student.name, attendanceMap[date])
-                      attendanceMap[date].includes(student.name) ? (
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                          <span>Present</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                          <span>Absent</span>
-                        </div>
-                      )
-                    }
+                  <StyledTableCell key={date} align="left">
+                    {date}
                   </StyledTableCell>
                 ))}
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {studentsAPI.map((student) => (
+                <StyledTableRow key={student._id}>
+                  <StyledTableCell component="th" scope="row">
+                    {student.name}
+                  </StyledTableCell>
+                  {/* Loop through each date in the attendanceMap */}
+                  {Object.keys(attendanceMap).map((date) => (
+                    <StyledTableCell align="center" key={date}>
+                      {
+                        // isPresent(student.name, attendanceMap[date])
+                        attendanceMap[date].includes(student.name) ? (
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                            <span>Present</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                            <span>Absent</span>
+                          </div>
+                        )
+                      }
+                    </StyledTableCell>
+                  ))}
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </>
   );
 };
