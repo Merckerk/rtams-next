@@ -19,6 +19,7 @@ import Term from "@enums/term";
 
 const StudentAttendance = () => {
   const [attendances, setAttendances] = useState([]);
+  const [attendancesAPI, setAttendancesAPI] = useState([]);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [attendanceMap, setAttendanceMap] = useState({});
   const [coursesAPI, setCoursesAPI] = useState([]);
@@ -32,6 +33,31 @@ const StudentAttendance = () => {
     section: "",
     term: "",
   });
+  const [loading, setLoading] = useState(false);
+
+  const getAttendancesFromAPI = async () => {
+    try {
+      setLoading(true);
+      const attendanceResponse = await axios.get(
+        `/api/attendance/fetchCourseReports`,
+        {
+          params: {
+            courseCode: payload.courseCode,
+            section: payload.section,
+            term: payload.term,
+          }
+        }
+      );
+
+      if (attendanceResponse) {
+        console.log("attendance Response:", attendanceResponse);
+      }
+    } catch (error) {
+      console.log("Error fetching data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //GET all students enrolled in a subject.
   const getAttendancesAndStudents = async () => {
@@ -94,6 +120,10 @@ const StudentAttendance = () => {
     console.log("attendanceMap:", attendanceMap);
   }, [attendances, enrolledStudents, attendanceMap]);
 
+  useEffect(() => {
+    console.log("payload:", payload);
+  }, [payload]);
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-8">
@@ -141,69 +171,72 @@ const StudentAttendance = () => {
           </div>
 
           <div className="form_group">
-          <label
-            htmlFor="section"
-            className="form_label font-satoshi font-semibold text-base text-gray-700"
-          >
-            Section
-          </label>
-          <select
-            id="section"
-            name="section"
-            className="form_input"
-            onChange={(e) => {
-              setPayload({ ...payload, section: e.target.value });
-            }}
-            value={payload?.section}
-            required
-          >
-            {/* Default option */}
-            <option value="" disabled>
-              Select Section
-            </option>
-
-            {/* Map over coursesAPI to create options */}
-            {Object.entries(Section).map(([key, value]) => (
-              <option key={key} value={value}>
-                {key}
+            <label
+              htmlFor="section"
+              className="form_label font-satoshi font-semibold text-base text-gray-700"
+            >
+              Section
+            </label>
+            <select
+              id="section"
+              name="section"
+              className="form_input"
+              onChange={(e) => {
+                setPayload({ ...payload, section: e.target.value });
+              }}
+              value={payload?.section}
+              required
+            >
+              {/* Default option */}
+              <option value="" disabled>
+                Select Section
               </option>
-            ))}
-          </select>
-          <span className="error_message">{errMsg.section}</span>
-        </div>
 
-        <div className="form_group">
-          <label
-            htmlFor="coursecode"
-            className="form_label font-satoshi font-semibold text-base text-gray-700"
-          >
-            Term
-          </label>
-          <select
-            id="term"
-            name="term"
-            className="form_input"
-            onChange={(e) => {
-              setPayload({ ...payload, term: e.target.value });
-            }}
-            value={payload?.term}
-            required
-          >
-            {/* Default option */}
-            <option value="" disabled>
-              Select Term
-            </option>
+              {/* Map over coursesAPI to create options */}
+              {Object.entries(Section).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {key}
+                </option>
+              ))}
+            </select>
+            <span className="error_message">{errMsg.section}</span>
+          </div>
 
-            {/* Map over coursesAPI to create options */}
-            {Object.entries(Term).map(([key, value]) => (
-              <option key={key} value={value}>
-                {key}
+          <div className="form_group">
+            <label
+              htmlFor="coursecode"
+              className="form_label font-satoshi font-semibold text-base text-gray-700"
+            >
+              Term
+            </label>
+            <select
+              id="term"
+              name="term"
+              className="form_input"
+              onChange={(e) => {
+                setPayload({ ...payload, term: e.target.value });
+              }}
+              value={payload?.term}
+              required
+            >
+              {/* Default option */}
+              <option value="" disabled>
+                Select Term
               </option>
-            ))}
-          </select>
-          <span className="error_message">{errMsg.term}</span>
-        </div>
 
+              {/* Map over coursesAPI to create options */}
+              {Object.entries(Term).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {key}
+                </option>
+              ))}
+            </select>
+            <span className="error_message">{errMsg.term}</span>
+          </div>
+
+          <button className="black_btn" disabled={loading} onClick={() => {getAttendancesFromAPI()}}>
+            {loading ? "Processing" : `Get Attendances`}
+          </button>
         </div>
       </div>
       <TableContainer component={Paper}>
