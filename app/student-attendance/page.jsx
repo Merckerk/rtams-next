@@ -20,6 +20,7 @@ import Term from "@enums/term";
 const StudentAttendance = () => {
   const [attendances, setAttendances] = useState([]);
   const [attendancesAPI, setAttendancesAPI] = useState([]);
+  const [studentsAPI, setStudentsAPI] = useState([]);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [attendanceMap, setAttendanceMap] = useState({});
   const [coursesAPI, setCoursesAPI] = useState([]);
@@ -35,31 +36,42 @@ const StudentAttendance = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const getAttendancesFromAPI = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const attendanceResponse = await axios.get(
-        `/api/attendance/fetchCourseReports`,
-        {
+  
+      const [attendanceResponse, studentsResponse] = await Promise.all([
+        axios.get(`/api/attendance/fetchCourseReports`, {
           params: {
             courseCode: payload.courseCode,
             section: payload.section,
             term: payload.term,
-          }
-        }
-      );
-
-      if (attendanceResponse) {
+          },
+        }),
+        axios.get(`/api/students/getStudentByCS`, {
+          params: {
+            courseCode: payload.courseCode,
+            section: payload.section,
+          },
+        }),
+      ]);
+  
+      if (attendanceResponse.status === 200 && studentsResponse.status === 200) {
         console.log("attendance Response:", attendanceResponse);
+        console.log("students Response:", studentsResponse);
+        setAttendancesAPI(attendanceResponse.data);
+        setStudentsAPI(studentsResponse.data);
+      } else{
+        console.log("Error fetching both data");
       }
+  
     } catch (error) {
       console.log("Error fetching data", error);
     } finally {
       setLoading(false);
     }
   };
-
-  //GET all students enrolled in a subject.
+  
   const getAttendancesAndStudents = async () => {
     //TODO: REPLACE WITH API INTEGRATION LATER
     setEnrolledStudents(studentMock);
@@ -123,6 +135,11 @@ const StudentAttendance = () => {
   useEffect(() => {
     console.log("payload:", payload);
   }, [payload]);
+
+  useEffect(() => {
+    console.log("studentsAPI:",studentsAPI);
+    console.log("attendancesAPI:",attendancesAPI);
+  }, [studentsAPI, attendancesAPI]);
 
   return (
     <>
@@ -234,7 +251,13 @@ const StudentAttendance = () => {
             <span className="error_message">{errMsg.term}</span>
           </div>
 
-          <button className="black_btn" disabled={loading} onClick={() => {getAttendancesFromAPI()}}>
+          <button
+            className="black_btn"
+            disabled={loading}
+            onClick={() => {
+              fetchData();
+            }}
+          >
             {loading ? "Processing" : `Get Attendances`}
           </button>
         </div>
