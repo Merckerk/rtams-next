@@ -81,7 +81,7 @@ const attendanceMock1 = [
   {
     _id: "65a00daf55f4cc272bf1b115",
     student: "6561a210e8a9548601bfe418",
-    studentName: "beya tuns",
+    studentName: "Beya Tuns",
     courseCode: "65607aa6ceb590e630e36e23",
     date: "2024-01-10T16:00:00.000Z",
     term: "2023-2024",
@@ -92,7 +92,7 @@ const attendanceMock1 = [
   {
     _id: "65a00daf55f4cc272bf1b116",
     student: "6561a210e8a9548601bfe418",
-    studentName: "beya tuns",
+    studentName: "Beya Tuns",
     courseCode: "65607aa6ceb590e630e36e23",
     date: "2024-01-11T16:00:00.000Z",
     term: "2023-2024",
@@ -104,7 +104,7 @@ const attendanceMock1 = [
   {
     _id: "65a00daf55f4cc272bf1b117",
     student: "6561a210e8a9548601bfe419",
-    studentName: "luwis",
+    studentName: "Luwis",
     courseCode: "65607aa6ceb590e630e36e23",
     date: "2024-01-10T16:00:00.000Z",
     term: "2023-2024",
