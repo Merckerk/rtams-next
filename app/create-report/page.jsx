@@ -43,9 +43,9 @@ const createAttendance = () => {
     getAllStudents();
   }, []);
 
-  useEffect(() => {
-    console.log("students:", studentsAPI);
-  }, [studentsAPI]);
+  // useEffect(() => {
+  //   console.log("students:", studentsAPI);
+  // }, [studentsAPI]);
 
   const onCreateReport = async () => {
     try {

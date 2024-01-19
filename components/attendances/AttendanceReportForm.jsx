@@ -21,6 +21,7 @@ const AttendanceReportForm = ({
     date: "",
   });
   const [coursesAPI, setCoursesAPI] = useState([]);
+  const [nfcAPI, setNFC_API] = useState([]);
 
   const fetchCoursesData = async () => {
     const response = await axios.get("/api/courses/fetchCourses");
@@ -30,8 +31,20 @@ const AttendanceReportForm = ({
     }
   };
 
+  const fetchNFC = async () => {
+    const response = await axios.get("/api/students/fetchNFC");
+    if (response) {
+      setNFC_API(response.data);
+    } else {
+    }
+  };
+
   useEffect(() => {
     fetchCoursesData();
+  }, []);
+
+  useEffect(() => {
+    fetchNFC();
   }, []);
 
   useEffect(() => {
@@ -63,7 +76,7 @@ const AttendanceReportForm = ({
           {type} Attendance Report
         </h1>
 
-        <ReusableInput
+        {/* <ReusableInput
           label="NFC UID"
           type="text"
           id="nfcUID"
@@ -77,8 +90,39 @@ const AttendanceReportForm = ({
           value={post?.nfcUID}
           errorMessage={errMsg.nfcUID}
           required
-        />
+        /> */}
 
+        {/* NFC UID Selector */}
+        <label
+          htmlFor="nfcUID"
+          className="form_label font-satoshi font-semibold text-base text-gray-700"
+        >
+          NFC UID
+        </label>
+
+        <select
+          id="nfcUID"
+          name="nfcUID"
+          onChange={(e) => {
+            setPost({ ...post, nfcUID: e.target.value });
+            validateUID(e.target.value);
+          }}
+          value={post?.nfcUID}
+          required
+        >
+          {/* Default Option */}
+          <option value="disabled">Select UID</option>
+
+          {/* Map of nfcUID for options */}
+          {nfcAPI.map((nfcAPI) => (
+            <option key={nfcAPI._id} value={nfcAPI.nfcUID}>
+              {nfcAPI.nfcUID}
+            </option>
+          ))}
+        </select>
+        <span className="error_message">{errMsg.nfcUID}</span>
+
+        {/* Course Code Selector */}
         <div className="form_group">
           <label
             htmlFor="coursecode"
@@ -144,7 +188,8 @@ const AttendanceReportForm = ({
           </select>
           <span className="error_message">{errMsg.section}</span>
         </div>
-        
+
+        {/* Term Selector */}
         <div className="form_group">
           <label
             htmlFor="coursecode"

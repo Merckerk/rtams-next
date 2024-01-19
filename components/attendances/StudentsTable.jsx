@@ -19,9 +19,6 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const StudentsTable = ({ students, setStudents, post }) => {
-
-  
-
   return (
     <div className="py-4 pt-7">
       <div className="flex justify-between items-center">
@@ -41,6 +38,7 @@ const StudentsTable = ({ students, setStudents, post }) => {
           <TableHead>
             <TableRow>
               <StyledTableCell>Student No.</StyledTableCell>
+              <StyledTableCell>NFC UID</StyledTableCell>
               <StyledTableCell align="left">Name</StyledTableCell>
               <StyledTableCell align="left">Timed-in</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
@@ -52,18 +50,14 @@ const StudentsTable = ({ students, setStudents, post }) => {
                 <StyledTableCell component="th" scope="row">
                   {student.studentNumber}
                 </StyledTableCell>
+                <StyledTableCell>{student.nfcUID}</StyledTableCell>
                 <StyledTableCell align="left">
                   {student.name || student.username}
                 </StyledTableCell>
                 <StyledTableCell align="left">TO BE FILLED</StyledTableCell>
                 <StyledTableCell align="center">
                   <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={false}
-                        onChange={() => {}}
-                      />
-                    }
+                    control={<Checkbox checked={false} onChange={() => {}} />}
                   />
                 </StyledTableCell>
               </StyledTableRow>
