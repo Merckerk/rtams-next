@@ -15,6 +15,7 @@ import { StyledTableCell, StyledTableRow } from "@styles/tableStyles";
 import axios from "axios";
 
 import Section from "@enums/section";
+import Term from "@enums/term";
 
 const StudentAttendance = () => {
   const [attendances, setAttendances] = useState([]);
@@ -171,6 +172,37 @@ const StudentAttendance = () => {
           <span className="error_message">{errMsg.section}</span>
         </div>
 
+        <div className="form_group">
+          <label
+            htmlFor="coursecode"
+            className="form_label font-satoshi font-semibold text-base text-gray-700"
+          >
+            Term
+          </label>
+          <select
+            id="term"
+            name="term"
+            className="form_input"
+            onChange={(e) => {
+              setPayload({ ...payload, term: e.target.value });
+            }}
+            value={payload?.term}
+            required
+          >
+            {/* Default option */}
+            <option value="" disabled>
+              Select Term
+            </option>
+
+            {/* Map over coursesAPI to create options */}
+            {Object.entries(Term).map(([key, value]) => (
+              <option key={key} value={value}>
+                {key}
+              </option>
+            ))}
+          </select>
+          <span className="error_message">{errMsg.term}</span>
+        </div>
 
         </div>
       </div>
