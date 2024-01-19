@@ -1,7 +1,11 @@
 import mongoose, { Schema, model, models } from "mongoose";
+import { stringify } from "postcss";
 import { date } from "yup";
 
 const attendanceSchema = new Schema({
+  nfcUID: {
+    type: String,
+  },
   student: {
     type: mongoose.Schema.ObjectId,
     ref: "students",
