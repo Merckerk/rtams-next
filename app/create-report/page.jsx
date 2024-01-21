@@ -43,15 +43,23 @@ const createAttendance = () => {
     getAllStudents();
   }, []);
 
-  useEffect(() => {
-    console.log("students:", studentsAPI);
-  }, [studentsAPI]);
+  // useEffect(() => {
+  //   console.log("students:", studentsAPI);
+  // }, [studentsAPI]);
 
   const onCreateReport = async () => {
     try {
       setIsLoading(true);
-      const { nfcUID, courseCode, section, term } = post;
-      const postValues = { nfcUID, courseCode, section, term };
+
+      const { nfcUID, student, studentName, courseCode, section, term } = post;
+      const postValues = {
+        nfcUID,
+        student,
+        studentName,
+        courseCode,
+        section,
+        term,
+      };
       const response = await axios.post(
         "api/attendance/createReport",
         postValues
@@ -72,8 +80,17 @@ const createAttendance = () => {
   const onCreateMultipleReports = async () => {
     try {
       setIsLoading(true);
-      const { nfcUids, courseCode, term, section } = post;
-      const postValues = { nfcUids, courseCode, term, section };
+      const { nfcUids, student, studentName, courseCode, term, section } = post;
+      const postValues = {
+        nfcUids,
+        student,
+        studentName,
+        student,
+        studentName,
+        courseCode,
+        term,
+        section,
+      };
 
       const response = await axios.post(
         "api/attendance/createMultipleReports",

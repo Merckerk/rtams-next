@@ -15,7 +15,10 @@ export const POST = async (req, res) => {
       student.load.includes(courseCode)
     );
     const studentIdMap = new Map(
-      filteredStudents.map((student) => [student.nfcUID, student._id])
+      filteredStudents.map((student) => [
+        student.nfcUID,
+        { studentId: student._id, studentName: student.name },
+      ])
     );
 
     const currentDate = new Date();

@@ -21,17 +21,17 @@ const AttendanceReports = () => {
   };
 
   const fetchReports = async () => {
-    const response = await axios.get("/api/attendance/fetchReports");
-    if (response) {
-      setPost(response.data);
-    } else {
-      console.log("Failed to fetch reports.");
+    try {
+      const response = await axios.get("/api/attendance/fetchReports");
+      if (response) {
+        setPost(response.data);
+      } else {
+        // Handle error if needed
+      }
+    } catch (error) {
+      console.error("Error fetching attendance reports", error);
     }
   };
-
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
 
   const deleteReport = async (reportId) => {
     const hasConfirmed = confirm(
@@ -83,18 +83,30 @@ const AttendanceReports = () => {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell>NFC UID</StyledTableCell>
-              <StyledTableCell align="left">Date</StyledTableCell>
+              <StyledTableCell align="center">NFC UID</StyledTableCell>
+              <StyledTableCell align="center">Student Name</StyledTableCell>
+              <StyledTableCell align="center">Date</StyledTableCell>
+              <StyledTableCell align="center">Time In</StyledTableCell>
+              <StyledTableCell align="center">Time Out</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {post.map((report) => (
               <StyledTableRow key={report._id}>
-                <StyledTableCell component="th" scope="row">
+                <StyledTableCell align="center" component="th" scope="row">
+                  {report.nfcUID}
+                </StyledTableCell>
+                <StyledTableCell align="center" component="th" scope="row">
                   {report.studentName}
                 </StyledTableCell>
-                <StyledTableCell align="left">{report.date}</StyledTableCell>
+                <StyledTableCell align="center">{report.date}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {report.timeIn}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {report.timeOut}
+                </StyledTableCell>
                 <StyledTableCell align="center">
                   <button
                     variant="outlined"

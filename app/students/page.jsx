@@ -22,23 +22,25 @@ const Students = () => {
     if (response) {
       setStudents(response.data);
     } else {
-        console.log("failed to fetch students")
+      console.log("failed to fetch students");
     }
   };
-  
+
   const handleEdit = (student) => {
     router.push(`/update-student?studentid=${student._id}`);
   };
 
   const deleteStudent = async (studentId) => {
-    const hasConfirmed = confirm("Are you sure you want to delete this student?");
-  
+    const hasConfirmed = confirm(
+      "Are you sure you want to delete this student?"
+    );
+
     if (hasConfirmed) {
       try {
         const response = await fetch(`/api/users/${studentId}`, {
           method: "DELETE",
         });
-  
+
         if (response.ok) {
           const filteredStudents = students.filter(
             (student) => student._id !== studentId
@@ -52,8 +54,8 @@ const Students = () => {
   };
 
   const handleLoad = (studentId) => {
-    router.push(`student-load?studentid=${studentId._id}`)
-  }
+    router.push(`student-load?studentid=${studentId._id}`);
+  };
 
   useEffect(() => {
     fetchStudentData();
@@ -84,6 +86,7 @@ const Students = () => {
             <TableRow>
               <StyledTableCell>Student Number</StyledTableCell>
               <StyledTableCell align="left">Name</StyledTableCell>
+              <StyledTableCell align="left">Section</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -93,8 +96,9 @@ const Students = () => {
                 <StyledTableCell component="th" scope="row">
                   {student.studentNumber}
                 </StyledTableCell>
+                <StyledTableCell align="left">{student.name}</StyledTableCell>
                 <StyledTableCell align="left">
-                  {student.name}
+                  {student.section}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <button
@@ -108,7 +112,7 @@ const Students = () => {
                   <button
                     variant="outlined"
                     color="primary"
-                    style={{ marginRight: "30px" }}   
+                    style={{ marginRight: "30px" }}
                     onClick={() => deleteStudent(student._id)}
                   >
                     Delete

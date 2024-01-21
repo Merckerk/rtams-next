@@ -1,9 +1,18 @@
 import mongoose, { Schema, model, models } from "mongoose";
+import { stringify } from "postcss";
+import { date } from "yup";
 
 const attendanceSchema = new Schema({
+  nfcUID: {
+    type: String,
+  },
   student: {
     type: mongoose.Schema.ObjectId,
     ref: "students",
+  },
+  studentName: {
+    type: String,
+    required: true,
   },
   courseCode: {
     type: mongoose.Schema.ObjectId,
@@ -13,10 +22,6 @@ const attendanceSchema = new Schema({
     type: Date,
     required: [true, "date is required"],
   },
-  time: {
-    type: String,
-    required: [true, "time is required"],
-  },
   term: {
     type: String,
     required: [true, "term is required"],
@@ -24,6 +29,12 @@ const attendanceSchema = new Schema({
   section: {
     type: String,
     required: [true, "section is required"],
+  },
+  timeIn: {
+    type: String,
+  },
+  timeOut: {
+    type: String,
   },
 });
 
