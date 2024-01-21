@@ -1,35 +1,23 @@
-import mongoose, { Schema, model, models } from "mongoose";
+import { Schema, model, models } from "mongoose";
+import Term from "@enums/term";
 
 const courseSchema = new Schema({
   courseName: {
-    // Name of the course
-    type: String,
-    required: true,
-  },
-  courseCode: {
-    // Subject code
     type: String,
     required: true,
     unique: true,
   },
-  professor: {
-    // Professor assigned to the course
-    type: Schema.Types.ObjectId,
-    ref: "users",
-  },
-  students: [
-    // Students enrolled in the course
-    {
-      type: Schema.Types.ObjectId,
-      ref: "users",
-    },
-  ],
-  // Class schedule
-  days: {
-    // Days when the class occurs, e.g. [Monday, Wednesday, Friday]
-    type: [String],
+  courseCode: {
+    type: String,
     required: true,
+    unique: true,
+  },
+  term: {
+    type: String,
+    enum: Object.values(Term),
   },
 });
 
-const Course = model("classes", courseSchema);
+const Course = models.courses || model("courses", courseSchema);
+
+export default Course;

@@ -1,6 +1,7 @@
 "use client";
 
 import defaultProfilePicture from "public/assets/images/defaultProfilePicture.jpg";
+import ReusableInput from "@components/reusableInput/ReusableInput";
 
 import { useEffect, useState } from "react";
 
@@ -14,6 +15,7 @@ const AdminCrudForm = ({
 }) => {
   const [errMsg, setErrMsg] = useState({
     email: "",
+    name: "",
     userId: "",
     username: "",
     password: "",
@@ -25,6 +27,15 @@ const AdminCrudForm = ({
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
       email: isValid ? "" : "Invalid email",
+    }));
+    return isValid;
+  };
+
+  const validateName = (value) => {
+    const isValid = !!value;
+    setErrMsg((prevErrMsg) => ({
+      ...prevErrMsg,
+      name: isValid ? "" : "User ID is required",
     }));
     return isValid;
   };
@@ -80,10 +91,10 @@ const AdminCrudForm = ({
   };
 
   return (
-    <div className="container mx-auto mt-1 mb-5">
+    <div className="container mx-auto mt-5 mb-8">
       <form className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism">
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
-          {type} User
+          {type} User Profile
         </h1>
 
         <div className="form-group">
@@ -122,141 +133,102 @@ const AdminCrudForm = ({
           ) : null}
         </div>
 
-        <div className="form-group">
-          <label>
-            <span className="font-satoshi font-semibold text-base text-gray-700">
-              Email
-            </span>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter email"
-              className="form_input"
-              onChange={(e) => {
-                setPost({ ...post, email: e.target.value });
-                validateEmail(e.target.value);
-              }}
-              value={post?.email}
-              required
-            />
-            {errMsg.email ? (
-              <p className="error_message">{errMsg.email}</p>
-            ) : null}
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            <span className="font-satoshi font-semibold text-base text-gray-700">
-              ID
-            </span>
-            <input
-              type="text"
-              id="userId"
-              name="userId"
-              placeholder="Enter User ID"
-              className="form_input"
-              onChange={(e) => {
-                setPost({ ...post, userId: e.target.value });
-                validateUserId(e.target.value);
-              }}
-              value={post?.userId}
-              required
-            />
-            {errMsg.userId ? (
-              <p className="error_message">{errMsg.userId}</p>
-            ) : null}
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            <span className="font-satoshi font-semibold text-base text-gray-700">
-              Username
-            </span>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Enter username"
-              className="form_input"
-              onChange={(e) => {
-                setPost({ ...post, username: e.target.value });
-                validateUsername(e.target.value);
-              }}
-              value={post?.username}
-              required
-            />
-            {errMsg.username ? (
-              <p className="error_message">{errMsg.username}</p>
-            ) : null}
-          </label>
-        </div>
+        <ReusableInput
+          label="Email"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter email"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, email: e.target.value });
+            validateEmail(e.target.value);
+          }}
+          value={post?.email}
+          errorMessage={errMsg.email}
+          required
+        />
+        
+        <ReusableInput
+          label="Name"
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter User name"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, name: e.target.value });
+            validateName(e.target.value);
+          }}
+          value={post?.name}
+          errorMessage={errMsg.name}
+          required
+        />
 
-        <div className="form-group">
-          <label>
-            <span className="font-satoshi font-semibold text-base text-gray-700">
-              Password
-            </span>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter password"
-              className="form_input"
-              onChange={(e) => {
-                setPost({ ...post, password: e.target.value });
-                validatePassword(e.target.value);
-              }}
-              value={post?.password}
-              required
-            />
-            {errMsg.password ? (
-              <p className="error_message">{errMsg.password}</p>
-            ) : null}
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            <span className="font-satoshi font-semibold text-base text-gray-700">
-              Retype Password
-            </span>
-            <input
-              type="password"
-              id="repassword"
-              name="repassword"
-              placeholder="Enter password"
-              className="form_input"
-              onChange={(e) => {
-                setPost({ ...post, repassword: e.target.value });
-                validateRepassword(e.target.value);
-              }}
-              value={post?.repassword}
-              required
-            />
-            {errMsg.repassword ? (
-              <p className="error_message">{errMsg.repassword}</p>
-            ) : null}
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            <span className="font-satoshi font-semibold text-base text-gray-700">
-              Is Admin:
-            </span>
-            <label className="toggle-container ml-2">
-              <input
-                type="checkbox"
-                id="isAdmin"
-                name="isAdmin"
-                checked={post?.isAdmin}
-                onChange={(e) =>
-                  setPost({ ...post, isAdmin: e.target.checked })
-                }
-              />
-              <span className="toggle"></span>
-            </label>
-          </label>
-        </div>
+        <ReusableInput
+          label="ID"
+          type="text"
+          id="userId"
+          name="userId"
+          placeholder="Enter User ID"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, userId: e.target.value });
+            validateUserId(e.target.value);
+          }}
+          value={post?.userId}
+          errorMessage={errMsg.userId}
+          required
+        />
+        
+        <ReusableInput
+          label="Username"
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Enter Username"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, username: e.target.value });
+            validateUsername(e.target.value);
+          }}
+          value={post?.username}
+          errorMessage={errMsg.username}
+          required
+        />
+        
+        <ReusableInput
+          label="Password"
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter Password"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, password: e.target.value });
+            validatePassword(e.target.value);
+          }}
+          value={post?.password}
+          errorMessage={errMsg.password}
+          required
+        />
+
+        <ReusableInput
+          label="Retype Password"
+          type="password"
+          id="repassword"
+          name="repassword"
+          placeholder="Retype Password"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, repassword: e.target.value });
+            validateRepassword(e.target.value);
+          }}
+          value={post?.repassword}
+          errorMessage={errMsg.repassword}
+          required
+        />
+
         <button className="black_btn" disabled={loading} onClick={handleSubmit}>
           {loading ? "Processing" : `${type} User`}
         </button>

@@ -9,16 +9,36 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
 
-
 const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  //TODO: MAKE ENUMS
   const featureCardProps = [
     {
       featureName: "RTAMS Users",
-      description: "View and Edit RTAMS Users.",
+      description: "Add, View and Edit RTAMS Users.",
       routeName: "admin-users",
+    },
+    {
+      featureName: "Students",
+      description: "Add, View and Edit Students.",
+      routeName: "students",
+    },
+    {
+      featureName: "Courses",
+      description: "View, add and edit Courses.",
+      routeName: "courses",
+    },
+    {
+      featureName: "Attendances",
+      description: "View, add, and edit Attendances.",
+      routeName: "attendances",
+    },
+    {
+      featureName: "Attendance Metrics",
+      description: "View Attendance Metrics.",
+      routeName: "attendance-metrics",
     },
   ];
 
@@ -36,8 +56,6 @@ const Home = () => {
       </p>
 
       <hr />
-
-      
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {featureCardProps.map((feature, index) => (

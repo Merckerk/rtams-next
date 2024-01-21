@@ -1,49 +1,25 @@
 "use client";
-import { styled } from "@mui/material/styles";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { StyledTableCell, StyledTableRow } from "@styles/tableStyles";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAdminUsers } from "@app/redux/features/admin-users/admin-users-slice";
 import { useEffect, useState } from "react";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
 
 const AdminUsers = () => {
-  const adminUsers = useSelector((state) => state.adminUsers.value);
   const [adminUsersAPI, setAdminUsersAPI] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const handleEdit = (adminUser) => {
-    router.push(`/update-admin?userid=${adminUser._id}`);
-  };
 
   const fetchAdminData = async () => {
     const response = await axios.get("/api/users/displayAdminUsers");
@@ -52,23 +28,36 @@ const AdminUsers = () => {
     } else {
     }
   };
+  
+  const handleEdit = (adminUser) => {
+    router.push(`/update-admin?userid=${adminUser._id}`);
+  };
 
   const deleteUser = async (userId) => {
-    try {
-      const response = await fetch(`/api/users/${userId}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        const filteredUsers = adminUsersAPI.filter(
-          (users) => users._id !== userId
-        );
-        setAdminUsersAPI(filteredUsers);
+    const hasConfirmed = confirm("Are you sure you want to delete this user?");
+  
+    if (hasConfirmed) {
+      try {
+        const response = await fetch(`/api/users/${userId}`, {
+          method: "DELETE",
+        });
+  
+        if (response.ok) {
+          const filteredUsers = adminUsersAPI.filter(
+            (users) => users._id !== userId
+          );
+          setAdminUsersAPI(filteredUsers);
+        }
+      } catch (error) {
+        console.error("Error deleting the user", error);
       }
-    } catch (error) {
-      console.error("Error deleting the user", error);
     }
   };
+
+  const handleLoad = (userId) => {
+    router.push(`teaching-load?userid=${userId._id}`)
+  }
+  
 
   useEffect(() => {
     fetchAdminData();
@@ -127,9 +116,17 @@ const AdminUsers = () => {
                   <button
                     variant="outlined"
                     color="primary"
+                    style={{ marginRight: "30px" }}   
                     onClick={() => deleteUser(adminUser._id)}
                   >
                     Delete
+                  </button>
+                  <button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => handleLoad(adminUser)}
+                  >
+                    Load
                   </button>
                 </StyledTableCell>
               </StyledTableRow>

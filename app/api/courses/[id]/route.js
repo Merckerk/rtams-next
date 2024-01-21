@@ -6,22 +6,19 @@ export const GET = async (req, { params }) => {
   try {
     await connectToDB();
 
-    // Find the course according to professor/userId and indicate who the professor is
-    const course = await Course.find({ professor: params.id }).populate(
-      "professor"
-    );
-
-    if (!course) return new Response("Course not found.", { status: 404 });
+    //Find the course according to params.id sent by client
+    const course = await Course.findById(params.id);
+    if (!course) return new Response("Course Not Found.", { status: 404 });
 
     return new Response(JSON.stringify(course), { status: 200 });
   } catch (error) {
-    return new Response("Failed to fetch courses.", { status: 500 });
+    return new Response("Internal Server Error.", { status: 500 });
   }
 };
 
 // EDIT/UPDATE course
 export const PATCH = async (req, { params }) => {
-  const { userId, course, students, days } = await req.json();
+  const { courseName, courseCode } = await req.json();
   try {
     // connect to mongoDB
     await connectToDB();
@@ -32,10 +29,8 @@ export const PATCH = async (req, { params }) => {
     if (!existingCourse)
       return new Response("Course not found.", { status: 404 });
 
-    existingCourse.userId = userId;
-    existingCourse.course = course;
-    existingCourse.students = students;
-    existingCourse.days = days;
+    existingCourse.courseName = courseName;
+    existingCourse.courseCode = courseCode;
 
     await existingCourse.save();
 

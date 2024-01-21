@@ -1,6 +1,7 @@
 import "@styles/globals.css";
 import { Providers } from "./redux/provider";
 import { NavBar } from "@components";
+import { AuthProvider } from "./Providers";
 
 export const metadata = {
   title: "RTAMS",
@@ -15,12 +16,14 @@ const RootLayout = ({ children }) => {
         <div className="main">
           <div className="gradient" />
         </div>
-        <Providers>
-          <main className="app">
-            <NavBar />
-            {children}
-          </main>
-        </Providers>
+        <AuthProvider>
+          <Providers>
+            <main className="app">
+              <NavBar />
+              {children}
+            </main>
+          </Providers>
+        </AuthProvider>
       </body>
     </html>
   );
