@@ -38,7 +38,7 @@ const Home = () => {
     {
       featureName: "Attendance Metrics",
       description: "View Attendance Metrics.",
-      routeName: "attendance-metrics",
+      routeName: "attendance-general-metrics",
     },
   ];
 

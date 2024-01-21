@@ -25,6 +25,7 @@ const AttendanceReports = () => {
       const response = await axios.get("/api/attendance/fetchReports");
       if (response) {
         setPost(response.data);
+        console.log(response.data);
       } else {
         // Handle error if needed
       }
