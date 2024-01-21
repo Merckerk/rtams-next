@@ -23,7 +23,7 @@ export const GET = async (req, { params }) => {
     const students = await Student.find({
         load: { $all: [courseCode] }, 
         section: { $in: section },
-      });
+      }, { image: 0 });
 
     if (!students) {
       return new Response("Students Not Found.", { status: 404 });
