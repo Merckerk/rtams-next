@@ -1,15 +1,21 @@
 import Attendances from "@models/attendanceModel";
 import { connectToDB } from "@utils/database";
 
+// Function to extract query parameters from URL
+const getQueryParams = (url) => {
+  const params = new URLSearchParams(url.split('?')[1]);
+  return Object.fromEntries(params.entries());
+};
+
 // GET attendances by course, section, term
 export const GET = async (req, { params }) => {
   try {
     await connectToDB();
 
-    const queryParams = new URLSearchParams(req.url.split('?')[1]); // Extract query parameters
-    const courseCode = queryParams.get('courseCode');
-    const section = queryParams.get('section');
-    const term = queryParams.get('term');
+    const queryParams = getQueryParams(req.url); // Extract query parameters
+    const courseCode = queryParams.courseCode;
+    const section = queryParams.section;
+    const term = queryParams.term;
 
     console.log("courseCode:", courseCode);
     console.log("section:", section);
