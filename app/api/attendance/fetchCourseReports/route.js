@@ -31,7 +31,6 @@ export const GET = async (req, { params }) => {
     }
 
     return new Response(JSON.stringify(attendances), { status: 200 });
-    // return new Response(JSON.stringify({message: "gud"}), { status: 200 });
     
   } catch (error) {
     console.error("Error getting attendances:", error);
