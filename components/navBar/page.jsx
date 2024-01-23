@@ -17,23 +17,23 @@ const NavBar = () => {
   const router = useRouter();
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const image = useSelector((state) => state.loggedInUser.loggedInImage);
+  // const image = useSelector((state) => state.loggedInUser.loggedInImage);
 
-  const logout = async () => {
-    try {
-      await axios.get("/api/users/logout");
-      dispatch(setLoggedInImage(""));
-      console.log("After dispatch");
-      router.push("/login");
-      console.log("After router.push");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const logout = async () => {
+  //   try {
+  //     await axios.get("/api/users/logout");
+  //     dispatch(setLoggedInImage(""));
+  //     console.log("After dispatch");
+  //     router.push("/login");
+  //     console.log("After router.push");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     console.log("session deets:", session);
-  }, [session]);
+  }, [session?.user?.name]);
 
   return (
     <nav className="flex-between w-full mb-16 pt-3">
@@ -63,7 +63,7 @@ const NavBar = () => {
 
             <Link href={"/profile"}>
               <span className="font-satoshi font-semibold text-base text-gray-700">
-                {session?.user?.name || session?.user?.username || "nothing"}
+                {session?.user?.name || session?.user?.username || "Sign In to access RTAMS"}
               </span>
             </Link>
           </div>

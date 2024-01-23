@@ -47,6 +47,23 @@ const authOptions = {
     }),
   ],
 
+  callbacks: {
+    async jwt({token, user}){
+      if (user){
+        token.id=user.id;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({session, token}){
+      if(token){
+        session.user.id = token.id;
+        session.user.name = token.name;
+      }
+      return session;
+    },
+  },
+
   session: {
     strategy: "jwt",
   },
