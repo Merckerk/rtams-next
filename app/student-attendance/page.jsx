@@ -17,6 +17,8 @@ import axios from "axios";
 import Section from "@enums/section";
 import Term from "@enums/term";
 
+// import fetch from "isomorphic-unfetch";
+
 const StudentAttendance = () => {
   const [attendances, setAttendances] = useState([]);
   const [attendancesAPI, setAttendancesAPI] = useState([]);
@@ -37,33 +39,36 @@ const StudentAttendance = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
+    // try {
+    //   const attendanceResponse = await fetch(`api/attendance/fetchCourseReports/${payload.courseCode}/${payload.section}/${payload.term}`);
+    //   const data = await attendanceResponse.json()
+    //   console.log("Attendance Response Data:",data);
+    // } catch (error) {
+    //   console.log(error)
+    // }
+
     try {
       setLoading(true);
 
       const [attendanceResponse, studentsResponse] = await Promise.all([
-        axios.get(`/api/attendance/fetchCourseReports`, {
-          params: {
-            courseCode: payload.courseCode,
-            section: payload.section,
-            term: payload.term,
-          },
-        }),
-        axios.get(`/api/students/getStudentByCS`, {
-          params: {
-            courseCode: payload.courseCode,
-            section: payload.section,
-          },
-        }),
+        fetch(
+          `/api/attendance/fetchCourseReports/${payload.courseCode}/${payload.section}/${payload.term}`
+        ),
+        fetch(
+          `/api/students/getStudentByCS/${payload.courseCode}/${payload.section}`
+        ),
       ]);
 
       if (
         attendanceResponse.status === 200 &&
         studentsResponse.status === 200
       ) {
-        console.log("attendance Response:", attendanceResponse);
-        console.log("students Response:", studentsResponse);
-        setAttendancesAPI(attendanceResponse.data);
-        setStudentsAPI(studentsResponse.data);
+        const attendanceData = await attendanceResponse.json();
+        const enrolledStudentsData = await studentsResponse.json();
+        console.log("attendance Response:", attendanceData);
+        console.log("students Response:", enrolledStudentsData);
+        setAttendancesAPI(attendanceData);
+        setStudentsAPI(enrolledStudentsData);
       } else {
         console.log("Error fetching both data");
       }
