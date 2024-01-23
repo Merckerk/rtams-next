@@ -64,13 +64,11 @@ const NavBar = () => {
               </button>
             )}
 
-            <Link href={"/profile"}>
-              <span className="font-satoshi font-semibold text-base text-gray-700">
-                {session?.user?.name ||
-                  session?.user?.username ||
-                  "Sign In to access RTAMS"}
-              </span>
-            </Link>
+            <span className="font-satoshi font-semibold text-base text-gray-700">
+              {session?.user?.name ||
+                session?.user?.username ||
+                "Sign In to access RTAMS"}
+            </span>
           </div>
         ) : (
           <></>
