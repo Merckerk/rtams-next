@@ -40,6 +40,11 @@ const Home = () => {
       description: "View Attendance Metrics.",
       routeName: "attendance-general-metrics",
     },
+    {
+      featureName: "Course Attendance",
+      description: "View attendances by course, section, and term.",
+      routeName: "student-attendance",
+    },
   ];
 
   return (
