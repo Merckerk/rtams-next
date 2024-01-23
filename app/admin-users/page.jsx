@@ -15,34 +15,35 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-
 const AdminUsers = () => {
   const [adminUsersAPI, setAdminUsersAPI] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
 
   const fetchAdminData = async () => {
-    const response = await fetch("/api/users/displayAdminUsers", {cache: "no-store"});
-    const data = await response.json()
+    const response = await fetch("/api/users/displayAdminUsers", {
+      cache: "no-store",
+    });
+    const data = await response.json();
     if (data) {
       setAdminUsersAPI(data);
     } else {
     }
   };
-  
+
   const handleEdit = (adminUser) => {
     router.push(`/update-admin?userid=${adminUser._id}`);
   };
 
   const deleteUser = async (userId) => {
     const hasConfirmed = confirm("Are you sure you want to delete this user?");
-  
+
     if (hasConfirmed) {
       try {
         const response = await fetch(`/api/users/${userId}`, {
           method: "DELETE",
         });
-  
+
         if (response.ok) {
           fetchAdminData();
         }
@@ -53,9 +54,8 @@ const AdminUsers = () => {
   };
 
   const handleLoad = (userId) => {
-    router.push(`teaching-load?userid=${userId._id}`)
-  }
-  
+    router.push(`teaching-load?userid=${userId._id}`);
+  };
 
   useEffect(() => {
     fetchAdminData();
@@ -114,7 +114,7 @@ const AdminUsers = () => {
                   <button
                     variant="outlined"
                     color="primary"
-                    style={{ marginRight: "30px" }}   
+                    style={{ marginRight: "30px" }}
                     onClick={() => deleteUser(adminUser._id)}
                   >
                     Delete
