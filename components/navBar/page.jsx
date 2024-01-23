@@ -51,15 +51,18 @@ const NavBar = () => {
       <div className="sm:flex hidden">
         {isLoggedIn ? (
           <div className="flex gap-3 md:gap-5">
-            <button
-              type="button"
-              onClick={() => {
-                signOut();
-              }}
-              className="outline_btn"
-            >
-              Sign Out
-            </button>
+            {session && (
+              <button
+                type="button"
+                onClick={() => {
+                  signOut();
+                }}
+                className="outline_btn"
+                hidden
+              >
+                Sign Out
+              </button>
+            )}
 
             <span className="font-satoshi font-semibold text-base text-gray-700">
               {session?.user?.name ||
