@@ -28,11 +28,12 @@ const Login = () => {
         redirect: false,
       });
 
-      if (res.error) {
-        setError("Invalid Credentials");
+      if (!res?.error) {
+        router.push("/");
+        router.refresh();
         return;
       }
-      setTimeout(() => router.replace("/"), 500);
+      // setTimeout(() => router.replace("/"), 500);
     } catch (error) {
       console.log(error)}
   };
