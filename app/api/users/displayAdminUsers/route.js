@@ -8,6 +8,7 @@ export const GET = async (req, res) => {
     //Find all users that are Admins
     const adminUsers = await User.find({}, { image: 0 });
 
+    // res.setHeader('Cache-Control', 'no-store, must-revalidate');
     return new Response(JSON.stringify(adminUsers), { status: 200 });
   } catch (error) {
     console.log(error);

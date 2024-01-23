@@ -22,9 +22,10 @@ const AdminUsers = () => {
   const router = useRouter();
 
   const fetchAdminData = async () => {
-    const response = await axios.get("/api/users/displayAdminUsers");
-    if (response) {
-      setAdminUsersAPI(response.data);
+    const response = await fetch("/api/users/displayAdminUsers", {cache: "no-store"});
+    const data = await response.json()
+    if (data) {
+      setAdminUsersAPI(data);
     } else {
     }
   };
