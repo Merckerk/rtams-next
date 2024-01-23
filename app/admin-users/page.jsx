@@ -43,10 +43,7 @@ const AdminUsers = () => {
         });
   
         if (response.ok) {
-          const filteredUsers = adminUsersAPI.filter(
-            (users) => users._id !== userId
-          );
-          setAdminUsersAPI(filteredUsers);
+          fetchAdminData();
         }
       } catch (error) {
         console.error("Error deleting the user", error);
