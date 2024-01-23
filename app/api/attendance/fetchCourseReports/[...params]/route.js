@@ -1,23 +1,16 @@
 import Attendances from "@models/attendanceModel";
 import { connectToDB } from "@utils/database";
 
-// Function to extract query parameters from URL
-const getQueryParams = (url) => {
-  const params = new URLSearchParams(url.split('?')[1]);
-  return Object.fromEntries(params.entries());
-};
-
-// GET attendances by course, section, term
+//GET attendances by course, section, term
 export const GET = async (req, { params }) => {
   try {
     await connectToDB();
 
-    const queryParams = getQueryParams(req.url); // Extract query parameters
-    const courseCode = queryParams.courseCode;
-    const section = queryParams.section;
-    const term = queryParams.term;
-
-    console.log("courseCode:", courseCode);
+    
+    const courseCode = params.params[0];
+    const section = params.params[1];
+    const term = params.params[2];
+    console.log("course Code:", courseCode);
     console.log("section:", section);
     console.log("term:", term);
 
@@ -35,9 +28,10 @@ export const GET = async (req, { params }) => {
     if (!attendances) {
       return new Response("Attendances Not Found.", { status: 404 });
     }
+    console.log("attendances", attendances)
 
     return new Response(JSON.stringify(attendances), { status: 200 });
-    
+    // return new Response(JSON.stringify({ message: "gud" }), { status: 200 });
   } catch (error) {
     console.error("Error getting attendances:", error);
     return new Response(
@@ -46,3 +40,20 @@ export const GET = async (req, { params }) => {
     );
   }
 };
+// export const GET = async (req, { params }) => {
+//   try {
+//     await connectToDB();
+
+//     console.log(params.id);
+//     console.log(params.id[0]);
+//     console.log(params.id[1]);
+//     return new Response(JSON.stringify({message: "good"}, { status: 200}));
+
+//     // const student = await Student.findById(params.id);
+//     // if (!student) return new Response("Student not found.", { status: 404 });
+
+//     // return new Response(JSON.stringify(student), { status: 200 });
+//   } catch (error) {
+//     return new Response("Internal server error.", { status: 500 });
+//   }
+// };

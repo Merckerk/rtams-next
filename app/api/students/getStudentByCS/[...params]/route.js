@@ -6,14 +6,20 @@ export const GET = async (req, { params }) => {
   try {
     await connectToDB();
 
-    const queryParams = new URLSearchParams(req.url.split('?')[1]); // Extract query parameters
-    const courseCode = queryParams.get('courseCode');
-    const section = queryParams.get('section');
-    // const term = queryParams.get('term');
+    // const queryParams = new URLSearchParams(req.url.split('?')[1]); // Extract query parameters
+    // const courseCode = queryParams.get('courseCode');
+    // const section = queryParams.get('section');
+    // // const term = queryParams.get('term');
 
-    console.log("courseCode:", courseCode);
-    console.log("section:", section);
-    // console.log("term:", term);
+    // // console.log("courseCode:", courseCode);
+    // // console.log("section:", section);
+    // // console.log("term:", term);
+
+    const courseCode = params.params[0];
+    const section = params.params[1];
+
+    console.log("courseCode frm studnt:", courseCode);
+    console.log("section frm studnt:", section);
 
     if (!courseCode || !section) {
       return new Response("Incomplete Payload", { status: 400 });
