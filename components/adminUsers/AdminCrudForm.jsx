@@ -1,6 +1,5 @@
 "use client";
 
-import defaultProfilePicture from "public/assets/images/defaultProfilePicture.jpg";
 import ReusableInput from "@components/reusableInput/ReusableInput";
 
 import { useEffect, useState } from "react";
