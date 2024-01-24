@@ -11,7 +11,7 @@ const FeatureCard = ({ featureName, description, routeName }) => {
     router.push(`/${routeName}`);
   };
   return (
-    <div className="feature_card flex flex-row h-32" style={{ height: '160px'}} onClick={handleCardClick}>
+    <Link className="feature_card flex flex-row h-32" style={{ height: '160px'}} href={`/${routeName}`}>
       <div className="flex flex-col">
         <div className="flex flex-row gap-6 mb-2">
           <div className="feature-image">
@@ -22,7 +22,7 @@ const FeatureCard = ({ featureName, description, routeName }) => {
         </div>
         <p className="feature-description">{description}</p>
       </div>
-    </div>
+    </Link>
   );
 };
 
