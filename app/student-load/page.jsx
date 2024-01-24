@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -77,9 +77,12 @@ const StudentLoad = () => {
     try {
       setLoading(true);
 
-      const response = await axios.patch(`/api/students/${studentId}/editLoad`, {
-        load: editedLoad,
-      });
+      const response = await axios.patch(
+        `/api/students/${studentId}/editLoad`,
+        {
+          load: editedLoad,
+        }
+      );
 
       console.log("Load changes saved:", response.data);
 
@@ -91,7 +94,8 @@ const StudentLoad = () => {
     }
   };
 
-  const isCourseInLoad = (courseId) => studentDetailsAPI.load.includes(courseId);
+  const isCourseInLoad = (courseId) =>
+    studentDetailsAPI.load.includes(courseId);
 
   const isCourseInEditedLoad = (courseId) => editedLoad.includes(courseId);
 
@@ -106,48 +110,37 @@ const StudentLoad = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-row items-center mb-10">
-        {!studentDetailsAPI.image ? (
-          <Image
-            src={"/assets/images/defaultProfilePicture.jpg"}
-            alt="Default Profile"
-            width={100}
-            height={100}
-            objectFit="contain"
-            className="rounded-full"
-          />
-        ) : (
-          <Image
-            src={studentDetailsAPI.image}
-            alt="Student Profile"
-            width={100}
-            height={100}
-            objectFit="contain"
-            className="rounded-full"
-          />
-        )}
-        <div className="ml-5">
-          <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
-            Student Load
-          </h1>
-          <span className="font-satoshi font-semibold text-base text-gray-700">
-            {studentDetailsAPI.name || studentDetailsAPI.username}
-          </span>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div>
+        <div className="flex flex-row items-center mb-10">
+          {!studentDetailsAPI.image ? (
+            <Image
+              src={"/assets/images/defaultProfilePicture.jpg"}
+              alt="Default Profile"
+              width={100}
+              height={100}
+              objectFit="contain"
+              className="rounded-full"
+            />
+          ) : (
+            <Image
+              src={studentDetailsAPI.image}
+              alt="Student Profile"
+              width={100}
+              height={100}
+              objectFit="contain"
+              className="rounded-full"
+            />
+          )}
+          <div className="ml-5">
+            <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
+              Student Load
+            </h1>
+            <span className="font-satoshi font-semibold text-base text-gray-700">
+              {studentDetailsAPI.name || studentDetailsAPI.username}
+            </span>
+          </div>
         </div>
-      </div>
-
-      <div className="flex-between">
-        <ReusableInput
-          label="Search"
-          type="text"
-          id="search"
-          name="search"
-          placeholder="Search by course code or name"
-          className="p-2 border border-gray-300 rounded w-64 m-3"
-          onChange={(e) => setSearchTerm(e.target.value)}
-          value={searchTerm}
-        />
 
         <button
           className="black_btn"
@@ -156,64 +149,64 @@ const StudentLoad = () => {
         >
           Save Load Changes
         </button>
-      </div>
 
-      <TableContainer component={Paper}>
-        <Table
-          className="min-w-[700px] md:min-w-screen-lg"
-          aria-label="Courses table"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Course Code</StyledTableCell>
-              <StyledTableCell align="left">Course Name</StyledTableCell>
-              <StyledTableCell align="center">
-                Current Load Status
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                Add or Remove Load
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredCourses.map((course) => (
-              <StyledTableRow key={course._id}>
-                <StyledTableCell component="th" scope="row">
-                  {course.courseCode}
-                </StyledTableCell>
-                <StyledTableCell align="left">
-                  {course.courseName}
+        <TableContainer component={Paper}>
+          <Table
+            className="min-w-[700px] md:min-w-screen-lg"
+            aria-label="Courses table"
+          >
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Course Code</StyledTableCell>
+                <StyledTableCell align="left">Course Name</StyledTableCell>
+                <StyledTableCell align="center">
+                  Current Load Status
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {isCourseInLoad(course._id) ? (
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                      <span>In Load</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                      <span>Not In Load</span>
-                    </div>
-                  )}
+                  Add or Remove Load
                 </StyledTableCell>
-                <StyledTableCell align="center">
-                  {/* Use a checkbox for selecting courses */}
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={isCourseInEditedLoad(course._id)}
-                        onChange={() => handleCheckboxChange(course._id)}
-                      />
-                    }
-                  />
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredCourses.map((course) => (
+                <StyledTableRow key={course._id}>
+                  <StyledTableCell component="th" scope="row">
+                    {course.courseCode}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {course.courseName}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {isCourseInLoad(course._id) ? (
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                        <span>In Load</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                        <span>Not In Load</span>
+                      </div>
+                    )}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {/* Use a checkbox for selecting courses */}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={isCourseInEditedLoad(course._id)}
+                          onChange={() => handleCheckboxChange(course._id)}
+                        />
+                      }
+                    />
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </Suspense>
   );
 };
 
