@@ -9,6 +9,8 @@ export const metadata = {
     "A Real-Time Attendance Monitoring System for the CpE Department",
 };
 
+export const fetchCache = 'force-no-store'
+
 const RootLayout = ({ children }) => {
   return (
     <html lang="en">
