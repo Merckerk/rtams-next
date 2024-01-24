@@ -7,7 +7,7 @@ export const GET = async (req, res) => {
 
     const Students = await Student.find({}, { image: 0 });
 
-    return new Response(JSON.stringify(Students));
+    return new Response(JSON.stringify(Students), { status: 200 });
   } catch (error) {
     return new Response("Failed to fetch students from the database.", {
       status: 500,
