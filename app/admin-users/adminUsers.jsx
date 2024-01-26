@@ -15,9 +15,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0;
-export const fetchCache = 'force-no-store'
+
 
 const AdminUsers = () => {
   const [adminUsersAPI, setAdminUsersAPI] = useState([]);
