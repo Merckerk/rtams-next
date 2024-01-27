@@ -86,6 +86,9 @@ const AttendanceReports = () => {
             <TableRow>
               <StyledTableCell align="center">NFC UID</StyledTableCell>
               <StyledTableCell align="center">Student Name</StyledTableCell>
+              <StyledTableCell align="center">Section</StyledTableCell>
+              <StyledTableCell align="center">Course</StyledTableCell>
+              <StyledTableCell align="center">Term</StyledTableCell>
               <StyledTableCell align="center">Date</StyledTableCell>
               <StyledTableCell align="center">Time In</StyledTableCell>
               <StyledTableCell align="center">Time Out</StyledTableCell>
@@ -100,6 +103,15 @@ const AttendanceReports = () => {
                 </StyledTableCell>
                 <StyledTableCell align="center" component="th" scope="row">
                   {report.studentName}
+                </StyledTableCell>
+                <StyledTableCell align="center" component="th" scope="row">
+                  {report.section}
+                </StyledTableCell>
+                <StyledTableCell align="center" component="th" scope="row">
+                  {report.course}
+                </StyledTableCell>
+                <StyledTableCell align="center" component="th" scope="row">
+                  {report.term}
                 </StyledTableCell>
                 <StyledTableCell align="center">{report.date}</StyledTableCell>
                 <StyledTableCell align="center">
