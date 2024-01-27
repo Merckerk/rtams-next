@@ -19,7 +19,7 @@ const attendanceSchema = new Schema({
     ref: "courses",
   },
   date: {
-    type: Date,
+    type: String,
     required: [true, "date is required"],
   },
   term: {
