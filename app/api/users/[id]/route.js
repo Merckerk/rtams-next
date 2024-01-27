@@ -2,6 +2,10 @@ import User from "@models/userModel";
 import { connectToDB } from "@utils/database";
 import bcryptjs from "bcryptjs";
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 // GET user
 export const GET = async (req, { params }) => {
   try {

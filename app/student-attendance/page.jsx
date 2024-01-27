@@ -270,7 +270,7 @@ const StudentAttendance = () => {
         </div>
       </div>
 
-      {attendancesAPI && studentsAPI && (
+      {Object.keys(attendanceMap).length > 0 && (
         <TableContainer component={Paper}>
           <Table
             className="min-w-[700px] md:min-w-screen-lg"

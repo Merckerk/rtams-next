@@ -36,8 +36,9 @@ const Students = () => {
     );
 
     if (hasConfirmed) {
+      console.log("deleting user")
       try {
-        const response = await fetch(`/api/users/${studentId}`, {
+        const response = await fetch(`/api/students/${studentId}`, {
           method: "DELETE",
         });
 
@@ -45,7 +46,8 @@ const Students = () => {
           const filteredStudents = students.filter(
             (student) => student._id !== studentId
           );
-          setStudents(filteredStudents);
+          console.log("delet student response:", response);
+          fetchStudentData();
         }
       } catch (error) {
         console.error("Error deleting the student", error);

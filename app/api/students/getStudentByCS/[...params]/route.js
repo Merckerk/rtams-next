@@ -1,6 +1,10 @@
 import Student from "@models/studentModel";
 import { connectToDB } from "@utils/database";
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 // GET attendances by course, section, term
 export const GET = async (req, { params }) => {
   try {

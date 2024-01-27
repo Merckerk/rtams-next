@@ -2,6 +2,10 @@ import Student from "@models/studentModel";
 import { connectToDB } from "@utils/database";
 import bcryptjs from "bcryptjs";
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 // GET student
 export const GET = async (req, { params }) => {
   try {
