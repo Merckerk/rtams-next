@@ -142,7 +142,7 @@ const TeachingLoad = () => {
         </div>
       </div>
 
-      <div className="flex-between">
+      <div className="flex-between mb-4">
         <button
           className="black_btn"
           onClick={handleEditLoad}
