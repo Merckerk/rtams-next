@@ -25,9 +25,9 @@ const StudentsTable = ({ students, setStudents, post }) => {
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
           Students
         </h1>
-        <button className="pb-7 black_btn" onClick={() => {}}>
+        {/* <button className="pb-7 black_btn" onClick={() => {}}>
           Update Attendance
-        </button>
+        </button> */}
       </div>
 
       <TableContainer component={Paper}>
@@ -40,8 +40,8 @@ const StudentsTable = ({ students, setStudents, post }) => {
               <StyledTableCell>Student No.</StyledTableCell>
               <StyledTableCell>NFC UID</StyledTableCell>
               <StyledTableCell align="left">Name</StyledTableCell>
-              <StyledTableCell align="left">Timed-in</StyledTableCell>
-              <StyledTableCell align="center">Actions</StyledTableCell>
+              {/* <StyledTableCell align="left">Timed-in</StyledTableCell> */}
+              {/* <StyledTableCell align="center">Actions</StyledTableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -54,12 +54,12 @@ const StudentsTable = ({ students, setStudents, post }) => {
                 <StyledTableCell align="left">
                   {student.name || student.username}
                 </StyledTableCell>
-                <StyledTableCell align="left">TO BE FILLED</StyledTableCell>
+                {/* <StyledTableCell align="left">TO BE FILLED</StyledTableCell>
                 <StyledTableCell align="center">
                   <FormControlLabel
                     control={<Checkbox checked={false} onChange={() => {}} />}
                   />
-                </StyledTableCell>
+                </StyledTableCell> */}
               </StyledTableRow>
             ))}
           </TableBody>
