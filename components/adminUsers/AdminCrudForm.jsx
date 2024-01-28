@@ -89,9 +89,40 @@ const AdminCrudForm = ({
     };
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    // Validate all fields before submitting
+    const isEmailValid = validateEmail(post.email);
+    const isNameValid = validateName(post.name);
+    const isUserIdValid = validateUserId(post.userId);
+    const isUsernameValid = validateUsername(post.username);
+    const isPasswordValid = validatePassword(post.password);
+    const isRepasswordValid = validateRepassword(post.repassword);
+
+    // If any validation fails, don't proceed with form submission
+    if (
+      !isEmailValid ||
+      !isNameValid ||
+      !isUserIdValid ||
+      !isUsernameValid ||
+      !isPasswordValid ||
+      !isRepasswordValid
+    ) {
+      // You might want to display an error message or handle invalid inputs differently
+      console.log("Invalid inputs. Please fix the errors.");
+      return;
+    }
+
+    // If all validations pass, proceed with the form submission
+    handleSubmit();
+  };
+
   return (
     <div className="container mx-auto mt-5 mb-8">
-      <form className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism">
+      <form className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism"
+      onSubmit={handleFormSubmit}
+      >
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
           {type} User Profile
         </h1>
@@ -228,7 +259,7 @@ const AdminCrudForm = ({
           required
         />
 
-        <button className="black_btn" disabled={loading} onClick={handleSubmit}>
+        <button className="black_btn" disabled={loading}>
           {loading ? "Processing" : `${type} User`}
         </button>
         {type == "Edit" ? (
