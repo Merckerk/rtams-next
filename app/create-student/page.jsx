@@ -51,7 +51,9 @@ const CreateStudent = () => {
       const response = await axios.post("api/students/newStudent", postValues);
       if (response) {
         toast.success("Successfully created a student!", response);
+        //LUWIS
         router.push("/students");
+        //LUWIS
       } else {
         toast.error("Failed to create student");
       }

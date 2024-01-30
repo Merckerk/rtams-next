@@ -73,7 +73,9 @@ const UpdateStudent = () => {
         }),
       });
       if (response.ok) {
+        //LUWIS
         router.push("/students");
+        //LUWIS
       }
     } catch (error) {
       console.log("Error updating student details", error);

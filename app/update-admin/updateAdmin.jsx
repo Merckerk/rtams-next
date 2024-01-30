@@ -65,7 +65,9 @@ const UpdateAdmin = () => {
         }),
       });
       if (response.ok) {
+        //LUWIS
         router.push("/admin-users");
+        //LUWIS
       }
     } catch (error) {
       console.log("Error updating user details", error);
