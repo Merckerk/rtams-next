@@ -18,7 +18,7 @@ const UpdateAdmin = () => {
     username: "",
     password: "",
     repassword: "",
-    load: []
+    audit: ""
   });
 
   const getUserDetails = async () => {
@@ -33,7 +33,7 @@ const UpdateAdmin = () => {
       username: data.username,
       password: "",
       repassword: "",
-      load: []
+      audit: ""
     });
   };
 
@@ -56,18 +56,15 @@ const UpdateAdmin = () => {
         method: "PATCH",
         body: JSON.stringify({
           image: post.image,
-          email: post.email,
           name: post.name,
           userId: post.userId,
           username: post.username,
           password: post.password,
-          load: post.load,
+          audit: post.audit,
         }),
       });
       if (response.ok) {
-        //LUWIS
         router.push("/admin-users");
-        //LUWIS
       }
     } catch (error) {
       console.log("Error updating user details", error);

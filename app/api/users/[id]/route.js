@@ -1,3 +1,4 @@
+import Audits from "@models/auditModel";
 import User from "@models/userModel";
 import { connectToDB } from "@utils/database";
 import bcryptjs from "bcryptjs";
@@ -24,8 +25,7 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE user
 export const PATCH = async (req, { params }) => {
-  const { image, email, userId, username, password, name, load } =
-    await req.json();
+  const { image, userId, username, password, name, audit } = await req.json();
   try {
     await connectToDB();
     // Find and update the user with the new data
@@ -37,21 +37,41 @@ export const PATCH = async (req, { params }) => {
       return new Response("Cannot edit/update this user.", { status: 500 });
     }
 
+    const oldData = {
+      image: existingUser.image,
+      name: existingUser.name,
+      userId: existingUser.userId,
+      username: existingUser.username,
+      password: existingUser.password,
+    };
+
     //re-hash password here
     const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = !password ? '' : await bcryptjs.hash(password, salt);
+    const hashedPassword = !password ? "" : await bcryptjs.hash(password, salt);
 
     // Response if user is updated successfully
     existingUser.image = image;
-    existingUser.email = email;
     existingUser.name = name;
     existingUser.userId = userId;
     existingUser.username = username;
     existingUser.password = hashedPassword || existingUser.password;
-    existingUser.load = load;
 
     await existingUser.save();
-    return new Response(JSON.stringify(existingUser), { status: 200 });
+
+    const auditData = {
+      target: "user",
+      description: audit,
+      oldData: oldData,
+      newData: existingUser.toObject(),
+    };
+    const auditRecord = new Audits(auditData);
+    await auditRecord.save();
+
+    const combinedResponse = {
+      updatedUser: existingUser,
+      audit: auditRecord,
+    };
+    return new Response(JSON.stringify(combinedResponse), { status: 200 });
   } catch (error) {
     console.log(error);
     return new Response("Failed to update user.", { status: 500 });
