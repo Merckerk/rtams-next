@@ -13,22 +13,12 @@ const AdminCrudForm = ({
   handleDelete = () => {},
 }) => {
   const [errMsg, setErrMsg] = useState({
-    email: "",
     name: "",
     userId: "",
     username: "",
     password: "",
     repassword: "",
   });
-
-  const validateEmail = (value) => {
-    const isValid = !value || /\S+@\S+\.\S+/.test(value);
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      email: isValid ? "" : "Invalid email",
-    }));
-    return isValid;
-  };
 
   const validateName = (value) => {
     const isValid = !!value;
@@ -93,7 +83,6 @@ const AdminCrudForm = ({
     e.preventDefault(); // Prevent the default form submission behavior
 
     // Validate all fields before submitting
-    const isEmailValid = validateEmail(post.email);
     const isNameValid = validateName(post.name);
     const isUserIdValid = validateUserId(post.userId);
     const isUsernameValid = validateUsername(post.username);
@@ -101,27 +90,27 @@ const AdminCrudForm = ({
     const isRepasswordValid = validateRepassword(post.repassword);
 
     // If any validation fails, don't proceed with form submission
-    if (
-      !isEmailValid ||
-      !isNameValid ||
-      !isUserIdValid ||
-      !isUsernameValid ||
-      !isPasswordValid ||
-      !isRepasswordValid
-    ) {
-      // You might want to display an error message or handle invalid inputs differently
-      console.log("Invalid inputs. Please fix the errors.");
-      return;
+    if (!isNameValid || !isUserIdValid || !isUsernameValid) {
+      if (type === "Edit") {
+        console.log("Invalid inputs. Please fix the errors.");
+        return;
+      }else if(type === "Create"){
+        if (!isPasswordValid || isRepasswordValid){
+          console.log("Invalid password inputs. Please fix the errors.");
+          return;
+        }
+      }
     }
 
     // If all validations pass, proceed with the form submission
-    handleSubmit();
+    handleSubmit(e);
   };
 
   return (
     <div className="container mx-auto mt-5 mb-8">
-      <form className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism"
-      onSubmit={handleFormSubmit}
+      <form
+        className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism"
+        onSubmit={handleFormSubmit}
       >
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
           {type} User Profile
@@ -164,22 +153,6 @@ const AdminCrudForm = ({
         </div>
 
         <ReusableInput
-          label="Email"
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Enter email"
-          className="form_input"
-          onChange={(e) => {
-            setPost({ ...post, email: e.target.value });
-            validateEmail(e.target.value);
-          }}
-          value={post?.email}
-          errorMessage={errMsg.email}
-          required
-        />
-        
-        <ReusableInput
           label="Name"
           type="text"
           id="name"
@@ -210,7 +183,7 @@ const AdminCrudForm = ({
           errorMessage={errMsg.userId}
           required
         />
-        
+
         <ReusableInput
           label="Username"
           type="text"
@@ -226,7 +199,7 @@ const AdminCrudForm = ({
           errorMessage={errMsg.username}
           required
         />
-        
+
         <ReusableInput
           label="Password"
           type="password"
@@ -240,7 +213,6 @@ const AdminCrudForm = ({
           }}
           value={post?.password}
           errorMessage={errMsg.password}
-          required
         />
 
         <ReusableInput
@@ -256,7 +228,6 @@ const AdminCrudForm = ({
           }}
           value={post?.repassword}
           errorMessage={errMsg.repassword}
-          required
         />
 
         <button className="black_btn" disabled={loading}>

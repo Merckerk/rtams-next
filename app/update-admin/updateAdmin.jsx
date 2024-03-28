@@ -101,7 +101,7 @@ const UpdateAdmin = () => {
       post={post}
       setPost={setPost}
       loading={loading}
-      handleSubmit={onUpdateUser}
+      handleSubmit={(e) => onUpdateUser(e)}
       handleDelete={onDeleteUser}
     />
   );

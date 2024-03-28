@@ -6,11 +6,6 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
-  email: {
-    type: String,
-    required: [true, "Please provide an email"],
-    unique: true,
-  },
   name: {
     type: String,
     // required: [true, "Please provide a name"],
@@ -29,12 +24,6 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Please provide a password"],
   },
-  load: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "courses",
-    },
-  ],
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,
