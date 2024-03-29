@@ -18,9 +18,14 @@ const CreateStudent = () => {
     repassword: "",
     section: "",
     load: [],
+    gender: "",
+    mobileNumber: "",
+    placeOfBirth: "",
+    residentialAddress: "",
+    permanentAddress: "",
+    nameOfSpouse: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  //TODO: MAKE THIS FUNCTIONAL
   const [areFieldsValid, setAreFieldsValid] = useState(false);
 
   const onCreateStudent = async () => {
@@ -36,6 +41,12 @@ const CreateStudent = () => {
         password,
         section,
         load,
+        gender,
+        mobileNumber,
+        placeOfBirth,
+        residentialAddress,
+        permanentAddress,
+        nameOfSpouse,
       } = post;
       const postValues = {
         image,
@@ -47,6 +58,12 @@ const CreateStudent = () => {
         password,
         section,
         load,
+        gender,
+        mobileNumber,
+        placeOfBirth,
+        residentialAddress,
+        permanentAddress,
+        nameOfSpouse,
       };
       const response = await axios.post("api/students/newStudent", postValues);
       if (response) {
