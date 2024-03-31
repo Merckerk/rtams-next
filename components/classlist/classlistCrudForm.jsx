@@ -1,5 +1,13 @@
 "use client";
 
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { StyledTableCell, StyledTableRow } from "@styles/tableStyles";
+
 import ReusableInput from "@components/reusableInput/ReusableInput";
 import ReusableDropdown from "@components/reusableDropdown/ReusableDropdown";
 import { useEffect, useState } from "react";
@@ -12,6 +20,7 @@ const ClasslistCrudForm = ({
   handleSubmit,
   handleDelete = () => {},
   faculties,
+  students,
 }) => {
   const [errMsg, setErrMsg] = useState({
     user: "",
@@ -154,6 +163,60 @@ const ClasslistCrudForm = ({
           </button>
         ) : null}
       </form>
+
+      <TableContainer component={Paper}>
+        <Table
+          className="min-w-[700px] md:min-w-screen-lg"
+          aria-label="admin users table"
+        >
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Student Number</StyledTableCell>
+              <StyledTableCell align="left">Name</StyledTableCell>
+              <StyledTableCell align="left">Section</StyledTableCell>
+              <StyledTableCell align="center">Actions</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {students.map((student) => (
+              <StyledTableRow key={student._id}>
+                <StyledTableCell component="th" scope="row">
+                  {student.studentNumber}
+                </StyledTableCell>
+                <StyledTableCell align="left">{student.name}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {student.section}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <button
+                    variant="outlined"
+                    color="primary"
+                    style={{ marginRight: "30px" }}
+                    onClick={() => handleEdit(student)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    variant="outlined"
+                    color="primary"
+                    style={{ marginRight: "30px" }}
+                    onClick={() => deleteStudent(student._id)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => handleLoad(student)}
+                  >
+                    Load
+                  </button>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

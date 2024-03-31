@@ -18,30 +18,49 @@ const CreateClassList = () => {
   });
 
   const [faculties, setFaculties] = useState([]);
+  const [students, setStudents] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [areFieldsValid, setAreFieldsValid] = useState(false);
 
-  const fetchFacultyData = async () => {
-    const response = await fetch("/api/users/getFacultyIdAndName", {
-      cache: "no-store",
-    });
-    const data = await response.json();
-    if (data) {
-      setFaculties(data);
-    } else {
+  const fetchData = async () => {
+    try {
+      const [facultyResponse, studentsResponse] = await Promise.all([
+        fetch("/api/users/getFacultyIdAndName", { cache: "no-store" }),
+        fetch("/api/students/getStudentsByIdNameSection", { cache: "no-store" }),
+      ]);
+  
+      const facultyData = await facultyResponse.json();
+      const studentsData = await studentsResponse.json();
+  
+      if (facultyData) {
+        setFaculties(facultyData);
+      } else {
+      }
+  
+      if (studentsData) {
+        setStudents(studentsData);
+      } else {
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
-
+  
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
   const onCreateClassList = async () => {};
 
-  useEffect(() => {
-    fetchFacultyData();
-  }, []);
 
   useEffect(() => {
     console.log("faculties:", faculties);
   }, [faculties]);
+  
+  useEffect(() => {
+    console.log("students:", students);
+  }, [students]);
 
   useEffect(() => {
     console.log("post:", post);
@@ -55,6 +74,7 @@ const CreateClassList = () => {
       loading={isLoading}
       handleSubmit={onCreateClassList}
       faculties={faculties}
+      students={students}
     />
   );
 };
