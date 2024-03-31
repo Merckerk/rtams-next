@@ -1,6 +1,6 @@
 import mongoose, {Schema, model, models} from "mongoose";
 
-const classSchema = new Schema({
+const classlistSchema = new Schema({
     user:{
         type: mongoose.Schema.ObjectId,
         ref: "users"
@@ -26,3 +26,7 @@ const classSchema = new Schema({
         ref: "students"
     }]
 });
+
+const  Classlist =  models.classelists || model("classlists", classlistSchema);
+
+export default Classlist;

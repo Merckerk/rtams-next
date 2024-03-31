@@ -37,9 +37,7 @@ const CreateUser = () => {
         };
         const response = await axios.post("api/users/create", postValues);
         toast.success("Successfully created an admin user!");
-        //LUWIS
         router.push("/login");
-        //LUWIS
       }
     } catch (error) {
       toast.error(error);
