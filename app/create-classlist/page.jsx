@@ -102,9 +102,9 @@ const CreateClassList = () => {
   //   console.log("post:", post);
   // }, [post]);
 
-  // useEffect(() => {
-  //   console.log("editedStudentsList:", editedStudentsList);
-  // }, [editedStudentsList]);
+  useEffect(() => {
+    console.log("editedStudentsList:", editedStudentsList);
+  }, [editedStudentsList]);
 
   return (
     <ClasslistCrudForm

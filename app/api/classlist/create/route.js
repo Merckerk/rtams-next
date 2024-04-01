@@ -37,7 +37,7 @@ export const POST = async (req, res) => {
       savedClasslist: savedClasslist,
     };
 
-    return new Response(responseValue, { status: 201 });
+    return new Response(JSON.stringify(responseValue), { status: 201 });
   } catch (error) {
     console.error(error);
     return new Response("Failed to create classlist.", { status: 500 });

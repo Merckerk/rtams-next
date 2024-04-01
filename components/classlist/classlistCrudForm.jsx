@@ -39,49 +39,48 @@ const ClasslistCrudForm = ({
     students: "",
   });
 
-  const handleFormSubmit = (e) => {};
-
+  
   const validateFaculty = () => {};
   const validateSectionCode = () => {};
   const validateSubjectCode = () => {};
   const validateSubjectDescription = () => {};
   const validateTerm = () => {};
   const validateSchedule = () => {};
-
+  
   const handleFacultyChange = (value) => setPost({ ...post, user: value });
-
+  
   const isStudentInClassList = (studentId) =>
-    post?.students.includes(studentId);
-
+  post?.students.includes(studentId);
+  
   const isStudentInEditedList = (studentId) =>
-    editedStudentsList.includes(studentId);
-
+  editedStudentsList.includes(studentId);
+  
   const handleCheckboxChange = (studentId) => {
     const isStudentInPayload = editedStudentsList.includes(studentId);
-
+    
     if (isStudentInPayload) {
       setEditedStudentsList((prevList) =>
-        prevList.filter((id) => id !== studentId)
+      prevList.filter((id) => id !== studentId)
       );
     } else {
       setEditedStudentsList((prevList) => [...prevList, studentId]);
     }
   };
-
+  
   const facultyOptions = useMemo(() => {
     return faculties.map((faculty) => ({
       value: faculty._id,
       label: faculty.name,
     }));
   }, [faculties]);
-
+  
   const sectionOptions = useMemo(() => {
     return Object.entries(Section).map(([key, value]) => ({
       value: key,
       label: value,
     }));
   }, []);
-
+  
   const memoizedStudents = useMemo(() => {
     return students.map((student) => (
       <StyledTableRow key={student._id}>
@@ -107,22 +106,25 @@ const ClasslistCrudForm = ({
           <FormControlLabel
             control={
               <Checkbox
-                checked={isStudentInEditedList(student._id)}
-                onChange={() => handleCheckboxChange(student._id)}
+              checked={isStudentInEditedList(student._id)}
+              onChange={() => handleCheckboxChange(student._id)}
               />
             }
-          />
+            />
         </StyledTableCell>
       </StyledTableRow>
     ));
-  }, [students]);
+  }, [students, editedStudentsList]);
+  
+  const handleFormSubmit = (e) => {
+    //fill up after validations checks
+  };
 
   return (
     <div className="container mx-auto mt-5 mb-8">
       <form
         className="max-w-2xl mb-8 mx-auto flex flex-col gap-7 glassmorphism"
-        onSubmit={handleFormSubmit}
-      >
+        >
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
           {type} Class list
         </h1>
@@ -234,15 +236,6 @@ const ClasslistCrudForm = ({
             ) : null}
           </label>
         ) : null}
-
-        <button className="black_btn" disabled={loading}>
-          {loading ? "Processing" : `${type} Class list`}
-        </button>
-        {type == "Edit" ? (
-          <button className="red_btn" disabled={loading} onClick={handleDelete}>
-            {loading ? "Processing" : "Delete Class list"}
-          </button>
-        ) : null}
       </form>
 
       <div className="flex justify-between items-center">
@@ -251,11 +244,9 @@ const ClasslistCrudForm = ({
         </h1>
         <button
           className="pb-7 black_btn"
-          onClick={() => {
-            router.push("/create-report");
-          }}
+          onClick={handleSubmit}
         >
-          Add Class list
+          {loading ? "Processing" : `${type} Class List`}
         </button>
       </div>
 
@@ -275,40 +266,6 @@ const ClasslistCrudForm = ({
           </TableHead>
           <TableBody>
             {memoizedStudents}
-            {/* {students.map((student) => (
-              <StyledTableRow key={student._id}>
-                <StyledTableCell component="th" scope="row">
-                  {student.studentNumber}
-                </StyledTableCell>
-                <StyledTableCell align="left">{student.name}</StyledTableCell>
-                <StyledTableCell align="left">
-                  {student.section}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {isStudentInClassList(student._id) ? (
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                      <span>In List</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                      <span>Not In List</span>
-                    </div>
-                  )}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={isStudentInEditedList(student._id)}
-                        onChange={() => handleCheckboxChange(student._id)}
-                      />
-                    }
-                  />
-                </StyledTableCell>
-              </StyledTableRow>
-            ))} */}
           </TableBody>
         </Table>
       </TableContainer>
