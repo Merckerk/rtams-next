@@ -8,9 +8,14 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { StyledTableCell, StyledTableRow } from "@styles/tableStyles";
 
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
 import ReusableInput from "@components/reusableInput/ReusableInput";
 import ReusableDropdown from "@components/reusableDropdown/ReusableDropdown";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+
+import Section from "@enums/section";
 
 const ClasslistCrudForm = ({
   type,
@@ -21,9 +26,12 @@ const ClasslistCrudForm = ({
   handleDelete = () => {},
   faculties,
   students,
+  editedStudentsList,
+  setEditedStudentsList,
 }) => {
   const [errMsg, setErrMsg] = useState({
     user: "",
+    sectionCode: "",
     subjectCode: "",
     subjectDescription: "",
     term: "",
@@ -31,13 +39,10 @@ const ClasslistCrudForm = ({
     students: "",
   });
 
-  const fetchFacultyData = async () => {
-    const response = await axios.get();
-  };
-
   const handleFormSubmit = (e) => {};
 
   const validateFaculty = () => {};
+  const validateSectionCode = () => {};
   const validateSubjectCode = () => {};
   const validateSubjectDescription = () => {};
   const validateTerm = () => {};
@@ -45,10 +50,77 @@ const ClasslistCrudForm = ({
 
   const handleFacultyChange = (value) => setPost({ ...post, user: value });
 
+  const isStudentInClassList = (studentId) =>
+    post?.students.includes(studentId);
+
+  const isStudentInEditedList = (studentId) =>
+    editedStudentsList.includes(studentId);
+
+  const handleCheckboxChange = (studentId) => {
+    const isStudentInPayload = editedStudentsList.includes(studentId);
+
+    if (isStudentInPayload) {
+      setEditedStudentsList((prevList) =>
+        prevList.filter((id) => id !== studentId)
+      );
+    } else {
+      setEditedStudentsList((prevList) => [...prevList, studentId]);
+    }
+  };
+
+  const facultyOptions = useMemo(() => {
+    return faculties.map((faculty) => ({
+      value: faculty._id,
+      label: faculty.name,
+    }));
+  }, [faculties]);
+
+  const sectionOptions = useMemo(() => {
+    return Object.entries(Section).map(([key, value]) => ({
+      value: key,
+      label: value,
+    }));
+  }, []);
+
+  const memoizedStudents = useMemo(() => {
+    return students.map((student) => (
+      <StyledTableRow key={student._id}>
+        <StyledTableCell component="th" scope="row">
+          {student.studentNumber}
+        </StyledTableCell>
+        <StyledTableCell align="left">{student.name}</StyledTableCell>
+        <StyledTableCell align="left">{student.section}</StyledTableCell>
+        <StyledTableCell align="center">
+          {isStudentInClassList(student._id) ? (
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+              <span>In List</span>
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+              <span>Not In List</span>
+            </div>
+          )}
+        </StyledTableCell>
+        <StyledTableCell align="center">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isStudentInEditedList(student._id)}
+                onChange={() => handleCheckboxChange(student._id)}
+              />
+            }
+          />
+        </StyledTableCell>
+      </StyledTableRow>
+    ));
+  }, [students]);
+
   return (
     <div className="container mx-auto mt-5 mb-8">
       <form
-        className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism"
+        className="max-w-2xl mb-8 mx-auto flex flex-col gap-7 glassmorphism"
         onSubmit={handleFormSubmit}
       >
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
@@ -59,15 +131,24 @@ const ClasslistCrudForm = ({
           label="Faculty"
           id="faculty"
           name="faculty"
-          options={faculties.map((faculty) => ({
-            value: faculty._id,
-            label: faculty.name,
-          }))}
+          options={facultyOptions}
           value={post?.user}
           onChange={(e) => {
             setPost({ ...post, user: e.target.value });
           }}
           placeholder="Select Faculty"
+        />
+
+        <ReusableDropdown
+          label="Section Code"
+          id="sectionCode"
+          name="sectionCode"
+          options={sectionOptions}
+          value={post?.sectionCode}
+          onChange={(e) => {
+            setPost({ ...post, sectionCode: e.target.value });
+          }}
+          placeholder="Select Section"
         />
 
         <ReusableInput
@@ -164,6 +245,20 @@ const ClasslistCrudForm = ({
         ) : null}
       </form>
 
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
+          Class list
+        </h1>
+        <button
+          className="pb-7 black_btn"
+          onClick={() => {
+            router.push("/create-report");
+          }}
+        >
+          Add Class list
+        </button>
+      </div>
+
       <TableContainer component={Paper}>
         <Table
           className="min-w-[700px] md:min-w-screen-lg"
@@ -174,11 +269,13 @@ const ClasslistCrudForm = ({
               <StyledTableCell>Student Number</StyledTableCell>
               <StyledTableCell align="left">Name</StyledTableCell>
               <StyledTableCell align="left">Section</StyledTableCell>
+              <StyledTableCell align="left">Status</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {students.map((student) => (
+            {memoizedStudents}
+            {/* {students.map((student) => (
               <StyledTableRow key={student._id}>
                 <StyledTableCell component="th" scope="row">
                   {student.studentNumber}
@@ -188,32 +285,30 @@ const ClasslistCrudForm = ({
                   {student.section}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <button
-                    variant="outlined"
-                    color="primary"
-                    style={{ marginRight: "30px" }}
-                    onClick={() => handleEdit(student)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    variant="outlined"
-                    color="primary"
-                    style={{ marginRight: "30px" }}
-                    onClick={() => deleteStudent(student._id)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => handleLoad(student)}
-                  >
-                    Load
-                  </button>
+                  {isStudentInClassList(student._id) ? (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                      <span>In List</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                      <span>Not In List</span>
+                    </div>
+                  )}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={isStudentInEditedList(student._id)}
+                        onChange={() => handleCheckboxChange(student._id)}
+                      />
+                    }
+                  />
                 </StyledTableCell>
               </StyledTableRow>
-            ))}
+            ))} */}
           </TableBody>
         </Table>
       </TableContainer>

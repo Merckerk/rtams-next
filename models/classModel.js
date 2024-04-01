@@ -5,6 +5,10 @@ const classlistSchema = new Schema({
         type: mongoose.Schema.ObjectId,
         ref: "users"
     },
+    sectionCode:{
+        type: String,
+        required: true
+    },
     subjectCode:{
         type: String,
         required: true
