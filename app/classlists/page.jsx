@@ -15,10 +15,32 @@ import axios from "axios";
 
 import React from "react";
 
-import classesMock from "@mocks/mockClassesData";
-
-const Class = () => {
+const Classlists = () => {
   const router = useRouter();
+  const [classlists, setClasslists] = useState([]);
+
+  const fetchClasslistsData = async () => {
+    const response = await fetch("/api/classlist/getAllClasslists", {
+      cache: "no-store",
+    });
+    const data = await response.json();
+
+    if (data) {
+      const classlistData = data.data;
+      console.log("data:", classlistData);
+
+      setClasslists(classlistData);
+    } else {
+    }
+  };
+
+  const handleEdit = (classlist) =>
+    router.push(`update-classlist?classlistid=${classlist._id}`);
+
+  useEffect(() => {
+    fetchClasslistsData();
+  }, []);
+
   return (
     <div className="py-4 pt-7">
       <div className="flex justify-between items-center">
@@ -42,37 +64,36 @@ const Class = () => {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell>Faculty</StyledTableCell>
+              <StyledTableCell>Section</StyledTableCell>
               <StyledTableCell align="left">Subject Code</StyledTableCell>
-              <StyledTableCell align="left">Subject Description</StyledTableCell>
+              <StyledTableCell align="left">
+                Subject Description
+              </StyledTableCell>
               <StyledTableCell align="center">Term</StyledTableCell>
-              <StyledTableCell align="center">Schedule</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
-
             </TableRow>
           </TableHead>
           <TableBody>
-            {classesMock.map((classlist) => (
+            {classlists.map((classlist) => (
               <StyledTableRow key={classlist._id}>
                 <StyledTableCell component="th" scope="row">
-                  {classlist.user}
+                  {classlist.sectionCode}
                 </StyledTableCell>
-                <StyledTableCell align="left">{classlist.subjectCode}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {classlist.subjectCode}
+                </StyledTableCell>
                 <StyledTableCell align="left">
                   {classlist.subjectDescription}
                 </StyledTableCell>
-                <StyledTableCell align="left">
-                  {classlist.term}
-                </StyledTableCell>
-                <StyledTableCell align="left">
-                  {classlist.schedule}
-                </StyledTableCell>
+                <StyledTableCell align="left">{classlist.term}</StyledTableCell>
                 <StyledTableCell align="center">
                   <button
                     variant="outlined"
                     color="primary"
                     style={{ marginRight: "30px" }}
-                    onClick={() => {}}
+                    onClick={() => {
+                      handleEdit(classlist);
+                    }}
                   >
                     View
                   </button>
@@ -86,4 +107,4 @@ const Class = () => {
   );
 };
 
-export default Class;
+export default Classlists;

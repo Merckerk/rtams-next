@@ -30,57 +30,88 @@ const ClasslistCrudForm = ({
   setEditedStudentsList,
 }) => {
   const [errMsg, setErrMsg] = useState({
-    user: "",
     sectionCode: "",
     subjectCode: "",
     subjectDescription: "",
     term: "",
-    schedule: "",
-    students: "",
+    audit: "",
   });
 
-  
-  const validateFaculty = () => {};
-  const validateSectionCode = () => {};
-  const validateSubjectCode = () => {};
-  const validateSubjectDescription = () => {};
-  const validateTerm = () => {};
-  const validateSchedule = () => {};
-  
-  const handleFacultyChange = (value) => setPost({ ...post, user: value });
-  
+  const checkForEmptyValue = (value, param) => {
+    const isValid = !!value;
+    setErrMsg((prevErrMsg) => ({
+      ...prevErrMsg,
+      [param]: isValid ? "" : "This field cannot be empty",
+    }));
+    return isValid;
+  };
+
+  const validateAudit = (value, param) => {
+    if (type === "Edit") {
+      checkForEmptyValue(value, param);
+    }
+  };
+
+  const areAllFieldsEmpty = () => {
+    if (!post.sectionCode)
+      setErrMsg((prev) => ({
+        ...prev,
+        sectionCode: "This field cannot be empty",
+      }));
+    if (!post.subjectCode)
+      setErrMsg((prev) => ({
+        ...prev,
+        subjectCode: "This field cannot be empty",
+      }));
+    if (!post.subjectDescription)
+      setErrMsg((prev) => ({
+        ...prev,
+        subjectDescription: "This field cannot be empty",
+      }));
+    if (!post.term)
+      setErrMsg((prev) => ({
+        ...prev,
+        term: "This field cannot be empty",
+      }));
+    if (!post.audit)
+      setErrMsg((prev) => ({
+        ...prev,
+        audit: "This field cannot be empty",
+      }));
+  };
+
   const isStudentInClassList = (studentId) =>
-  post?.students.includes(studentId);
-  
+    post?.students.includes(studentId);
+
   const isStudentInEditedList = (studentId) =>
-  editedStudentsList.includes(studentId);
-  
+    editedStudentsList.includes(studentId);
+
   const handleCheckboxChange = (studentId) => {
     const isStudentInPayload = editedStudentsList.includes(studentId);
-    
+
     if (isStudentInPayload) {
       setEditedStudentsList((prevList) =>
-      prevList.filter((id) => id !== studentId)
+        prevList.filter((id) => id !== studentId)
       );
     } else {
       setEditedStudentsList((prevList) => [...prevList, studentId]);
     }
   };
-  
+
   const facultyOptions = useMemo(() => {
     return faculties.map((faculty) => ({
       value: faculty._id,
       label: faculty.name,
     }));
   }, [faculties]);
-  
+
   const sectionOptions = useMemo(() => {
     return Object.entries(Section).map(([key, value]) => ({
       value: key,
       label: value,
     }));
   }, []);
-  
+
   const memoizedStudents = useMemo(() => {
     return students.map((student) => (
       <StyledTableRow key={student._id}>
@@ -106,25 +137,29 @@ const ClasslistCrudForm = ({
           <FormControlLabel
             control={
               <Checkbox
-              checked={isStudentInEditedList(student._id)}
-              onChange={() => handleCheckboxChange(student._id)}
+                checked={isStudentInEditedList(student._id)}
+                onChange={() => handleCheckboxChange(student._id)}
               />
             }
-            />
+          />
         </StyledTableCell>
       </StyledTableRow>
     ));
   }, [students, editedStudentsList]);
-  
-  const handleFormSubmit = (e) => {
-    //fill up after validations checks
+
+  const handleEdit = (e) => {
+    areAllFieldsEmpty();
+    handleSubmit(e);
   };
+
+  const onDelete = () => {
+    areAllFieldsEmpty();
+    handleDelete();
+  }
 
   return (
     <div className="container mx-auto mt-5 mb-8">
-      <form
-        className="max-w-2xl mb-8 mx-auto flex flex-col gap-7 glassmorphism"
-        >
+      <form className="max-w-2xl mb-8 mx-auto flex flex-col gap-7 glassmorphism">
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
           {type} Class list
         </h1>
@@ -162,7 +197,7 @@ const ClasslistCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, subjectCode: e.target.value });
-            validateSubjectCode(e.target.value);
+            checkForEmptyValue(e.target.value, "subjectCode");
           }}
           value={post?.subjectCode}
           errorMessage={errMsg.subjectCode}
@@ -178,10 +213,10 @@ const ClasslistCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, subjectDescription: e.target.value });
-            validateSubjectDescription(e.target.value);
+            checkForEmptyValue(e.target.value, "subjectDescription");
           }}
-          value={post?.username}
-          errorMessage={errMsg.username}
+          value={post?.subjectDescription}
+          errorMessage={errMsg.subjectDescription}
           required
         />
 
@@ -194,7 +229,6 @@ const ClasslistCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, term: e.target.value });
-            validateTerm(e.target.value);
           }}
           value={post?.term}
           errorMessage={errMsg.term}
@@ -209,7 +243,6 @@ const ClasslistCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, schedule: e.target.value });
-            validateSchedule(e.target.value);
           }}
           value={post?.schedule}
           errorMessage={errMsg.schedule}
@@ -218,16 +251,16 @@ const ClasslistCrudForm = ({
         {type == "Edit" ? (
           <label>
             <span className="font-satoshi font-semibold text-base text-gray-700">
-              Reson for Edit:
+              Reason to Edit or Delete:
             </span>
             <textarea
               id="audit"
               name="audit"
-              placeholder="Your reason for editing values here..."
+              placeholder="Your reason for editing/deleting here..."
               className="form_input"
               onChange={(e) => {
                 setPost({ ...post, audit: e.target.value });
-                validateAudit(e.target.value);
+                validateAudit(e.target.value, "audit");
               }}
               value={post?.audit}
             />
@@ -242,12 +275,21 @@ const ClasslistCrudForm = ({
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
           Class list
         </h1>
-        <button
-          className="pb-7 black_btn"
-          onClick={handleSubmit}
-        >
-          {loading ? "Processing" : `${type} Class List`}
-        </button>
+
+        <div className="flex">
+          <button className="pb-7 mx-2 black_btn" onClick={handleEdit}>
+            {loading ? "Processing" : `${type} Class List`}
+          </button>
+          {type == "Edit" ? (
+            <button
+              className="red_btn ml-2"
+              disabled={loading}
+              onClick={onDelete}
+            >
+              {loading ? "Processing" : "Delete Classlist"}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <TableContainer component={Paper}>
@@ -264,9 +306,7 @@ const ClasslistCrudForm = ({
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {memoizedStudents}
-          </TableBody>
+          <TableBody>{memoizedStudents}</TableBody>
         </Table>
       </TableContainer>
     </div>

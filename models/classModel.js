@@ -31,6 +31,6 @@ const classlistSchema = new Schema({
     }]
 });
 
-const  Classlist =  models.classelists || model("classlists", classlistSchema);
+const  Classlist =  models.classlists || model("classlists", classlistSchema);
 
 export default Classlist;

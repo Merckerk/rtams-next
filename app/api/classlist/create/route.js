@@ -33,6 +33,7 @@ export const POST = async (req, res) => {
     const savedClasslist = await newClasslist.save();
 
     const responseValue = {
+      success: true,
       message: "Successfully created classlist",
       savedClasslist: savedClasslist,
     };
