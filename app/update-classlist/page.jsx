@@ -186,7 +186,7 @@ const UpdateClassList = () => {
   }, [editedStudentsList]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense>
       <div>
         <ClasslistCrudForm
           type="Edit"
