@@ -26,9 +26,9 @@ const Home = () => {
       routeName: "students",
     },
     {
-      featureName: "Courses",
-      description: "View, add and edit Courses.",
-      routeName: "courses",
+      featureName: "Classlists",
+      description: "View, add, edit, and delete classlists.",
+      routeName: "classlists",
     },
     {
       featureName: "Attendances",
