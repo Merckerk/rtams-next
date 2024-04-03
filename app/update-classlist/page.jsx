@@ -164,7 +164,10 @@ const UpdateClassList = () => {
           console.log("Classlist deleted");
           router.push("/classlists");
         } else {
-          console.log("Error deleting class list:", data.error || "Unknown error");
+          console.log(
+            "Error deleting class list:",
+            data.error || "Unknown error"
+          );
         }
       } catch (error) {
         console.log("Error deleting class list", error);
@@ -184,18 +187,20 @@ const UpdateClassList = () => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ClasslistCrudForm
-        type="Edit"
-        post={post}
-        setPost={setPost}
-        loading={isLoading}
-        handleSubmit={onUpdateClassList}
-        handleDelete={onDeleteClasslist}
-        faculties={faculties}
-        students={students}
-        editedStudentsList={editedStudentsList}
-        setEditedStudentsList={setEditedStudentsList}
-      />
+      <div>
+        <ClasslistCrudForm
+          type="Edit"
+          post={post}
+          setPost={setPost}
+          loading={isLoading}
+          handleSubmit={onUpdateClassList}
+          handleDelete={onDeleteClasslist}
+          faculties={faculties}
+          students={students}
+          editedStudentsList={editedStudentsList}
+          setEditedStudentsList={setEditedStudentsList}
+        />
+      </div>
     </Suspense>
   );
 };
