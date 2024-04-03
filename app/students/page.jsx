@@ -119,13 +119,6 @@ const Students = () => {
                   >
                     Delete
                   </button>
-                  <button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => handleLoad(student)}
-                  >
-                    Load
-                  </button>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
