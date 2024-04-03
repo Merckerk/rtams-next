@@ -132,7 +132,7 @@ const UpdateClassList = () => {
       if (success) {
         toast.success("Successfully edited a classlist!");
         router.push("/classlists");
-      }else{
+      } else {
         toast.error("Error updating data.");
       }
     } catch (error) {
@@ -155,11 +155,17 @@ const UpdateClassList = () => {
         setIsLoading(true);
         const response = await fetch(`/api/classlist/${classlistId}`, {
           method: "DELETE",
-          body: JSON.stringify({audit: post?.audit}),
+          body: JSON.stringify({ audit: post?.audit }),
         });
 
-        
-        console.log(response);
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          console.log("Classlist deleted");
+          router.push("/classlists");
+        } else {
+          console.log("Error deleting class list:", data.error || "Unknown error");
+        }
       } catch (error) {
         console.log("Error deleting class list", error);
       } finally {

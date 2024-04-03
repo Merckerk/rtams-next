@@ -101,28 +101,36 @@ export const DELETE = async (req, { params }) => {
 
     await connectToDB();
 
-    const deletedUser = await Classlist.findByIdAndRemove(params.id);
+    const deletedClasslist = await Classlist.findByIdAndRemove(params.id);
 
     const auditData = {
-        target: "Classlist",
-        description: audit,
-        oldData: deletedUser,
-        newData: { user: "deleted user"},
-      };
-      const auditRecord = new Audits(auditData);
-      await auditRecord.save();
+      target: "Classlist",
+      description: audit,
+      oldData: deletedClasslist,
+      newData: { classlist: "deleted classlist" },
+    };
+    const auditRecord = new Audits(auditData);
+    await auditRecord.save();
 
-      const combinedResponse = {
-        success: true,
-        message: "Successfully updated the class list.",
-        data: {
-          updatedClassList: existingClasslist,
-          audit: auditRecord,
-        },
-      };
+    console.log("good here1");
 
+    const combinedResponse = {
+      success: true,
+      message: "Successfully updated the class list.",
+      data: {
+        audit: auditRecord,
+      },
+    };
+
+    console.log("good here");
     return new Response(JSON.stringify(combinedResponse), { status: 200 });
   } catch (error) {
-    return new Response("Failed to delete the Classlist.", { status: 500 });
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: "Failed to delete the Classlist.",
+      }),
+      { status: 500 }
+    );
   }
 };
