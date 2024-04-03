@@ -77,6 +77,7 @@ export const PATCH = async (req, { params }) => {
     await auditRecord.save();
 
     const combinedResponse = {
+      success: true,
       message: "Successfully updated the class list.",
       data: {
         updatedClassList: existingClasslist,

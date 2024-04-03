@@ -127,8 +127,7 @@ const UpdateClassList = () => {
       });
 
       const data = await response.json();
-      const responseData = data.data;
-      const success = responseData.success;
+      const success = data.success;
 
       if (success) {
         toast.success("Successfully edited a classlist!");

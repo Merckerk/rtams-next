@@ -82,7 +82,7 @@ const CreateClassList = () => {
 
       const response = await axios.post("api/classlist/create", postValues);
       toast.success("Successfully created a classlist!");
-      router.push("/");
+      router.push("/classlists");
     } catch (error) {
       toast.error(error);
     } finally {
