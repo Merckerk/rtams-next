@@ -183,18 +183,20 @@ const UpdateClassList = () => {
   }, [editedStudentsList]);
 
   return (
-    <ClasslistCrudForm
-      type="Edit"
-      post={post}
-      setPost={setPost}
-      loading={isLoading}
-      handleSubmit={onUpdateClassList}
-      handleDelete={onDeleteClasslist}
-      faculties={faculties}
-      students={students}
-      editedStudentsList={editedStudentsList}
-      setEditedStudentsList={setEditedStudentsList}
-    />
+    <Suspense fallback={<div>Loading...</div>}>
+      <ClasslistCrudForm
+        type="Edit"
+        post={post}
+        setPost={setPost}
+        loading={isLoading}
+        handleSubmit={onUpdateClassList}
+        handleDelete={onDeleteClasslist}
+        faculties={faculties}
+        students={students}
+        editedStudentsList={editedStudentsList}
+        setEditedStudentsList={setEditedStudentsList}
+      />
+    </Suspense>
   );
 };
 
