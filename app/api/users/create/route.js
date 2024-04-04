@@ -6,7 +6,7 @@ export const POST = async (req, res) => {
   try {
     await connectToDB();
     const reqBody = await req.json();
-    const { image, name, userId, username, password, load } = reqBody;
+    const { image, name, userId, username, password } = reqBody;
 
     const userIdCheck = await User.findOne({ userId });
     const userNameCheck = await User.findOne({ username });

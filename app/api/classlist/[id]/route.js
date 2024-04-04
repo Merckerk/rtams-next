@@ -1,7 +1,6 @@
 import Audits from "@models/auditModel";
 import Classlist from "@models/classModel";
 import { connectToDB } from "@utils/database";
-import bcryptjs from "bcryptjs";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -17,6 +16,7 @@ export const GET = async (req, { params }) => {
       return new Response("Classlist Not Found.", { status: 404 });
 
     const returnValue = {
+      success: true,
       message: "Classlist found.",
       data: classlist,
     };

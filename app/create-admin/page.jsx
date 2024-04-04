@@ -9,7 +9,6 @@ const CreateUser = () => {
   const router = useRouter();
   const [post, setPost] = useState({
     image: "",
-    email: "",
     name: "",
     userId: "",
     username: "",

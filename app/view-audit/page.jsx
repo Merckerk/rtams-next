@@ -1,9 +1,11 @@
-import React from 'react'
+import ViewAudit from './viewAudit'
 
-const ViewAudit = () => {
+export const dynamic = 'force-dynamic'
+
+const Page = () => {
   return (
-    <div>ViewAudit</div>
+    <ViewAudit />
   )
 }
 
-export default ViewAudit
+export default Page
