@@ -35,7 +35,7 @@ const AuditTrails = () => {
   };
 
   const handleView = (audit) =>{
-    router.push(`view-audit?auditid= ${audit._id}`);
+    router.push(`view-audit?auditid=${audit._id}`);
   }
 
   useEffect(() => {

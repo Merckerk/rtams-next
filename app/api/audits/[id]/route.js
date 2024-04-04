@@ -11,7 +11,7 @@ export const GET = async (req, { params }) => {
 
     const audit = await Audits.findById(params.id);
 
-    if (!classlist) {
+    if (!audit) {
       return new Response(
         JSON.stringify({
           success: false,
