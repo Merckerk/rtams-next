@@ -17,7 +17,6 @@ export const POST = async (req, res) => {
       });
     }
 
-
     // Get the current date and format it
     const currentDate = new Date();
     const formattedDate = `${currentDate.getFullYear()}:${(
@@ -40,10 +39,23 @@ export const POST = async (req, res) => {
       // If there is an existing attendance, update the timeOut if it's not already set
       if (existingAttendance.timeIn && !existingAttendance.timeOut) {
         existingAttendance.timeOut = currentTime;
-        const timeIn = new Date(existingAttendance.timeIn);
-        const timeOut = new Date(existingAttendance.timeOut);
-        const hoursRendered = (timeOut - timeIn) / (1000 * 60 * 60);
-        existingAttendance.hoursRendered = hoursRendered;
+        // Parse timeIn and timeOut strings into Date objects
+        const timeInParts = existingAttendance.timeIn.split(":");
+        const timeOutParts = existingAttendance.timeOut.split(":");
+
+        const timeInDate = new Date();
+        timeInDate.setHours(parseInt(timeInParts[0]));
+        timeInDate.setMinutes(parseInt(timeInParts[1]));
+
+        const timeOutDate = new Date();
+        timeOutDate.setHours(parseInt(timeOutParts[0]));
+        timeOutDate.setMinutes(parseInt(timeOutParts[1]));
+
+        const millisecondsDifference = timeOutDate - timeInDate;
+        const minutesRendered = millisecondsDifference / (1000 * 60); // Convert milliseconds to minutes
+
+        existingAttendance.hoursRendered = minutesRendered;
+
         await existingAttendance.save();
         return new Response("Updated attendance report.", { status: 200 });
       }
