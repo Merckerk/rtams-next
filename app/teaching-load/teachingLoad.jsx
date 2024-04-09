@@ -79,6 +79,8 @@ const TeachingLoad = () => {
     console.log("teachingload:", coursesAPI);
   }, [coursesAPI]);
 
+
+  // ! DO NOT DELETE THE COMMENTS IN THIS FILE
   // const handleEditLoad = async () => {
   //   try {
   //     setLoading(true);

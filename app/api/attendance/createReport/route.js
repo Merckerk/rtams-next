@@ -7,7 +7,7 @@ export const POST = async (req, res) => {
     await connectToDB();
 
     const reqBody = await req.json();
-    const { nfcUID, courseCode, section, term } = reqBody;
+    const { nfcUID, course } = reqBody;
 
     // Find the student based on the NFC UID
     const student = await Student.findOne({ nfcUID });
@@ -16,6 +16,7 @@ export const POST = async (req, res) => {
         status: 404,
       });
     }
+
 
     // Get the current date and format it
     const currentDate = new Date();
@@ -31,7 +32,7 @@ export const POST = async (req, res) => {
     // Check if there is an existing attendance for the same student, course, and date
     let existingAttendance = await Attendances.findOne({
       student: student._id,
-      courseCode,
+      course,
       date: formattedDate,
     });
 
@@ -39,6 +40,10 @@ export const POST = async (req, res) => {
       // If there is an existing attendance, update the timeOut if it's not already set
       if (existingAttendance.timeIn && !existingAttendance.timeOut) {
         existingAttendance.timeOut = currentTime;
+        const timeIn = new Date(existingAttendance.timeIn);
+        const timeOut = new Date(existingAttendance.timeOut);
+        const hoursRendered = (timeOut - timeIn) / (1000 * 60 * 60);
+        existingAttendance.hoursRendered = hoursRendered;
         await existingAttendance.save();
         return new Response("Updated attendance report.", { status: 200 });
       }
@@ -48,12 +53,10 @@ export const POST = async (req, res) => {
         student: student._id,
         nfcUID: student.nfcUID,
         studentName: student.name,
-        courseCode,
+        course: course,
         date: formattedDate,
-        term,
-        section,
-        timeIn: currentTime, // Set timeIn when creating a new report
-        timeOut: null, // Initialize timeOut as null
+        timeIn: currentTime,
+        timeOut: null,
       });
 
       const savedReport = await newReport.save();

@@ -14,27 +14,23 @@ const attendanceSchema = new Schema({
     type: String,
     required: true,
   },
-  courseCode: {
+  course: {
     type: mongoose.Schema.ObjectId,
-    ref: "courses",
+    ref: "classlists",
   },
   date: {
     type: String,
     required: [true, "date is required"],
-  },
-  term: {
-    type: String,
-    required: [true, "term is required"],
-  },
-  section: {
-    type: String,
-    required: [true, "section is required"],
   },
   timeIn: {
     type: String,
   },
   timeOut: {
     type: String,
+  },
+  hoursRendered: {
+    type: Number,
+    default: 0,
   },
 });
 
