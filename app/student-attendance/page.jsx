@@ -47,8 +47,10 @@ const StudentAttendance = () => {
       const response = await attendanceResponse.json();
 
       if(response){
-        const attendanceData = response.data;
-        setAttendances(attendanceData);
+        const attendanceData = response.attendanceData;
+        const enrolledStudents = response.enrolledStudents
+        setAttendanceMap(attendanceData);
+        setStudentsAPI(enrolledStudents);
       }else {
         console.error("No response");
       }
@@ -123,21 +125,21 @@ const StudentAttendance = () => {
     console.log("enrolledStudents:", enrolledStudents);
   }, [attendances, enrolledStudents]);
 
-  useEffect(() => {
-    // Create a hashmap for attendance dates and students attended
-    if (attendancesAPI && studentsAPI) {
-      const map = {};
-      attendancesAPI.forEach((attendance) => {
-        const date = attendance.date.split("T")[0]; // Extracting date part only
-        if (!map[date]) {
-          map[date] = [];
-        }
-        map[date].push(attendance.studentName);
-      });
-      //TODO: SORT BY DATE
-      setAttendanceMap(map);
-    }
-  }, [attendancesAPI, studentsAPI]);
+  // useEffect(() => {
+  //   // Create a hashmap for attendance dates and students attended
+  //   if (attendancesAPI && studentsAPI) {
+  //     const map = {};
+  //     attendancesAPI.forEach((attendance) => {
+  //       const date = attendance.date.split("T")[0]; // Extracting date part only
+  //       if (!map[date]) {
+  //         map[date] = [];
+  //       }
+  //       map[date].push(attendance.studentName);
+  //     });
+  //     //TODO: SORT BY DATE
+  //     setAttendanceMap(map);
+  //   }
+  // }, [attendancesAPI, studentsAPI]);
 
   useEffect(() => {
     console.log("attendances:", attendances);
@@ -236,7 +238,7 @@ const StudentAttendance = () => {
           </button>
         </div>
       </div>
-{/*       
+     
       {Object.keys(attendanceMap).length > 0 && (
         <TableContainer component={Paper}>
           <Table
@@ -282,7 +284,7 @@ const StudentAttendance = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      )} */}
+      )}
     </>
   );
 };

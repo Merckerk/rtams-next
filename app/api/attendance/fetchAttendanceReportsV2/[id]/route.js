@@ -16,17 +16,23 @@ export const GET = async (req, { params }) => {
       return new Response("ClasslistId not supplied", { status: 404 });
     }
 
-    console.log("good here1");
-
     const classlist = await Classlist.findById(classlistId).populate({
       path: "students",
-      select: "name"
+      select: "name",
     });
 
-    console.log("good here2");
+    console.log("classlist students:", classlist);
+
     if (!classlist) {
       return new Response("Classlist not found", { status: 404 });
     }
+
+    // let students = [];
+
+    // classlist.students.forEach((student) => {
+    //   const studentName = student.name;
+    //   students.push(studentName);
+    // });
 
     const attendances = await Attendances.find({
       course: classlist._id,
@@ -34,8 +40,6 @@ export const GET = async (req, { params }) => {
       path: "student",
       select: "name",
     });
-
-    console.log("good here3");
 
     const map = {};
 
@@ -46,22 +50,18 @@ export const GET = async (req, { params }) => {
         map[date] = [];
       }
 
-      map[date].push(attendance.student.name); 
+      map[date].push(attendance.student.name);
     });
-
-    console.log("good here4");
 
     const returnValue = {
       success: true,
       message: "Attendances data retrieved successfully.",
-      data: map,
+      attendanceData: map,
+      enrolledStudents: classlist.students,
     };
-
-    console.log("good here5");
 
     return new Response(JSON.stringify(returnValue), { status: 200 });
   } catch (error) {
-    // Include the actual error message in the response
     return new Response(`Internal Server Error: ${error}`, { status: 500 });
   }
 };
