@@ -37,15 +37,27 @@ const StudentAttendance = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
-    // try {
-    //   const attendanceResponse = await fetch(`api/attendance/fetchCourseReports/${payload.courseCode}/${payload.section}/${payload.term}`);
-    //   const data = await attendanceResponse.json()
-    //   console.log("Attendance Response Data:",data);
-    // } catch (error) {
-    //   console.log(error)
-    // }
+  const fetchAttendanceReports = async () => {
+    try {
+      const attendanceResponse = await fetch(
+        `api/attendance/fetchAttendanceReportsV2/${payload?.courseCode}`,
+        { cache: "no-store" }
+      );
 
+      const response = await attendanceResponse.json();
+
+      if(response){
+        const attendanceData = response.data;
+        setAttendances(attendanceData);
+      }else {
+        console.error("No response");
+      }
+    } catch (error) {
+      console.error("Error fetching attendances", error)
+    }
+  };
+
+  const fetchData = async () => {
     try {
       setLoading(true);
 
@@ -78,12 +90,6 @@ const StudentAttendance = () => {
     }
   };
 
-  const getAttendancesAndStudents = async () => {
-    //TODO: REPLACE WITH API INTEGRATION LATER
-    setEnrolledStudents(studentMock);
-    setAttendances(attendanceMock1);
-  };
-
   const getCourses = async () => {
     try {
       const coursesResponse = await fetch("api/classlist/getAllClasslists", {
@@ -110,10 +116,6 @@ const StudentAttendance = () => {
 
   useEffect(() => {
     getCourses();
-  }, []);
-
-  useEffect(() => {
-    getAttendancesAndStudents();
   }, []);
 
   useEffect(() => {
@@ -165,7 +167,7 @@ const StudentAttendance = () => {
       label: value,
     }));
   });
-  
+
   const termsOptions = useMemo(() => {
     return Object.entries(Term).map(([key, value]) => ({
       value: key,
@@ -198,7 +200,7 @@ const StudentAttendance = () => {
             }}
             placeholder="Select Section"
           />
-          
+
           <ReusableDropdown
             label="Term"
             id="term"
@@ -227,14 +229,14 @@ const StudentAttendance = () => {
             className="black_btn"
             disabled={loading}
             onClick={() => {
-              fetchData();
+              fetchAttendanceReports();
             }}
           >
             {loading ? "Processing" : `Get Attendances`}
           </button>
         </div>
       </div>
-
+{/*       
       {Object.keys(attendanceMap).length > 0 && (
         <TableContainer component={Paper}>
           <Table
@@ -258,11 +260,9 @@ const StudentAttendance = () => {
                   <StyledTableCell component="th" scope="row">
                     {student.name}
                   </StyledTableCell>
-                  {/* Loop through each date in the attendanceMap */}
                   {Object.keys(attendanceMap).map((date) => (
                     <StyledTableCell align="center" key={date}>
                       {
-                        // isPresent(student.name, attendanceMap[date])
                         attendanceMap[date].includes(student.name) ? (
                           <div className="flex items-center">
                             <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
@@ -282,7 +282,7 @@ const StudentAttendance = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      )}
+      )} */}
     </>
   );
 };

@@ -20,17 +20,21 @@ const Classlists = () => {
   const [classlists, setClasslists] = useState([]);
 
   const fetchClasslistsData = async () => {
-    const response = await fetch("/api/classlist/getAllClasslists", {
-      cache: "no-store",
-    });
-    const data = await response.json();
+    try {
+      const response = await fetch("/api/classlist/getAllClasslists", {
+        cache: "no-store",
+      });
+      const data = await response.json();
 
-    if (data) {
-      const classlistData = data.data;
-      console.log("data:", classlistData);
+      if (data) {
+        const classlistData = data.data;
+        console.log("data:", classlistData);
 
-      setClasslists(classlistData);
-    } else {
+        setClasslists(classlistData);
+      } else {
+      }
+    } catch (error) {
+      console.error("Error fetching classlists", error);
     }
   };
 
