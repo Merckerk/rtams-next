@@ -36,10 +36,8 @@ export const POST = async (req, res) => {
     });
 
     if (existingAttendance) {
-      // If there is an existing attendance, update the timeOut if it's not already set
       if (existingAttendance.timeIn && !existingAttendance.timeOut) {
         existingAttendance.timeOut = currentTime;
-        // Parse timeIn and timeOut strings into Date objects
         const timeInParts = existingAttendance.timeIn.split(":");
         const timeOutParts = existingAttendance.timeOut.split(":");
 
@@ -60,7 +58,6 @@ export const POST = async (req, res) => {
         return new Response("Updated attendance report.", { status: 200 });
       }
     } else {
-      // If no existing attendance, create a new attendance report
       const newReport = new Attendances({
         student: student._id,
         nfcUID: student.nfcUID,
