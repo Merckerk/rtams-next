@@ -1,5 +1,6 @@
 import Attendances from "@models/attendanceModel";
 import Classlist from "@models/classModel";
+import Student from "@models/studentModel";
 import { connectToDB } from "@utils/database";
 
 export const revalidate = 0;
@@ -15,17 +16,26 @@ export const GET = async (req, { params }) => {
       return new Response("ClasslistId not supplied", { status: 404 });
     }
 
-    const classlist = await Classlist.findById(classlistId).populate(
-      "students"
-    );
+    console.log("good here1");
 
+    const classlist = await Classlist.findById(classlistId).populate({
+      path: "students",
+      select: "name"
+    });
+
+    console.log("good here2");
     if (!classlist) {
       return new Response("Classlist not found", { status: 404 });
     }
 
     const attendances = await Attendances.find({
       course: classlist._id,
-    }).populate("student");
+    }).populate({
+      path: "student",
+      select: "name",
+    });
+
+    console.log("good here3");
 
     const map = {};
 
@@ -36,8 +46,10 @@ export const GET = async (req, { params }) => {
         map[date] = [];
       }
 
-      map[date].push(attendance.student.studentName);
+      map[date].push(attendance.student.name); 
     });
+
+    console.log("good here4");
 
     const returnValue = {
       success: true,
@@ -45,8 +57,11 @@ export const GET = async (req, { params }) => {
       data: map,
     };
 
+    console.log("good here5");
+
     return new Response(JSON.stringify(returnValue), { status: 200 });
   } catch (error) {
-    return new Response("Internal Server Error.", { status: 500 });
+    // Include the actual error message in the response
+    return new Response(`Internal Server Error: ${error}`, { status: 500 });
   }
 };
