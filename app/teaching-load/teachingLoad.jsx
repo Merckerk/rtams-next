@@ -27,8 +27,8 @@ const TeachingLoad = () => {
   const [loading, setLoading] = useState(false);
 
   const [coursesAPI, setCoursesAPI] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [editedLoad, setEditedLoad] = useState([]);
+  // const [searchTerm, setSearchTerm] = useState("");
+  // const [editedLoad, setEditedLoad] = useState([]);
   const [userDetailsAPI, setUserDetailsAPI] = useState({
     image: "",
     name: "",
@@ -43,6 +43,7 @@ const TeachingLoad = () => {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const [coursesResponse, userDetailsResponse] = await Promise.all([
         fetch(`/api/classlist/${userId}/getClasslistsByUser`),
         fetch(`/api/users/${userId}`),
@@ -56,12 +57,11 @@ const TeachingLoad = () => {
       }
 
       if (userData) {
-        console.log("user found")
+        console.log("user found");
         setUserDetailsAPI({
           image: userData.image,
           name: userData.name,
           username: userData.username,
-
         });
       }
     } catch (error) {
@@ -78,7 +78,6 @@ const TeachingLoad = () => {
   useEffect(() => {
     console.log("teachingload:", coursesAPI);
   }, [coursesAPI]);
-
 
   // ! DO NOT DELETE THE COMMENTS IN THIS FILE
   // const handleEditLoad = async () => {
@@ -98,11 +97,6 @@ const TeachingLoad = () => {
   //     setLoading(false);
   //   }
   // };
-
-  useEffect(() => {
-    console.log("current load:", userDetailsAPI.load);
-    console.log("edited load:", editedLoad);
-  }, [userDetailsAPI.load, editedLoad]);
 
   // const isCourseInLoad = (courseId) => userDetailsAPI.load.includes(courseId);
 
@@ -160,43 +154,45 @@ const TeachingLoad = () => {
         </button>
       </div> */}
 
-      <TableContainer component={Paper}>
-        <Table
-          className="min-w-[700px] md:min-w-screen-lg"
-          aria-label="Courses table"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Subject Code</StyledTableCell>
-              <StyledTableCell align="left">Section Code</StyledTableCell>
-              <StyledTableCell align="center">
-                Description
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                Schedule
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {coursesAPI.map((course) => (
-              <StyledTableRow key={course._id}>
-                <StyledTableCell component="th" scope="row">
-                  {course.subjectCode}
-                </StyledTableCell>
-                <StyledTableCell align="left">
-                  {course.sectionCode}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {course.subjectDescription}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {course.schedule}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {!loading && coursesAPI.length === 0 ? (
+        <span className="font-satoshi font-semibold text-base text-gray-700">
+        This user has no teaching load.
+      </span>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table
+            className="min-w-[700px] md:min-w-screen-lg"
+            aria-label="Courses table"
+          >
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Subject Code</StyledTableCell>
+                <StyledTableCell align="left">Section Code</StyledTableCell>
+                <StyledTableCell align="center">Description</StyledTableCell>
+                <StyledTableCell align="center">Schedule</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {coursesAPI.map((course) => (
+                <StyledTableRow key={course._id}>
+                  <StyledTableCell component="th" scope="row">
+                    {course.subjectCode}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {course.sectionCode}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {course.subjectDescription}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {course.schedule}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </div>
   );
 };
