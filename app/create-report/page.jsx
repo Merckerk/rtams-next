@@ -66,9 +66,7 @@ const createAttendance = () => {
       );
       if (response) {
         toast.success("Successfully created an attendance entry!");
-        //LUWIS
         router.push("/attendances");
-        //LUWIS
       } else {
         alert("Attendance sending failed");
       }
