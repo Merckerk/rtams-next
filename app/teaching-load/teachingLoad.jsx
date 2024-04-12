@@ -116,6 +116,8 @@ const TeachingLoad = () => {
   //   }
   // };
 
+  //;-;
+
   return (
     <div>
       <div className="flex flex-row items-center mb-10">
