@@ -33,90 +33,82 @@ const TeachingLoad = () => {
     image: "",
     name: "",
     username: "",
+    email: "",
+    load: [],
   });
 
-  // const filteredCourses = coursesAPI.filter(
-  //   (course) =>
-  //     course.courseCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     course.courseName.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
+  const filteredCourses = coursesAPI.filter(
+    (course) =>
+      course.courseCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.courseName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const fetchData = async () => {
     try {
       const [coursesResponse, userDetailsResponse] = await Promise.all([
-        fetch(`/api/classlist/${userId}/getClasslistsByUser`),
+        axios.get("/api/courses/fetchCourses"),
         fetch(`/api/users/${userId}`),
       ]);
 
-      const coursesData = await coursesResponse.json();
+      const coursesData = coursesResponse.data;
       const userData = await userDetailsResponse.json();
 
-      if (coursesData.success) {
-        setCoursesAPI(coursesData.data);
-      }
+      setCoursesAPI(coursesData);
+      setUserDetailsAPI({
+        image: userData.image,
+        name: userData.name,
+        username: userData.username,
+        email: userData.email,
+        load: userData.load,
+      });
 
-      if (userData) {
-        console.log("user found")
-        setUserDetailsAPI({
-          image: userData.image,
-          name: userData.name,
-          username: userData.username,
-
-        });
-      }
+      setEditedLoad(userData?.load);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, [userId]);
 
-  useEffect(() => {
-    console.log("teachingload:", coursesAPI);
-  }, [coursesAPI]);
+  const handleEditLoad = async () => {
+    try {
+      setLoading(true);
 
+      const response = await axios.patch(`/api/users/${userId}/editLoad`, {
+        load: editedLoad,
+      });
 
-  // ! DO NOT DELETE THE COMMENTS IN THIS FILE
-  // const handleEditLoad = async () => {
-  //   try {
-  //     setLoading(true);
+      console.log("Load changes saved:", response.data);
 
-  //     const response = await axios.patch(`/api/users/${userId}/editLoad`, {
-  //       load: editedLoad,
-  //     });
-
-  //     console.log("Load changes saved:", response.data);
-
-  //     fetchData();
-  //   } catch (error) {
-  //     console.error("Error saving load changes:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      fetchData();
+    } catch (error) {
+      console.error("Error saving load changes:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     console.log("current load:", userDetailsAPI.load);
     console.log("edited load:", editedLoad);
   }, [userDetailsAPI.load, editedLoad]);
 
-  // const isCourseInLoad = (courseId) => userDetailsAPI.load.includes(courseId);
+  const isCourseInLoad = (courseId) => userDetailsAPI.load.includes(courseId);
 
-  // const isCourseInEditedLoad = (courseId) => editedLoad.includes(courseId);
+  const isCourseInEditedLoad = (courseId) => editedLoad.includes(courseId);
 
-  // const handleCheckboxChange = (courseId) => {
-  //   const isCourseInLoad = editedLoad.includes(courseId);
+  const handleCheckboxChange = (courseId) => {
+    const isCourseInLoad = editedLoad.includes(courseId);
 
-  //   if (isCourseInLoad) {
-  //     setEditedLoad((prevLoad) => prevLoad.filter((id) => id !== courseId));
-  //   } else {
-  //     setEditedLoad((prevLoad) => [...prevLoad, courseId]);
-  //   }
-  // };
+    if (isCourseInLoad) {
+      setEditedLoad((prevLoad) => prevLoad.filter((id) => id !== courseId));
+    } else {
+      setEditedLoad((prevLoad) => [...prevLoad, courseId]);
+    }
+  };
 
   return (
     <div>
@@ -150,7 +142,7 @@ const TeachingLoad = () => {
         </div>
       </div>
 
-      {/* <div className="flex-between mb-4">
+      <div className="flex-between">
         <button
           className="black_btn"
           onClick={handleEditLoad}
@@ -158,7 +150,7 @@ const TeachingLoad = () => {
         >
           Save Load Changes
         </button>
-      </div> */}
+      </div>
 
       <TableContainer component={Paper}>
         <Table
@@ -167,30 +159,48 @@ const TeachingLoad = () => {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell>Subject Code</StyledTableCell>
-              <StyledTableCell align="left">Section Code</StyledTableCell>
+              <StyledTableCell>Course Code</StyledTableCell>
+              <StyledTableCell align="left">Course Name</StyledTableCell>
               <StyledTableCell align="center">
-                Description
+                Current Load Status
               </StyledTableCell>
               <StyledTableCell align="center">
-                Schedule
+                Add or Remove Load
               </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {coursesAPI.map((course) => (
+            {filteredCourses.map((course) => (
               <StyledTableRow key={course._id}>
                 <StyledTableCell component="th" scope="row">
-                  {course.subjectCode}
+                  {course.courseCode}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {course.sectionCode}
+                  {course.courseName}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {course.subjectDescription}
+                  {isCourseInLoad(course._id) ? (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                      <span>In Load</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                      <span>Not In Load</span>
+                    </div>
+                  )}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {course.schedule}
+                  {/* Use a checkbox for selecting courses */}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={isCourseInEditedLoad(course._id)}
+                        onChange={() => handleCheckboxChange(course._id)}
+                      />
+                    }
+                  />
                 </StyledTableCell>
               </StyledTableRow>
             ))}

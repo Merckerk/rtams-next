@@ -7,7 +7,7 @@ export const POST = async (req, res) => {
     await connectToDB();
 
     const reqBody = await req.json();
-    const { nfcUID, course } = reqBody;
+    const { nfcUID, courseCode, section, term } = reqBody;
 
     // Find the student based on the NFC UID
     const student = await Student.findOne({ nfcUID });
@@ -19,11 +19,11 @@ export const POST = async (req, res) => {
 
     // Get the current date and format it
     const currentDate = new Date();
-    const formattedDate = `${currentDate.getFullYear()}:${(
-      currentDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}:${currentDate.getDate().toString().padStart(2, "0")}`;
+    const formattedDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate()
+    );
 
     // Get the current time
     const currentTime = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
@@ -31,41 +31,29 @@ export const POST = async (req, res) => {
     // Check if there is an existing attendance for the same student, course, and date
     let existingAttendance = await Attendances.findOne({
       student: student._id,
-      course,
+      courseCode,
       date: formattedDate,
     });
 
     if (existingAttendance) {
+      // If there is an existing attendance, update the timeOut if it's not already set
       if (existingAttendance.timeIn && !existingAttendance.timeOut) {
         existingAttendance.timeOut = currentTime;
-        const timeInParts = existingAttendance.timeIn.split(":");
-        const timeOutParts = existingAttendance.timeOut.split(":");
-
-        const timeInDate = new Date();
-        timeInDate.setHours(parseInt(timeInParts[0]));
-        timeInDate.setMinutes(parseInt(timeInParts[1]));
-
-        const timeOutDate = new Date();
-        timeOutDate.setHours(parseInt(timeOutParts[0]));
-        timeOutDate.setMinutes(parseInt(timeOutParts[1]));
-
-        const millisecondsDifference = timeOutDate - timeInDate;
-        const minutesRendered = millisecondsDifference / (1000 * 60); // Convert milliseconds to minutes
-
-        existingAttendance.hoursRendered = minutesRendered;
-
         await existingAttendance.save();
         return new Response("Updated attendance report.", { status: 200 });
       }
     } else {
+      // If no existing attendance, create a new attendance report
       const newReport = new Attendances({
         student: student._id,
         nfcUID: student.nfcUID,
         studentName: student.name,
-        course: course,
+        courseCode,
         date: formattedDate,
-        timeIn: currentTime,
-        timeOut: null,
+        term,
+        section,
+        timeIn: currentTime, // Set timeIn when creating a new report
+        timeOut: null, // Initialize timeOut as null
       });
 
       const savedReport = await newReport.save();

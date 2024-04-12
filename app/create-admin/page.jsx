@@ -9,12 +9,13 @@ const CreateUser = () => {
   const router = useRouter();
   const [post, setPost] = useState({
     image: "",
+    email: "",
     name: "",
     userId: "",
     username: "",
     password: "",
     repassword: "",
-    load: [],
+    load: []
   });
   const [isLoading, setIsLoading] = useState(false);
   //TODO: MAKE THIS FUNCTIONAL
@@ -23,21 +24,11 @@ const CreateUser = () => {
   const onCreateUser = async () => {
     try {
       setIsLoading(true);
-      if (post.password !== post.repassword)
-        throw new Error("Passwords do not match");
-      else {
-        const { image, name, userId, username, password } = post;
-        const postValues = {
-          image,
-          name,
-          userId,
-          username,
-          password,
-        };
-        const response = await axios.post("api/users/create", postValues);
-        toast.success("Successfully created an admin user!");
-        router.push("/login");
-      }
+      const { image, email, name, userId, username, password, load } = post;
+      const postValues = { image, email, name, userId, username, password, load };
+      const response = await axios.post("api/users/create", postValues);
+      toast.success("Successfully created an admin user!");
+      router.push("/login");
     } catch (error) {
       toast.error(error);
     } finally {
@@ -48,6 +39,7 @@ const CreateUser = () => {
   useEffect(() => {
     console.log(post);
     if (
+      !post.email ||
       !post.name ||
       !post.userId ||
       !post.username ||

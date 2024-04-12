@@ -22,9 +22,7 @@ const CreateCourse = () => {
       const postValues = { courseCode, courseName };
       const response = await axios.post("api/courses/createCourse", postValues)
       toast.success("Successfully created a Course!");
-      //LUWIS
       router.push("/courses");
-      //LUWIS
     } catch (error) {
       toast.error(error);
     } finally {

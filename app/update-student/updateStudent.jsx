@@ -21,13 +21,6 @@ const UpdateStudent = () => {
     repassword: "",
     section: "",
     load: [],
-    gender: "",
-    mobileNumber: "",
-    placeOfBirth: "",
-    residentialAddress: "",
-    permanentAddress: "",
-    nameOfSpouse: "",
-    audit: "",
   });
 
   const getStudentDetails = async () => {
@@ -35,22 +28,16 @@ const UpdateStudent = () => {
     const data = await response.json();
 
     setPost({
-      image: data?.image,
-      studentNumber: data?.studentNumber,
-      nfcUID: data?.nfcUID,
-      email: data?.email,
-      name: data?.name,
-      username: data?.username,
+      image: data.image,
+      studentNumber: data.studentNumber,
+      nfcUID: data.nfcUID,
+      email: data.email,
+      name: data.name,
+      username: data.username,
       password: "",
       repassword: "",
-      section: data?.section,
-      load: data?.load,
-      gender: data?.gender,
-      mobileNumber: data?.mobileNumber,
-      placeOfBirth: data?.placeOfBirth,
-      residentialAddress: data?.residentialAddress,
-      permanentAddress: data?.permanentAddress,
-      nameOfSpouse: data?.nameOfSpouse,
+      section: data.section,
+      load: data.load,
     });
   };
 
@@ -83,13 +70,6 @@ const UpdateStudent = () => {
           password: post.password,
           load: post.load,
           section: post.section,
-          gender: post.gender,
-          mobileNumber: post.mobileNumber,
-          placeOfBirth: post.placeOfBirth,
-          residentialAddress: post.residentialAddress,
-          permanentAddress: post.permanentAddress,
-          nameOfSpouse: post.nameOfSpouse,
-          audit: post.audit,
         }),
       });
       if (response.ok) {

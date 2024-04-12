@@ -44,31 +44,6 @@ const studentSchema = new Schema({
       ref: "courses",
     },
   ],
-  gender: {
-    type: String,
-    enum: ["Male", "Female"],
-    required: [true, "Please provide a gender"],
-  },
-  mobileNumber: {
-    type: String,
-    required: false,
-  },
-  placeOfBirth: {
-    type: String,
-    required: false,
-  },
-  residentialAddress: {
-    type: String,
-    required: false,
-  },
-  permanentAddress: {
-    type: String,
-    required: false,
-  },
-  nameOfSpouse: {
-    type: String,
-    required: false,
-  },
 });
 
 const Student = models.students || model("students", studentSchema);

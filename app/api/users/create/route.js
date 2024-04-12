@@ -6,10 +6,15 @@ export const POST = async (req, res) => {
   try {
     await connectToDB();
     const reqBody = await req.json();
-    const { image, name, userId, username, password } = reqBody;
+    const { image, email, name, userId, username, password, load } = reqBody;
 
+    const userEmailCheck = await User.findOne({ email });
     const userIdCheck = await User.findOne({ userId });
     const userNameCheck = await User.findOne({ username });
+
+    if (userEmailCheck) {
+      return new Response("Email already exists.", { status: 400 });
+    }
 
     if (userIdCheck) {
       return new Response("UserID already exists.", { status: 400 });
@@ -26,10 +31,12 @@ export const POST = async (req, res) => {
     //create user
     const newUser = new User({
       image,
+      email,
       name,
       userId,
       username,
       password: hashedPassword,
+      load,
     });
 
     const savedUser = await newUser.save();

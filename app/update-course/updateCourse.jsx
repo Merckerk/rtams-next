@@ -86,9 +86,7 @@ const UpdateCourse = () => {
         });
   
         if (response.ok) {
-          //LUWIS
           router.push("/courses");
-          //LUWIS
         } else {
           console.error("Error deleting the course", response.statusText);
         }

@@ -18,7 +18,7 @@ const UpdateAdmin = () => {
     username: "",
     password: "",
     repassword: "",
-    audit: ""
+    load: []
   });
 
   const getUserDetails = async () => {
@@ -33,7 +33,7 @@ const UpdateAdmin = () => {
       username: data.username,
       password: "",
       repassword: "",
-      audit: ""
+      load: []
     });
   };
 
@@ -56,11 +56,12 @@ const UpdateAdmin = () => {
         method: "PATCH",
         body: JSON.stringify({
           image: post.image,
+          email: post.email,
           name: post.name,
           userId: post.userId,
           username: post.username,
           password: post.password,
-          audit: post.audit,
+          load: post.load,
         }),
       });
       if (response.ok) {
@@ -98,7 +99,7 @@ const UpdateAdmin = () => {
       post={post}
       setPost={setPost}
       loading={loading}
-      handleSubmit={(e) => onUpdateUser(e)}
+      handleSubmit={onUpdateUser}
       handleDelete={onDeleteUser}
     />
   );

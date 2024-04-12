@@ -99,7 +99,7 @@ const AdminUsers = () => {
             {adminUsersAPI.map((adminUser) => (
               <StyledTableRow key={adminUser._id}>
                 <StyledTableCell component="th" scope="row">
-                  {adminUser.name}
+                  {adminUser.username}
                 </StyledTableCell>
                 <StyledTableCell align="left">
                   {adminUser.email}

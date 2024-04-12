@@ -16,12 +16,6 @@ export const POST = async (req, res) => {
       password,
       section,
       load,
-      gender,
-      mobileNumber,
-      placeOfBirth,
-      residentialAddress,
-      permanentAddress,
-      nameOfSpouse,
     } = reqBody;
 
     const studentNumberCheck = await Student.findOne({ studentNumber });
@@ -55,12 +49,6 @@ export const POST = async (req, res) => {
       password: hashedPassword,
       section,
       load,
-      gender,
-      mobileNumber,
-      placeOfBirth,
-      residentialAddress,
-      permanentAddress,
-      nameOfSpouse,
     });
 
     const savedStudent = await newStudent.save();

@@ -26,24 +26,24 @@ const Home = () => {
       routeName: "students",
     },
     {
-      featureName: "Classlists",
-      description: "View, add, edit, and delete classlists.",
-      routeName: "classlists",
+      featureName: "Courses",
+      description: "View, add and edit Courses.",
+      routeName: "courses",
     },
     {
       featureName: "Attendances",
       description: "View, add, and edit Attendances.",
       routeName: "attendances",
     },
+    // {
+    //   featureName: "Attendance Metrics",
+    //   description: "View Attendance Metrics.",
+    //   routeName: "attendance-general-metrics",
+    // },
     {
       featureName: "Course Attendance",
       description: "View attendances by course, section, and term.",
       routeName: "student-attendance",
-    },
-    {
-      featureName: "Audit Trails",
-      description: "View changes made in the system.",
-      routeName: "audit-trails",
     },
   ];
 
