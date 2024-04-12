@@ -25,6 +25,9 @@ const StudentAttendance = () => {
   const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [attendanceMap, setAttendanceMap] = useState({});
   const [coursesAPI, setCoursesAPI] = useState([]);
+
+  const [highestHoursRendered, setHighestHoursRendered] = useState(0);
+
   const [payload, setPayload] = useState({
     courseCode: "",
     section: "",

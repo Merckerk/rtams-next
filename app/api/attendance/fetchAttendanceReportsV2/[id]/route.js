@@ -42,7 +42,6 @@ export const GET = async (req, { params }) => {
     });
 
     console.log("attendances: ", attendances);
-    //for the hoursRenderedMap, it should be a key-value pairs of students and their total hours rendered.
 
     const map = {};
     const hoursRenderedMap = {};
@@ -58,6 +57,7 @@ export const GET = async (req, { params }) => {
         hoursRenderedMap[studentId] = {
           studentName,
           hoursRendered: 0,
+          minimumAttendance: false,
         };
       }
       hoursRenderedMap[studentId].hoursRendered += isNaN(hoursRendered)
@@ -74,14 +74,26 @@ export const GET = async (req, { params }) => {
       }
     });
 
+    
+    const attendancePercentageThreshold = 0.8;
+    Object.values(hoursRenderedMap).forEach((student) => {
+      const hasAllowedAttendanceRate =
+      student.hoursRendered >=
+      attendancePercentageThreshold * highestHoursRendered;
+      
+      student.minimumAttendance = hasAllowedAttendanceRate;
+    });
+    
     console.log("hours rendered map", hoursRenderedMap);
     console.log("highest hours rendered", highestHoursRendered);
-
+    
     const returnValue = {
       success: true,
       message: "Attendances data retrieved successfully.",
       attendanceData: map,
       enrolledStudents: classlist.students,
+      hoursRenderedDataMap: hoursRenderedMap,
+      highestHoursRendered: highestHoursRendered,
     };
 
     return new Response(JSON.stringify(returnValue), { status: 200 });
