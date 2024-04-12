@@ -24,9 +24,9 @@ const StudentAttendance = () => {
   const [studentsAPI, setStudentsAPI] = useState([]);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [attendanceMap, setAttendanceMap] = useState({});
-  const [coursesAPI, setCoursesAPI] = useState([]);
+  const [hoursRenderedMap, setHoursRenderedMap] = useState({});
 
-  const [highestHoursRendered, setHighestHoursRendered] = useState(0);
+  const [coursesAPI, setCoursesAPI] = useState([]);
 
   const [payload, setPayload] = useState({
     courseCode: "",
@@ -49,16 +49,19 @@ const StudentAttendance = () => {
 
       const response = await attendanceResponse.json();
 
-      if(response){
+      console.log("response:", response);
+
+      if (response) {
         const attendanceData = response.attendanceData;
-        const enrolledStudents = response.enrolledStudents
+        const enrolledStudents = response.enrolledStudents;
         setAttendanceMap(attendanceData);
         setStudentsAPI(enrolledStudents);
-      }else {
+        setHoursRenderedMap(response.hoursRenderedDataMap);
+      } else {
         console.error("No response");
       }
     } catch (error) {
-      console.error("Error fetching attendances", error)
+      console.error("Error fetching attendances", error);
     }
   };
 
@@ -180,6 +183,12 @@ const StudentAttendance = () => {
     }));
   });
 
+  // const checkMinimumHoursRendered = (studentid) => {
+  //   if(true){
+
+  //   }
+  // }
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-8">
@@ -241,7 +250,7 @@ const StudentAttendance = () => {
           </button>
         </div>
       </div>
-     
+
       {Object.keys(attendanceMap).length > 0 && (
         <TableContainer component={Paper}>
           <Table
@@ -251,6 +260,7 @@ const StudentAttendance = () => {
             <TableHead>
               <TableRow>
                 <StyledTableCell>Student Name</StyledTableCell>
+                <StyledTableCell>Hours Rendered</StyledTableCell>
                 {Object.keys(attendanceMap).map((date) => (
                   <StyledTableCell key={date} align="left">
                     {date}
@@ -265,21 +275,33 @@ const StudentAttendance = () => {
                   <StyledTableCell component="th" scope="row">
                     {student.name}
                   </StyledTableCell>
+
+                  <StyledTableCell component="th" scope="row">
+                    {hoursRenderedMap[`${student._id}`]?.minimumAttendance ? (
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                        {hoursRenderedMap[`${student._id}`]?.hoursRendered}
+                      </div>
+                    ) : (
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                        {hoursRenderedMap[`${student._id}`]?.hoursRendered}
+                      </div>
+                    )}
+                  </StyledTableCell>
                   {Object.keys(attendanceMap).map((date) => (
                     <StyledTableCell align="center" key={date}>
-                      {
-                        attendanceMap[date].includes(student.name) ? (
-                          <div className="flex items-center">
-                            <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                            <span>Present</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center">
-                            <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                            <span>Absent</span>
-                          </div>
-                        )
-                      }
+                      {attendanceMap[date].includes(student.name) ? (
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                          <span>Present</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                          <span>Absent</span>
+                        </div>
+                      )}
                     </StyledTableCell>
                   ))}
                 </StyledTableRow>

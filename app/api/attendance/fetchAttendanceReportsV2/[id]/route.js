@@ -27,13 +27,6 @@ export const GET = async (req, { params }) => {
       return new Response("Classlist not found", { status: 404 });
     }
 
-    // let students = [];
-
-    // classlist.students.forEach((student) => {
-    //   const studentName = student.name;
-    //   students.push(studentName);
-    // });
-
     const attendances = await Attendances.find({
       course: classlist._id,
     }).populate({
@@ -67,6 +60,7 @@ export const GET = async (req, { params }) => {
       if (!map[date]) {
         map[date] = [];
       }
+
       map[date].push(studentName);
 
       if (hoursRenderedMap[studentId].hoursRendered > highestHoursRendered) {
@@ -86,7 +80,7 @@ export const GET = async (req, { params }) => {
     
     console.log("hours rendered map", hoursRenderedMap);
     console.log("highest hours rendered", highestHoursRendered);
-    
+
     const returnValue = {
       success: true,
       message: "Attendances data retrieved successfully.",
