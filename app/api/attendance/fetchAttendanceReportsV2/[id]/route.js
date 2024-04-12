@@ -46,6 +46,7 @@ export const GET = async (req, { params }) => {
 
     const map = {};
     const hoursRenderedMap = {};
+    let highestHoursRendered = 0;
 
     attendances.forEach((attendance) => {
       const date = attendance.date;
@@ -59,18 +60,22 @@ export const GET = async (req, { params }) => {
           hoursRendered: 0,
         };
       }
+      hoursRenderedMap[studentId].hoursRendered += isNaN(hoursRendered)
+        ? 0
+        : hoursRendered;
 
       if (!map[date]) {
         map[date] = [];
       }
-
       map[date].push(studentName);
-      hoursRenderedMap[studentId].hoursRendered += isNaN(hoursRendered)
-        ? 0
-        : hoursRendered;
+
+      if (hoursRenderedMap[studentId].hoursRendered > highestHoursRendered) {
+        highestHoursRendered = hoursRenderedMap[studentId].hoursRendered;
+      }
     });
 
     console.log("hours rendered map", hoursRenderedMap);
+    console.log("highest hours rendered", highestHoursRendered);
 
     const returnValue = {
       success: true,
