@@ -41,17 +41,36 @@ export const GET = async (req, { params }) => {
       select: "name",
     });
 
+    console.log("attendances: ", attendances);
+    //for the hoursRenderedMap, it should be a key-value pairs of students and their total hours rendered.
+
     const map = {};
+    const hoursRenderedMap = {};
 
     attendances.forEach((attendance) => {
       const date = attendance.date;
+      const studentId = attendance.student._id;
+      const studentName = attendance.student.name;
+      const hoursRendered = parseInt(attendance.hoursRendered);
+
+      if (!hoursRenderedMap[studentId]) {
+        hoursRenderedMap[studentId] = {
+          studentName,
+          hoursRendered: 0,
+        };
+      }
 
       if (!map[date]) {
         map[date] = [];
       }
 
-      map[date].push(attendance.student.name);
+      map[date].push(studentName);
+      hoursRenderedMap[studentId].hoursRendered += isNaN(hoursRendered)
+        ? 0
+        : hoursRendered;
     });
+
+    console.log("hours rendered map", hoursRenderedMap);
 
     const returnValue = {
       success: true,
