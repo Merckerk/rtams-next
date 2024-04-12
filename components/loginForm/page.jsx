@@ -29,8 +29,10 @@ const Login = () => {
       });
 
       if (!res?.error) {
+        //LUWIS
         router.push("/");
         router.refresh();
+        //LUWIS
         return;
       }
       // setTimeout(() => router.replace("/"), 500);

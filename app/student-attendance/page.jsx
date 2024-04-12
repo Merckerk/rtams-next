@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import attendanceMock1 from "@mocks/mockAttendances1";
 import studentMock from "@mocks/mockStudent";
 import { useState } from "react";
@@ -13,11 +13,10 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { StyledTableCell, StyledTableRow } from "@styles/tableStyles";
 import axios from "axios";
+import ReusableDropdown from "@components/reusableDropdown/ReusableDropdown";
 
 import Section from "@enums/section";
 import Term from "@enums/term";
-
-// import fetch from "isomorphic-unfetch";
 
 const StudentAttendance = () => {
   const [attendances, setAttendances] = useState([]);
@@ -38,15 +37,29 @@ const StudentAttendance = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
-    // try {
-    //   const attendanceResponse = await fetch(`api/attendance/fetchCourseReports/${payload.courseCode}/${payload.section}/${payload.term}`);
-    //   const data = await attendanceResponse.json()
-    //   console.log("Attendance Response Data:",data);
-    // } catch (error) {
-    //   console.log(error)
-    // }
+  const fetchAttendanceReports = async () => {
+    try {
+      const attendanceResponse = await fetch(
+        `api/attendance/fetchAttendanceReportsV2/${payload?.courseCode}`,
+        { cache: "no-store" }
+      );
 
+      const response = await attendanceResponse.json();
+
+      if(response){
+        const attendanceData = response.attendanceData;
+        const enrolledStudents = response.enrolledStudents
+        setAttendanceMap(attendanceData);
+        setStudentsAPI(enrolledStudents);
+      }else {
+        console.error("No response");
+      }
+    } catch (error) {
+      console.error("Error fetching attendances", error)
+    }
+  };
+
+  const fetchData = async () => {
     try {
       setLoading(true);
 
@@ -79,18 +92,17 @@ const StudentAttendance = () => {
     }
   };
 
-  const getAttendancesAndStudents = async () => {
-    //TODO: REPLACE WITH API INTEGRATION LATER
-    setEnrolledStudents(studentMock);
-    setAttendances(attendanceMock1);
-  };
-
   const getCourses = async () => {
     try {
-      const coursesResponse = await axios.get("api/courses/fetchCourses");
-      const coursesData = coursesResponse.data;
-      console.log("courses data:", coursesData);
-      setCoursesAPI(coursesData);
+      const coursesResponse = await fetch("api/classlist/getAllClasslists", {
+        cache: "no-store",
+      });
+      const response = await coursesResponse.json();
+
+      if (response) {
+        const coursesData = response.data;
+        setCoursesAPI(coursesData);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -109,29 +121,25 @@ const StudentAttendance = () => {
   }, []);
 
   useEffect(() => {
-    getAttendancesAndStudents();
-  }, []);
-
-  useEffect(() => {
     console.log("attendances:", attendances);
     console.log("enrolledStudents:", enrolledStudents);
   }, [attendances, enrolledStudents]);
 
-  useEffect(() => {
-    // Create a hashmap for attendance dates and students attended
-    if (attendancesAPI && studentsAPI) {
-      const map = {};
-      attendancesAPI.forEach((attendance) => {
-        const date = attendance.date.split("T")[0]; // Extracting date part only
-        if (!map[date]) {
-          map[date] = [];
-        }
-        map[date].push(attendance.studentName);
-      });
-      //TODO: SORT BY DATE
-      setAttendanceMap(map);
-    }
-  }, [attendancesAPI, studentsAPI]);
+  // useEffect(() => {
+  //   // Create a hashmap for attendance dates and students attended
+  //   if (attendancesAPI && studentsAPI) {
+  //     const map = {};
+  //     attendancesAPI.forEach((attendance) => {
+  //       const date = attendance.date.split("T")[0]; // Extracting date part only
+  //       if (!map[date]) {
+  //         map[date] = [];
+  //       }
+  //       map[date].push(attendance.studentName);
+  //     });
+  //     //TODO: SORT BY DATE
+  //     setAttendanceMap(map);
+  //   }
+  // }, [attendancesAPI, studentsAPI]);
 
   useEffect(() => {
     console.log("attendances:", attendances);
@@ -148,6 +156,27 @@ const StudentAttendance = () => {
     console.log("attendancesAPI:", attendancesAPI);
   }, [studentsAPI, attendancesAPI]);
 
+  const classlistsOptions = useMemo(() => {
+    return coursesAPI.map((course) => ({
+      value: course._id,
+      label: `${course.sectionCode} - ${course.subjectCode} - ${course.term}`,
+    }));
+  }, [coursesAPI]);
+
+  const sectionsOptions = useMemo(() => {
+    return Object.entries(Section).map(([key, value]) => ({
+      value: key,
+      label: value,
+    }));
+  });
+
+  const termsOptions = useMemo(() => {
+    return Object.entries(Term).map(([key, value]) => ({
+      value: key,
+      label: value,
+    }));
+  });
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-8">
@@ -162,114 +191,54 @@ const StudentAttendance = () => {
             Enter course, section and term to get tabulated attendance data.
           </h2>
 
-          <div className="form_group">
-            <label
-              htmlFor="coursecode"
-              className="form_label font-satoshi font-semibold text-base text-gray-700"
-            >
-              Course Code
-            </label>
-            <select
-              id="coursecode"
-              name="coursecode"
-              className="form_input"
-              onChange={(e) => {
-                setPayload({ ...payload, courseCode: e.target.value });
-              }}
-              value={payload?.courseCode}
-              required
-            >
-              {/* Default option */}
-              <option value="" disabled>
-                Select Course Code
-              </option>
+          <ReusableDropdown
+            label="Section"
+            id="section"
+            name="section"
+            options={sectionsOptions}
+            value={payload?.section}
+            onChange={(e) => {
+              setPayload({ ...payload, section: e.target.value });
+            }}
+            placeholder="Select Section"
+          />
 
-              {/* Map over coursesAPI to create options */}
-              {coursesAPI.map((course) => (
-                <option key={course._id} value={course._id}>
-                  {course.courseCode} - {course.courseName}
-                </option>
-              ))}
-            </select>
-            <span className="error_message">{errMsg.courseCode}</span>
-          </div>
+          <ReusableDropdown
+            label="Term"
+            id="term"
+            name="term"
+            options={termsOptions}
+            value={payload?.term}
+            onChange={(e) => {
+              setPayload({ ...payload, term: e.target.value });
+            }}
+            placeholder="Select Term"
+          />
 
-          <div className="form_group">
-            <label
-              htmlFor="section"
-              className="form_label font-satoshi font-semibold text-base text-gray-700"
-            >
-              Section
-            </label>
-            <select
-              id="section"
-              name="section"
-              className="form_input"
-              onChange={(e) => {
-                setPayload({ ...payload, section: e.target.value });
-              }}
-              value={payload?.section}
-              required
-            >
-              {/* Default option */}
-              <option value="" disabled>
-                Select Section
-              </option>
-
-              {/* Map over coursesAPI to create options */}
-              {Object.entries(Section).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {key}
-                </option>
-              ))}
-            </select>
-            <span className="error_message">{errMsg.section}</span>
-          </div>
-
-          <div className="form_group">
-            <label
-              htmlFor="coursecode"
-              className="form_label font-satoshi font-semibold text-base text-gray-700"
-            >
-              Term
-            </label>
-            <select
-              id="term"
-              name="term"
-              className="form_input"
-              onChange={(e) => {
-                setPayload({ ...payload, term: e.target.value });
-              }}
-              value={payload?.term}
-              required
-            >
-              {/* Default option */}
-              <option value="" disabled>
-                Select Term
-              </option>
-
-              {/* Map over coursesAPI to create options */}
-              {Object.entries(Term).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {key}
-                </option>
-              ))}
-            </select>
-            <span className="error_message">{errMsg.term}</span>
-          </div>
+          <ReusableDropdown
+            label="Classlist"
+            id="classlist"
+            name="classlist"
+            options={classlistsOptions}
+            value={payload?.courseCode}
+            onChange={(e) => {
+              setPayload({ ...payload, courseCode: e.target.value });
+            }}
+            placeholder="Select Classlist"
+          />
 
           <button
             className="black_btn"
             disabled={loading}
             onClick={() => {
-              fetchData();
+              fetchAttendanceReports();
             }}
           >
             {loading ? "Processing" : `Get Attendances`}
           </button>
         </div>
       </div>
-
+     
       {Object.keys(attendanceMap).length > 0 && (
         <TableContainer component={Paper}>
           <Table
@@ -293,11 +262,9 @@ const StudentAttendance = () => {
                   <StyledTableCell component="th" scope="row">
                     {student.name}
                   </StyledTableCell>
-                  {/* Loop through each date in the attendanceMap */}
                   {Object.keys(attendanceMap).map((date) => (
                     <StyledTableCell align="center" key={date}>
                       {
-                        // isPresent(student.name, attendanceMap[date])
                         attendanceMap[date].includes(student.name) ? (
                           <div className="flex items-center">
                             <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />

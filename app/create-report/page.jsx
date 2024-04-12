@@ -10,9 +10,7 @@ const createAttendance = () => {
   const router = useRouter();
   const [post, setPost] = useState({
     nfcUID: "",
-    courseCode: "",
-    section: "",
-    term: "",
+    course: "",
     nfcUids: [],
   });
 
@@ -51,14 +49,10 @@ const createAttendance = () => {
     try {
       setIsLoading(true);
 
-      const { nfcUID, student, studentName, courseCode, section, term } = post;
+      const { nfcUID, course } = post;
       const postValues = {
         nfcUID,
-        student,
-        studentName,
-        courseCode,
-        section,
-        term,
+        course,
       };
       const response = await axios.post(
         "api/attendance/createReport",
@@ -77,53 +71,58 @@ const createAttendance = () => {
     }
   };
 
-  const onCreateMultipleReports = async () => {
-    try {
-      setIsLoading(true);
-      const { nfcUids, student, studentName, courseCode, term, section } = post;
-      const postValues = {
-        nfcUids,
-        student,
-        studentName,
-        student,
-        studentName,
-        courseCode,
-        term,
-        section,
-      };
+  // const onCreateMultipleReports = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const { nfcUids, student, studentName, courseCode, term, section } = post;
+  //     const postValues = {
+  //       nfcUids,
+  //       student,
+  //       studentName,
+  //       student,
+  //       studentName,
+  //       courseCode,
+  //       term,
+  //       section,
+  //     };
 
-      const response = await axios.post(
-        "api/attendance/createMultipleReports",
-        postValues
-      );
+  //     const response = await axios.post(
+  //       "api/attendance/createMultipleReports",
+  //       postValues
+  //     );
 
-      if (response) {
-        toast.success("Successfully created multiple attendance entries!");
-        router.push("/attendances");
-      } else {
-        alert("Attendance sending failed");
-      }
-    } catch (error) {
-      toast.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     if (response) {
+  //       toast.success("Successfully created multiple attendance entries!");
+  //       router.push("/attendances");
+  //     } else {
+  //       alert("Attendance sending failed");
+  //     }
+  //   } catch (error) {
+  //     toast.error(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
-    console.log("post values:", post);
-    const filtered = studentsAPI.filter((student) => {
-      const courseCodeMatch = post.courseCode
-        ? student.load.includes(post.courseCode)
-        : true;
-      const sectionMatch = post.section
-        ? student.section === post.section
-        : true;
-      return courseCodeMatch && sectionMatch;
-    });
+    console.log("course:", post.course)
+  }, [post.course]);
 
-    setFilteredStudents(filtered);
-  }, [post]);
+  // !REWRITE LATER AFTER REHAUL
+  // useEffect(() => {
+  //   console.log("post values:", post);
+  //   const filtered = studentsAPI.filter((student) => {
+  //     const courseCodeMatch = post.courseCode
+  //       ? student.load.includes(post.courseCode)
+  //       : true;
+  //     const sectionMatch = post.section
+  //       ? student.section === post.section
+  //       : true;
+  //     return courseCodeMatch && sectionMatch;
+  //   });
+
+  //   setFilteredStudents(filtered);
+  // }, [post]);
 
   return (
     <>

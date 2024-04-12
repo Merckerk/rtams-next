@@ -1,4 +1,5 @@
 import Student from "@models/studentModel";
+import Audits from "@models/auditModel";
 import { connectToDB } from "@utils/database";
 import bcryptjs from "bcryptjs";
 
@@ -32,6 +33,13 @@ export const PATCH = async (req, { params }) => {
     password,
     section,
     load,
+    gender,
+    mobileNumber,
+    placeOfBirth,
+    residentialAddress,
+    permanentAddress,
+    nameOfSpouse,
+    audit,
   } = await req.json();
 
   try {
@@ -39,10 +47,30 @@ export const PATCH = async (req, { params }) => {
 
     const existingStudent = await Student.findById(params.id);
 
+    if (!audit) return new Response("Please enter reason for edit");
+
     if (!existingStudent) {
       console.log("student doesn't exist");
       return new Response("Student not found", { status: 404 });
     }
+
+    const oldData = {
+      image: existingStudent.image,
+      studentNumber: existingStudent.studentNumber,
+      nfcUID: existingStudent.nfcUID,
+      email: existingStudent.email,
+      name: existingStudent.name,
+      username: existingStudent.username,
+      password: existingStudent.password,
+      section: existingStudent.section,
+      load: existingStudent.load,
+      gender: existingStudent.gender,
+      mobileNumber: existingStudent.mobileNumber,
+      placeOfBirth: existingStudent.placeOfBirth,
+      residentialAddress: existingStudent.residentialAddress,
+      permanentAddress: existingStudent.permanentAddress,
+      nameOfSpouse: existingStudent.nameOfSpouse,
+    };
 
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = !password ? "" : await bcryptjs.hash(password, salt);
@@ -56,9 +84,29 @@ export const PATCH = async (req, { params }) => {
     existingStudent.password = hashedPassword || existingStudent.password;
     existingStudent.section = section;
     existingStudent.load = load;
+    existingStudent.gender = gender;
+    existingStudent.mobileNumber = mobileNumber;
+    existingStudent.placeOfBirth = placeOfBirth;
+    existingStudent.residentialAddress = residentialAddress;
+    existingStudent.permanentAddress = permanentAddress;
+    existingStudent.nameOfSpouse = nameOfSpouse;
 
     await existingStudent.save();
-    return new Response(JSON.stringify(existingStudent), { status: 200 });
+
+    const auditData = {
+      target: "student",
+      description: audit,
+      oldData: oldData,
+      newData: existingStudent.toObject()
+    }
+
+    const auditRecord = new Audits(auditData);
+    await auditRecord.save();
+    const combinedResponse = {
+      updatedStudent: existingStudent,
+      audit: auditRecord
+    };
+    return new Response(JSON.stringify(combinedResponse), { status: 200 });
   } catch (error) {
     console.log("Error in patch endpoint");
     return new Response("Failed to update student information.", {

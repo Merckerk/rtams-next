@@ -1,11 +1,12 @@
 "use client";
 
 import ReusableInput from "@components/reusableInput/ReusableInput";
+import ReusableDropdown from "@components/reusableDropdown/ReusableDropdown";
 import axios from "axios";
 import Section from "@enums/section";
 import Term from "@enums/term";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const AttendanceReportForm = ({
   type,
@@ -24,9 +25,14 @@ const AttendanceReportForm = ({
   const [nfcAPI, setNFC_API] = useState([]);
 
   const fetchCoursesData = async () => {
-    const response = await axios.get("/api/courses/fetchCourses");
-    if (response) {
-      setCoursesAPI(response.data);
+    const response = await fetch("/api/classlist/getAllClasslists", {
+      cache: "no-store",
+    });
+    const data = await response.json();
+
+    if (data) {
+      const classlistData = data.data;
+      setCoursesAPI(classlistData);
     } else {
     }
   };
@@ -68,6 +74,13 @@ const AttendanceReportForm = ({
     }));
     return isValid;
   };
+
+  const classlistsOptions = useMemo(() => {
+    return coursesAPI.map((course) => ({
+      value: course._id,
+      label: `${course.sectionCode} - ${course.subjectCode} - ${course.term}`,
+    }));
+  }, [coursesAPI]);
 
   return (
     <div className="container mx-auto mt-5 mb-8">
@@ -123,7 +136,19 @@ const AttendanceReportForm = ({
         <span className="error_message">{errMsg.nfcUID}</span>
 
         {/* Course Code Selector */}
-        <div className="form_group">
+        <ReusableDropdown
+          label="Classlist"
+          id="classlist"
+          name="classlist"
+          options={classlistsOptions}
+          value={post?.course}
+          onChange={(e) => {
+            setPost({ ...post, course: e.target.value });
+          }}
+          placeholder="Select Classlist"
+        />
+
+        {/* <div className="form_group">
           <label
             htmlFor="coursecode"
             className="form_label font-satoshi font-semibold text-base text-gray-700"
@@ -141,12 +166,10 @@ const AttendanceReportForm = ({
             value={post?.courseCode}
             required
           >
-            {/* Default option */}
             <option value="" disabled>
               Select Course Code
             </option>
 
-            {/* Map over coursesAPI to create options */}
             {coursesAPI.map((course) => (
               <option key={course._id} value={course._id}>
                 {course.courseCode} - {course.courseName}
@@ -154,74 +177,7 @@ const AttendanceReportForm = ({
             ))}
           </select>
           <span className="error_message">{errMsg.courseCode}</span>
-        </div>
-
-        <div className="form_group">
-          <label
-            htmlFor="section"
-            className="form_label font-satoshi font-semibold text-base text-gray-700"
-          >
-            Section
-          </label>
-          <select
-            id="section"
-            name="section"
-            className="form_input"
-            onChange={(e) => {
-              setPost({ ...post, section: e.target.value });
-              validateCourseCode(e.target.value);
-            }}
-            value={post?.section}
-            required
-          >
-            {/* Default option */}
-            <option value="" disabled>
-              Select Section
-            </option>
-
-            {/* Map over coursesAPI to create options */}
-            {Object.entries(Section).map(([key, value]) => (
-              <option key={key} value={value}>
-                {key}
-              </option>
-            ))}
-          </select>
-          <span className="error_message">{errMsg.section}</span>
-        </div>
-
-        {/* Term Selector */}
-        <div className="form_group">
-          <label
-            htmlFor="coursecode"
-            className="form_label font-satoshi font-semibold text-base text-gray-700"
-          >
-            Term
-          </label>
-          <select
-            id="term"
-            name="term"
-            className="form_input"
-            onChange={(e) => {
-              setPost({ ...post, term: e.target.value });
-              validateCourseCode(e.target.value);
-            }}
-            value={post?.term}
-            required
-          >
-            {/* Default option */}
-            <option value="" disabled>
-              Select Term
-            </option>
-
-            {/* Map over coursesAPI to create options */}
-            {Object.entries(Term).map(([key, value]) => (
-              <option key={key} value={value}>
-                {key}
-              </option>
-            ))}
-          </select>
-          <span className="error_message">{errMsg.courseCode}</span>
-        </div>
+        </div> */}
 
         <button className="black_btn" disabled={loading} onClick={handleSubmit}>
           {loading ? "Processing" : `${type} Attendance Report`}

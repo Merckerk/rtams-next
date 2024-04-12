@@ -13,22 +13,13 @@ const AdminCrudForm = ({
   handleDelete = () => {},
 }) => {
   const [errMsg, setErrMsg] = useState({
-    email: "",
     name: "",
     userId: "",
     username: "",
     password: "",
     repassword: "",
+    audit: "",
   });
-
-  const validateEmail = (value) => {
-    const isValid = !value || /\S+@\S+\.\S+/.test(value);
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      email: isValid ? "" : "Invalid email",
-    }));
-    return isValid;
-  };
 
   const validateName = (value) => {
     const isValid = !!value;
@@ -78,6 +69,15 @@ const AdminCrudForm = ({
     return isValid;
   };
 
+  const validateAudit = (value) => {
+    const isValid = !!value;
+    setErrMsg((prevErrMsg) => ({
+      ...prevErrMsg,
+      audit: isValid ? "" : "Reason to Edit is required",
+    }));
+    return isValid;
+  };
+
   const convertToBase64 = (e) => {
     var reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
@@ -89,9 +89,50 @@ const AdminCrudForm = ({
     };
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    const isNameValid = validateName(post.name);
+    const isUserIdValid = validateUserId(post.userId);
+    const isUsernameValid = validateUsername(post.username);
+    let isPasswordValid = true;
+    let isRepasswordValid = true;
+    let isAuditValid = true;
+
+    if (type === "Create") {
+      isPasswordValid = validatePassword(post.password);
+      isRepasswordValid = validateRepassword(post.repassword);
+    }
+
+    if (type === "Edit") {
+      isAuditValid = validateAudit(post.audit);
+    }
+
+    if (
+      !isNameValid ||
+      !isUserIdValid ||
+      !isUsernameValid ||
+      !isPasswordValid ||
+      !isRepasswordValid ||
+      !isAuditValid
+    ) {
+      console.log(
+        type === "Edit"
+          ? "Invalid inputs. Please fix the errors."
+          : "Invalid password inputs. Please fix the errors."
+      );
+      return;
+    }
+
+    handleSubmit(e);
+  };
+
   return (
     <div className="container mx-auto mt-5 mb-8">
-      <form className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism">
+      <form
+        className="max-w-2xl mx-auto flex flex-col gap-7 glassmorphism"
+        onSubmit={handleFormSubmit}
+      >
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
           {type} User Profile
         </h1>
@@ -133,22 +174,6 @@ const AdminCrudForm = ({
         </div>
 
         <ReusableInput
-          label="Email"
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Enter email"
-          className="form_input"
-          onChange={(e) => {
-            setPost({ ...post, email: e.target.value });
-            validateEmail(e.target.value);
-          }}
-          value={post?.email}
-          errorMessage={errMsg.email}
-          required
-        />
-        
-        <ReusableInput
           label="Name"
           type="text"
           id="name"
@@ -179,7 +204,7 @@ const AdminCrudForm = ({
           errorMessage={errMsg.userId}
           required
         />
-        
+
         <ReusableInput
           label="Username"
           type="text"
@@ -195,7 +220,7 @@ const AdminCrudForm = ({
           errorMessage={errMsg.username}
           required
         />
-        
+
         <ReusableInput
           label="Password"
           type="password"
@@ -209,7 +234,6 @@ const AdminCrudForm = ({
           }}
           value={post?.password}
           errorMessage={errMsg.password}
-          required
         />
 
         <ReusableInput
@@ -225,10 +249,31 @@ const AdminCrudForm = ({
           }}
           value={post?.repassword}
           errorMessage={errMsg.repassword}
-          required
         />
 
-        <button className="black_btn" disabled={loading} onClick={handleSubmit}>
+        {type == "Edit" ? (
+          <label>
+            <span className="font-satoshi font-semibold text-base text-gray-700">
+              Reson for Edit:
+            </span>
+            <textarea
+              id="audit"
+              name="audit"
+              placeholder="Your reason for editing values here..."
+              className="form_input"
+              onChange={(e) => {
+                setPost({ ...post, audit: e.target.value });
+                validateAudit(e.target.value);
+              }}
+              value={post?.audit}
+            />
+            {errMsg.audit ? (
+              <p className="error_message">{errMsg.audit}</p>
+            ) : null}
+          </label>
+        ) : null}
+
+        <button className="black_btn" disabled={loading}>
           {loading ? "Processing" : `${type} User`}
         </button>
         {type == "Edit" ? (

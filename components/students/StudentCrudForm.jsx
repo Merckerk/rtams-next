@@ -2,6 +2,7 @@
 
 import ReusableInput from "@components/reusableInput/ReusableInput";
 import Section from "@enums/section";
+import Gender from "@enums/gender";
 
 import { useEffect, useState } from "react";
 
@@ -88,7 +89,25 @@ const StudentCrudForm = ({
       section: isValid ? "" : "Invalid section",
     }));
     return isValid;
-  };  
+  };
+
+  const validateGender = (value) => {
+    const isValid = !!value && Object.values(Gender).includes(value);
+    setErrMsg((prevErrMsg) => ({
+      ...prevErrMsg,
+      section: isValid ? "" : "Invalid gender",
+    }));
+    return isValid;
+  };
+
+  const validateAudit = (value) => {
+    const isValid = !!value;
+    setErrMsg((prevErrMsg) => ({
+      ...prevErrMsg,
+      audit: isValid ? "" : "Reason to Edit is required",
+    }));
+    return isValid;
+  };
 
   const convertToBase64 = (e) => {
     var reader = new FileReader();
@@ -277,6 +296,115 @@ const StudentCrudForm = ({
             </option>
           ))}
         </select>
+
+        <select
+          id="gender"
+          name="gender"
+          className="form_input"
+          onChange={(e) => {
+            const selectedGender = e.target.value;
+            setPost({ ...post, gender: selectedGender });
+            validateGender(selectedGender);
+          }}
+          value={post?.gender}
+          required
+        >
+          <option value="" disabled selected>
+            Select Gender
+          </option>
+          {Object.entries(Gender).map(([key, value]) => (
+            <option key={key} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
+
+        <ReusableInput
+          label="Mobile number"
+          type="text"
+          id="mobile number"
+          name="mobile number"
+          placeholder="Enter mobile number"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, mobileNumber: e.target.value });
+          }}
+          value={post?.mobileNumber}
+        />
+
+        <ReusableInput
+          label="Place of birth"
+          type="text"
+          id="place of birth"
+          name="place of birth"
+          placeholder="Enter place of birth"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, placeOfBirth: e.target.value });
+          }}
+          value={post?.placeOfBirth}
+        />
+
+        <ReusableInput
+          label="Residential address"
+          type="text"
+          id="residential address"
+          name="residential address"
+          placeholder="Enter residential address"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, residentialAddress: e.target.value });
+          }}
+          value={post?.residentialAddress}
+        />
+
+        <ReusableInput
+          label="Permanent address"
+          type="text"
+          id="permanent address"
+          name="permanent address"
+          placeholder="Enter permanent address"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, permanentAddress: e.target.value });
+          }}
+          value={post?.permanentAddress}
+        />
+
+        <ReusableInput
+          label="Name of spouse"
+          type="text"
+          id="name of spouse"
+          name="name of spouse"
+          placeholder="Enter name of spouse"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, nameOfSpouse: e.target.value });
+          }}
+          value={post?.nameOfSpouse}
+        />
+
+        {type == "Edit" ? (
+          <label>
+            <span className="font-satoshi font-semibold text-base text-gray-700">
+              Reson for Edit:
+            </span>
+            <textarea
+              id="audit"
+              name="audit"
+              placeholder="Your reason for editing values here..."
+              className="form_input"
+              onChange={(e) => {
+                setPost({ ...post, audit: e.target.value });
+                validateAudit(e.target.value);
+              }}
+              value={post?.audit}
+            />
+            {errMsg.audit ? (
+              <p className="error_message">{errMsg.audit}</p>
+            ) : null}
+          </label>
+        ) : null}
 
         <button className="black_btn" disabled={loading} onClick={handleSubmit}>
           {loading ? "Processing" : `${type} Student`}
