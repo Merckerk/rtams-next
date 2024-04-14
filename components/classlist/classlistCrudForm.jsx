@@ -230,6 +230,7 @@ const ClasslistCrudForm = ({
             className="form_input"
             onChange={(e) => {
               setPost({ ...post, term: e.target.value });
+              checkForEmptyValue(e.target.value, "term");
             }}
             value={post?.term}
             errorMessage={errMsg.term}

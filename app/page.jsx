@@ -45,6 +45,16 @@ const Home = () => {
       description: "View changes made in the system.",
       routeName: "audit-trails",
     },
+    {
+      featureName: "Terms",
+      description: "View available terms.",
+      routeName: "terms",
+    },
+    {
+      featureName: "Sections",
+      description: "View available sections.",
+      routeName: "sections",
+    },
   ];
 
   return (
