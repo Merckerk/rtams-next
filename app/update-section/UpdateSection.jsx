@@ -23,12 +23,12 @@ const UpdateSection = () => {
       const response = await sectionResponse.json();
 
       console.log("response: ",response)
-    //   if (response) {
-    //     const data = response.data;
-    //     setPost({ ...post, section: data });
-    //   } else {
-    //     console.error("error fetching section data");
-    //   }
+      if (response) {
+        const data = response.data;
+        setPost({ ...post, section: data.section });
+      } else {
+        console.error("error fetching section data");
+      }
     } catch (error) {
       console.error("error fetching section data", error);
     } finally {
