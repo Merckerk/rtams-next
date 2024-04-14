@@ -3,28 +3,28 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import TermCrudForm from "@components/term/TermCrudForm";
+import SectionCrudForm from "@components/sections/SectionCrudForm";
 
-const CreateTerm = () => {
+const CreateSection = () => {
   const router = useRouter();
   const [post, setPost] = useState({
-    term: "",
+    section: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const onCreateTerm = async () => {
+  const onCreateSection = async () => {
     try {
       setIsLoading(true);
-      const { term } = post;
+      const { section } = post;
 
       const postValues = {
-        term,
+        section,
       };
 
-      const response = await axios.post("api/terms/create", postValues);
-      toast.success("Successfully created a term!");
-      router.push("/terms");
+      const response = await axios.post("api/sections/create", postValues);
+      toast.success("Successfully created a section!");
+      router.push("/sections");
     } catch (error) {
       toast.error(error);
     } finally {
@@ -33,14 +33,14 @@ const CreateTerm = () => {
   };
 
   return (
-    <TermCrudForm
+    <SectionCrudForm
       type="Create"
       post={post}
       setPost={setPost}
       loading={isLoading}
-      handleSubmit={onCreateTerm}
+      handleSubmit={onCreateSection}
     />
   );
 };
 
-export default CreateTerm;
+export default CreateSection;

@@ -13,49 +13,48 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const Terms = () => {
+const Sections = () => {
   const router = useRouter();
-  const [terms, setTerms] = useState([]);
+  const [sections, setSections] = useState([]);
 
-  const fetchTermsData = async () => {
+  const fetchSectionsData = async () => {
     try {
-      const termsResponse = await fetch("/api/terms/getAllTerms", {
+      const sectionsResponse = await fetch("/api/sections/getAllSections", {
         cache: "no-store",
       });
-      const response = await termsResponse.json();
+      const response = await sectionsResponse.json();
 
       if (response) {
-        const termsData = response.data;
-        console.log("data:", termsData);
+        const sectionsData = response.data;
+        console.log("data:", sectionsData);
 
-        setTerms(termsData);
+        setSections(sectionsData);
       } else {
       }
     } catch (error) {
-      console.error("Error fetching terms", error);
+      console.error("Error fetching sections", error);
     }
   };
 
-  const handleEdit = (term) =>
-    router.push(`update-term?termid=${term._id}`);
+  const handleEdit = (section) => router.push(`update-section?sectionid=${section._id}`);
 
   useEffect(() => {
-    fetchTermsData();
+    fetchSectionsData();
   }, []);
 
   return (
     <div className="py-4 pt-7">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
-          Terms
+          Sections
         </h1>
         <button
           className="pb-7 black_btn"
           onClick={() => {
-            router.push("/create-term");
+            router.push("/create-section");
           }}
         >
-          Create Term
+          Create Section
         </button>
       </div>
 
@@ -66,15 +65,15 @@ const Terms = () => {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell>Terms</StyledTableCell>
+              <StyledTableCell>Section</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {terms.map((term) => (
-              <StyledTableRow key={term._id}>
+            {sections.map((section) => (
+              <StyledTableRow key={section._id}>
                 <StyledTableCell component="th" scope="row">
-                  {term.term}
+                  {section.section}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <button
@@ -82,7 +81,7 @@ const Terms = () => {
                     color="primary"
                     style={{ marginRight: "30px" }}
                     onClick={() => {
-                      handleEdit(term);
+                      handleEdit(section);
                     }}
                   >
                     View
@@ -97,4 +96,4 @@ const Terms = () => {
   );
 };
 
-export default Terms;
+export default Sections;

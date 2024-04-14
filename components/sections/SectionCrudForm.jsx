@@ -5,7 +5,7 @@ import { useState, Suspense } from "react";
 
 import React from "react";
 
-const TermCrudForm = ({
+const SectionCrudForm = ({
   type,
   post,
   setPost,
@@ -14,7 +14,7 @@ const TermCrudForm = ({
   handleDelete = () => {},
 }) => {
   const [errMsg, setErrMsg] = useState({
-    term: "",
+    section: "",
     audit: "",
   });
 
@@ -30,14 +30,14 @@ const TermCrudForm = ({
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    const isTermValid = checkForEmptyValue(post?.term, "term");
+    const isSectionValid = checkForEmptyValue(post?.section, "section");
     let isAuditValid = true;
 
     if(type === "Edit"){
         isAuditValid = checkForEmptyValue(post?.audit, "audit");
     }
 
-    if(!isTermValid || !isAuditValid){
+    if(!isSectionValid || !isAuditValid){
         console.log("Please fill all inputs");
         return;
     }
@@ -54,22 +54,22 @@ const TermCrudForm = ({
       <div className="container mx-auto mt-5 mb-8">
         <form className="max-w-2xl mb-8 mx-auto flex flex-col gap-7 glassmorphism" onSubmit={handleFormSubmit}>
           <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
-            {type} Term
+            {type} Section
           </h1>
 
           <ReusableInput
-            label="Term"
+            label="Section"
             type="text"
             id="term"
             name="term"
-            placeholder="Enter Term"
+            placeholder="Enter Section"
             className="form_input"
             onChange={(e) => {
-              setPost({ ...post, term: e.target.value });
-              checkForEmptyValue(e.target.value, "term");
+              setPost({ ...post, section: e.target.value });
+              checkForEmptyValue(e.target.value, "section");
             }}
-            value={post?.term}
-            errorMessage={errMsg.term}
+            value={post?.section}
+            errorMessage={errMsg.section}
             required
           />
 
@@ -96,7 +96,7 @@ const TermCrudForm = ({
           ) : null}
 
             <button className="black_btn" disabled={loading}>
-              {loading ? "Processing" : `${type} Term`}
+              {loading ? "Processing" : `${type} Section`}
             </button>
             {type == "Edit" ? (
               <button
@@ -104,7 +104,7 @@ const TermCrudForm = ({
                 disabled={loading}
                 onClick={onDelete}
               >
-                {loading ? "Processing" : "Delete Term"}
+                {loading ? "Processing" : "Delete Section"}
               </button>
             ) : null}
         </form>
@@ -113,4 +113,4 @@ const TermCrudForm = ({
   );
 };
 
-export default TermCrudForm;
+export default SectionCrudForm;
