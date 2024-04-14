@@ -86,7 +86,8 @@ const UpdateClassList = () => {
         post.sectionCode &&
         post.subjectCode &&
         post.subjectDescription &&
-        post.term
+        post.term &&
+        post.audit
       );
     } else if (action == "Delete") {
       return !!post.audit;
