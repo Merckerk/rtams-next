@@ -4,6 +4,7 @@ import attendanceMock1 from "@mocks/mockAttendances1";
 import studentMock from "@mocks/mockStudent";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -19,6 +20,8 @@ import Section from "@enums/section";
 import Term from "@enums/term";
 
 const StudentAttendance = () => {
+  const { data: session } = useSession();
+
   const [attendances, setAttendances] = useState([]);
   const [attendancesAPI, setAttendancesAPI] = useState([]);
   const [studentsAPI, setStudentsAPI] = useState([]);
@@ -100,9 +103,20 @@ const StudentAttendance = () => {
 
   const getCourses = async () => {
     try {
-      const coursesResponse = await fetch("api/classlist/getAllClasslists", {
-        cache: "no-store",
-      });
+      let coursesResponse;
+
+      if(session?.user){
+        if(session?.user?.role === "Admin"){
+          coursesResponse = await fetch("api/classlist/getAllClasslists", {
+            cache: "no-store",
+          });
+        }else{
+          coursesResponse = await fetch(`api/classlist/getClasslistsByFaculty/${session?.user?.id}`, {
+            cache: "no-store",
+          });
+        }
+      }
+
       const response = await coursesResponse.json();
 
       if (response) {
@@ -124,7 +138,7 @@ const StudentAttendance = () => {
 
   useEffect(() => {
     getCourses();
-  }, []);
+  }, [session?.user?.id]);
 
   useEffect(() => {
     console.log("attendances:", attendances);
