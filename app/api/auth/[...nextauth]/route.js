@@ -35,10 +35,17 @@ const authOptions = {
             console.log("Valid password");
           }
 
-          const userWithoutImage = { ...user.toObject() };
-          delete userWithoutImage.image;
+          console.log(user, typeof user);
 
-          return userWithoutImage;
+          const returnValue = {
+            id: user._id,
+            name: user.name,
+            role: user.role ?? "User",
+          };
+          // const userWithoutImage = { ...user.toObject() };
+          // delete userWithoutImage.image;
+
+          return returnValue;
         } catch (error) {
           console.error("Error during authorization:", error);
           return null;
@@ -52,6 +59,7 @@ const authOptions = {
       if (user){
         token.id=user.id;
         token.name = user.name;
+        token.role = user.role;
       }
       return token;
     },
@@ -59,6 +67,7 @@ const authOptions = {
       if(token){
         session.user.id = token.id;
         session.user.name = token.name;
+        session.user.role = token.role;
       }
       return session;
     },

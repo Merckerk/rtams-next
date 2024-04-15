@@ -25,7 +25,7 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE user
 export const PATCH = async (req, { params }) => {
-  const { image, userId, username, password, name, audit } = await req.json();
+  const { image, userId, username, password, name, audit, role } = await req.json();
   try {
     await connectToDB();
     // Find and update the user with the new data
@@ -38,11 +38,12 @@ export const PATCH = async (req, { params }) => {
     }
 
     const oldData = {
-      image: existingUser.image,
-      name: existingUser.name,
-      userId: existingUser.userId,
-      username: existingUser.username,
-      password: existingUser.password,
+      image: existingUser?.image,
+      name: existingUser?.name,
+      userId: existingUser?.userId,
+      username: existingUser?.username,
+      password: existingUser?.password,
+      role: existingUser?.role,
     };
 
     //re-hash password here
@@ -55,6 +56,7 @@ export const PATCH = async (req, { params }) => {
     existingUser.userId = userId;
     existingUser.username = username;
     existingUser.password = hashedPassword || existingUser.password;
+    existingUser.role = role;
 
     await existingUser.save();
 

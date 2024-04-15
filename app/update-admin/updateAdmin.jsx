@@ -18,6 +18,7 @@ const UpdateAdmin = () => {
     username: "",
     password: "",
     repassword: "",
+    role: "",
     audit: ""
   });
 
@@ -33,6 +34,7 @@ const UpdateAdmin = () => {
       username: data.username,
       password: "",
       repassword: "",
+      role: data.role,
       audit: ""
     });
   };
@@ -60,6 +62,7 @@ const UpdateAdmin = () => {
           userId: post.userId,
           username: post.username,
           password: post.password,
+          role: post.role,
           audit: post.audit,
         }),
       });

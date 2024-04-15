@@ -14,6 +14,7 @@ const CreateUser = () => {
     username: "",
     password: "",
     repassword: "",
+    role: "",
     load: [],
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -26,13 +27,14 @@ const CreateUser = () => {
       if (post.password !== post.repassword)
         throw new Error("Passwords do not match");
       else {
-        const { image, name, userId, username, password } = post;
+        const { image, name, userId, username, password, role } = post;
         const postValues = {
           image,
           name,
           userId,
           username,
           password,
+          role,
         };
         const response = await axios.post("api/users/create", postValues);
         toast.success("Successfully created an admin user!");

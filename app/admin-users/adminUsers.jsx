@@ -91,7 +91,7 @@ const AdminUsers = () => {
           <TableHead>
             <TableRow>
               <StyledTableCell>Username</StyledTableCell>
-              <StyledTableCell align="left">Email</StyledTableCell>
+              <StyledTableCell align="left">Role</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -102,7 +102,7 @@ const AdminUsers = () => {
                   {adminUser.name}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {adminUser.email}
+                  {adminUser.role}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <button
