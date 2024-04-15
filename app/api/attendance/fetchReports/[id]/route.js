@@ -1,4 +1,6 @@
 import Attendances from "@models/attendanceModel";
+import Classlist from "@models/classModel";
+import User from "@models/userModel";
 import { connectToDB } from "@utils/database";
 
 export const revalidate = 0;
@@ -8,12 +10,18 @@ export const fetchCache = "force-no-store";
 export const GET = async (req, { params }) => {
   try {
     await connectToDB();
+    console.log("id:", params.id);
 
-    const attendanceReports = await Attendances.find({
-      "classlist.user": params.id,
+    const attendanceReports = await Attendances.find().populate("course");
+
+    const filteredReports = attendanceReports.filter((report) => {
+      console.log(report?.course?.user?.toString());
+      return report?.course?.user?.toString() === params?.id?.toString();
     });
 
-    return new Response(JSON.stringify(attendanceReports));
+    console.log("good here2");
+
+    return new Response(JSON.stringify(filteredReports));
   } catch (error) {
     return new Response(
       "Failed to fetch attendance reports from the database.",

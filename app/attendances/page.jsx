@@ -6,6 +6,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { StyledTableCell, StyledTableRow } from "@styles/tableStyles";
+import { useSession } from "next-auth/react";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -13,6 +14,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const AttendanceReports = () => {
+  const { data: session } = useSession();
   const [post, setPost] = useState([]);
   const router = useRouter();
 
@@ -22,7 +24,19 @@ const AttendanceReports = () => {
 
   const fetchReports = async () => {
     try {
-      const response = await axios.get("/api/attendance/fetchReports");
+      let response;
+      if (session?.user?.id) {
+        if (session?.user?.role === "Admin") {
+          console.log("admin");
+          response = await axios.get("/api/attendance/fetchReports");
+        } else {
+          console.log("non admin");
+          response = await axios.get(
+            `/api/attendance/fetchReports/${session?.user?.id}`
+          );
+        }
+      }
+
       if (response) {
         setPost(response.data);
         console.log(response.data);
@@ -59,7 +73,7 @@ const AttendanceReports = () => {
 
   useEffect(() => {
     fetchReports();
-  }, []);
+  }, [session?.user?.id]);
 
   return (
     <div className="py-4 pt-7">
@@ -67,6 +81,7 @@ const AttendanceReports = () => {
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
           Attendance Reports
         </h1>
+        
         <button
           className="pb-7 black_btn"
           onClick={() => {
