@@ -23,6 +23,7 @@ const AttendanceReports = () => {
   };
 
   const fetchReports = async () => {
+    console.log("called");
     try {
       let response;
       if (session?.user?.id) {
@@ -81,7 +82,7 @@ const AttendanceReports = () => {
         <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
           Attendance Reports
         </h1>
-        
+
         <button
           className="pb-7 black_btn"
           onClick={() => {
