@@ -9,10 +9,7 @@ export const fetchCache = "force-no-store";
 export const GET = async (req, res) => {
   try {
     await connectToDB();
-    const classlists = await Classlist.find(
-      {},
-      { _id: 1, sectionCode: 1, subjectCode: 1, subjectDescription: 1, term: 1 }
-    );
+    const classlists = await Classlist.find().populate("sectionCode").populate("term");
 
     // res.setHeader('Cache-Control', 'no-store, must-revalidate');
     const returnValue = {

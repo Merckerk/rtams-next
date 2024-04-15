@@ -6,7 +6,8 @@ const classlistSchema = new Schema({
         ref: "users"
     },
     sectionCode:{
-        type: String,
+        type: mongoose.Schema.ObjectId,
+        ref: "sections",
         required: true
     },
     subjectCode:{
@@ -18,7 +19,8 @@ const classlistSchema = new Schema({
         required: true
     },
     term: {
-        type: String,
+        type: mongoose.Schema.ObjectId,
+        ref: "terms",
         required: true
     },
     schedule: {
