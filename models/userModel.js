@@ -24,6 +24,11 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Please provide a password"],
   },
+  role: {
+    type: String,
+    enum: ["User", "Admin"],
+    required: [true, "Please provide a role"],
+  },
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,

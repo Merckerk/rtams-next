@@ -1,8 +1,10 @@
 "use client";
 
 import ReusableInput from "@components/reusableInput/ReusableInput";
+import ReusableDropdown from "@components/reusableDropdown/ReusableDropdown";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Role from "@enums/role";
 
 const AdminCrudForm = ({
   type,
@@ -18,32 +20,15 @@ const AdminCrudForm = ({
     username: "",
     password: "",
     repassword: "",
+    role: "",
     audit: "",
   });
 
-  const validateName = (value) => {
+  const checkForEmptyValue = (value, param) => {
     const isValid = !!value;
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
-      name: isValid ? "" : "User ID is required",
-    }));
-    return isValid;
-  };
-
-  const validateUserId = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      userId: isValid ? "" : "User ID is required",
-    }));
-    return isValid;
-  };
-
-  const validateUsername = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      username: isValid ? "" : "Username is required",
+      [param]: isValid ? "" : "This field cannot be empty",
     }));
     return isValid;
   };
@@ -92,9 +77,9 @@ const AdminCrudForm = ({
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    const isNameValid = validateName(post.name);
-    const isUserIdValid = validateUserId(post.userId);
-    const isUsernameValid = validateUsername(post.username);
+    const isNameValid = checkForEmptyValue(post?.name, "name");
+    const isUserIdValid = checkForEmptyValue(post?.userId, "userId");
+    const isUsernameValid = checkForEmptyValue(post?.username, "username");
     let isPasswordValid = true;
     let isRepasswordValid = true;
     let isAuditValid = true;
@@ -126,6 +111,13 @@ const AdminCrudForm = ({
 
     handleSubmit(e);
   };
+
+  const roleOptions = useMemo(() => {
+    return Object.entries(Role).map(([key, value]) => ({
+      value: key,
+      label: value,
+    }))
+  });
 
   return (
     <div className="container mx-auto mt-5 mb-8">
@@ -182,7 +174,7 @@ const AdminCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, name: e.target.value });
-            validateName(e.target.value);
+            checkForEmptyValue(e.target.value, "name");
           }}
           value={post?.name}
           errorMessage={errMsg.name}
@@ -198,7 +190,7 @@ const AdminCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, userId: e.target.value });
-            validateUserId(e.target.value);
+            checkForEmptyValue(e.target.value, "userId");
           }}
           value={post?.userId}
           errorMessage={errMsg.userId}
@@ -214,7 +206,7 @@ const AdminCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, username: e.target.value });
-            validateUsername(e.target.value);
+            checkForEmptyValue(e.target.value, "username");
           }}
           value={post?.username}
           errorMessage={errMsg.username}
@@ -249,6 +241,19 @@ const AdminCrudForm = ({
           }}
           value={post?.repassword}
           errorMessage={errMsg.repassword}
+        />
+
+        <ReusableDropdown
+          label="Role"
+          id="role"
+          name="role"
+          options={roleOptions}
+          value={post?.role}
+          onChange={(e) => {
+            setPost({ ...post, role: e.target.value });
+            checkForEmptyValue(e.target.value, "role");
+          }}
+          placeholder="Select role"
         />
 
         {type == "Edit" ? (

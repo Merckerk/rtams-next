@@ -6,7 +6,7 @@ export const POST = async (req, res) => {
   try {
     await connectToDB();
     const reqBody = await req.json();
-    const { image, name, userId, username, password } = reqBody;
+    const { image, name, userId, username, password, role } = reqBody;
 
     const userIdCheck = await User.findOne({ userId });
     const userNameCheck = await User.findOne({ username });
@@ -19,17 +19,20 @@ export const POST = async (req, res) => {
       return new Response("Username already exists.", { status: 400 });
     }
 
-    //hash password
+    if (!userId || !username || !password || !role) {
+      return new Response("Incomplete payload values.", { status: 400 });
+    }
+
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
-    //create user
     const newUser = new User({
       image,
       name,
       userId,
       username,
       password: hashedPassword,
+      role,
     });
 
     const savedUser = await newUser.save();
