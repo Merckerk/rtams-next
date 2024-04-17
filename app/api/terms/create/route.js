@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { connectToDB } from "@utils/database";
 import Term from "@models/termModel";
+import { getToken } from "next-auth/jwt";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 export const POST = async (req, res) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
     const reqBody = await req.json();

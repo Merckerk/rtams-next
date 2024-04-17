@@ -1,8 +1,11 @@
 import { connectToDB } from "@utils/database";
 import User from "@models/userModel";
 import bcryptjs from "bcryptjs";
+import { getToken } from "next-auth/jwt";
 
 export const POST = async (req, res) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
     const reqBody = await req.json();

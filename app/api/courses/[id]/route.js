@@ -1,5 +1,6 @@
 import Course from "@models/courseModel";
 import { connectToDB } from "@utils/database";
+import { getToken } from "next-auth/jwt";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -7,6 +8,8 @@ export const fetchCache = "force-no-store";
 
 // GET course
 export const GET = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 
@@ -22,6 +25,8 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE course
 export const PATCH = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   const { courseName, courseCode } = await req.json();
   try {
     // connect to mongoDB
@@ -46,6 +51,8 @@ export const PATCH = async (req, { params }) => {
 
 // DELETE course
 export const DELETE = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 
