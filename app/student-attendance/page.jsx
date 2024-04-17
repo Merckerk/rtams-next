@@ -28,6 +28,8 @@ const StudentAttendance = () => {
   const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [attendanceMap, setAttendanceMap] = useState({});
   const [hoursRenderedMap, setHoursRenderedMap] = useState({});
+  const [termsAPI, setTermsAPI] = useState([]);
+  const [sectionsAPI, setSectionsAPI] = useState([]);
 
   const [coursesAPI, setCoursesAPI] = useState([]);
 
@@ -68,52 +70,90 @@ const StudentAttendance = () => {
     }
   };
 
-  const fetchData = async () => {
+  const fetchTermsAndSections = async () => {
     try {
-      setLoading(true);
-
-      const [attendanceResponse, studentsResponse] = await Promise.all([
-        fetch(
-          `/api/attendance/fetchCourseReports/${payload.courseCode}/${payload.section}/${payload.term}`
-        ),
-        fetch(
-          `/api/students/getStudentByCS/${payload.courseCode}/${payload.section}`
-        ),
+      const [terms, sections] = await Promise.all([
+        fetch("/api/terms/getAllTerms", { cache: "no-store" }),
+        fetch("/api/sections/getAllSections", { cache: "no-store" }),
       ]);
 
-      if (
-        attendanceResponse.status === 200 &&
-        studentsResponse.status === 200
-      ) {
-        const attendanceData = await attendanceResponse.json();
-        const enrolledStudentsData = await studentsResponse.json();
-        console.log("attendance Response:", attendanceData);
-        console.log("students Response:", enrolledStudentsData);
-        setAttendancesAPI(attendanceData);
-        setStudentsAPI(enrolledStudentsData);
-      } else {
-        console.log("Error fetching both data");
+      const termsResponse = await terms.json();
+      const sectionsResponse = await sections.json();
+
+      if(termsResponse){
+        const termsData = termsResponse.data;
+        setTermsAPI(termsData);
       }
-    } catch (error) {
-      console.log("Error fetching data", error);
-    } finally {
-      setLoading(false);
-    }
+      if(sectionsResponse){
+        const sectionsData = sectionsResponse.data;
+        setSectionsAPI(sectionsData);
+      }
+    } catch (error) {}
   };
+
+  const sectionsOptions = useMemo(() => {
+    return sectionsAPI.map((section) => ({
+      value: section._id,
+      label: section.section,
+    }));
+  }, [sectionsAPI]);
+
+  const termsOptions = useMemo(() => {
+    return termsAPI.map((term) => ({
+      value: term._id,
+      label: term.term,
+    }));
+  }, [termsAPI]);
+
+  // const fetchData = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     const [attendanceResponse, studentsResponse] = await Promise.all([
+  //       fetch(
+  //         `/api/attendance/fetchCourseReports/${payload.courseCode}/${payload.section}/${payload.term}`
+  //       ),
+  //       fetch(
+  //         `/api/students/getStudentByCS/${payload.courseCode}/${payload.section}`
+  //       ),
+  //     ]);
+
+  //     if (
+  //       attendanceResponse.status === 200 &&
+  //       studentsResponse.status === 200
+  //     ) {
+  //       const attendanceData = await attendanceResponse.json();
+  //       const enrolledStudentsData = await studentsResponse.json();
+  //       console.log("attendance Response:", attendanceData);
+  //       console.log("students Response:", enrolledStudentsData);
+  //       setAttendancesAPI(attendanceData);
+  //       setStudentsAPI(enrolledStudentsData);
+  //     } else {
+  //       console.log("Error fetching both data");
+  //     }
+  //   } catch (error) {
+  //     console.log("Error fetching data", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const getCourses = async () => {
     try {
       let coursesResponse;
 
-      if(session?.user){
-        if(session?.user?.role === "Admin"){
+      if (session?.user) {
+        if (session?.user?.role === "Admin") {
           coursesResponse = await fetch("api/classlist/getAllClasslists", {
             cache: "no-store",
           });
-        }else{
-          coursesResponse = await fetch(`api/classlist/getClasslistsByFaculty/${session?.user?.id}`, {
-            cache: "no-store",
-          });
+        } else {
+          coursesResponse = await fetch(
+            `api/classlist/getClasslistsByFaculty/${session?.user?.id}`,
+            {
+              cache: "no-store",
+            }
+          );
         }
       }
 
@@ -141,9 +181,13 @@ const StudentAttendance = () => {
   }, [session?.user?.id]);
 
   useEffect(() => {
-    console.log("attendances:", attendances);
-    console.log("enrolledStudents:", enrolledStudents);
-  }, [attendances, enrolledStudents]);
+    fetchTermsAndSections();
+  }, []);
+
+  useEffect(() => {
+    console.log("terms:", termsAPI);
+    console.log("sections:", sectionsAPI);
+  }, [termsAPI, sectionsAPI])
 
   // useEffect(() => {
   //   // Create a hashmap for attendance dates and students attended
@@ -179,23 +223,11 @@ const StudentAttendance = () => {
   const classlistsOptions = useMemo(() => {
     return coursesAPI.map((course) => ({
       value: course._id,
-      label: `${course.sectionCode} - ${course.subjectCode} - ${course.term}`,
+      label: `${course.sectionCode.section} - ${course.subjectCode} - ${course.term.term}`,
     }));
   }, [coursesAPI]);
 
-  const sectionsOptions = useMemo(() => {
-    return Object.entries(Section).map(([key, value]) => ({
-      value: key,
-      label: value,
-    }));
-  });
-
-  const termsOptions = useMemo(() => {
-    return Object.entries(Term).map(([key, value]) => ({
-      value: key,
-      label: value,
-    }));
-  });
+  
 
   // const checkMinimumHoursRendered = (studentid) => {
   //   if(true){

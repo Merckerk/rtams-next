@@ -37,6 +37,33 @@ const ClasslistCrudForm = ({
     audit: "",
   });
 
+  const [termsAPI, setTermsAPI] = useState([]);
+  const [sectionsAPI, setSectionsAPI] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const [termRes, sectionsRes] = await Promise.all([
+        fetch("/api/terms/getAllTerms", { cache: "no-store" }),
+        fetch("/api/sections/getAllSections", { cache: "no-store" }),
+      ]);
+
+      const terms = await termRes.json();
+      const sections = await sectionsRes.json();
+
+      if (terms) {
+        const termsData = terms.data;
+        setTermsAPI(termsData);
+      }
+
+      if (sections) {
+        const sectionsData = sections.data;
+        setSectionsAPI(sectionsData);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const checkForEmptyValue = (value, param) => {
     const isValid = !!value;
     setErrMsg((prevErrMsg) => ({
@@ -105,12 +132,23 @@ const ClasslistCrudForm = ({
     }));
   }, [faculties]);
 
-  const sectionOptions = useMemo(() => {
-    return Object.entries(Section).map(([key, value]) => ({
-      value: key,
-      label: value,
-    }));
-  }, []);
+  const termsOptions = useMemo(() => {
+    if (termsAPI) {
+      return termsAPI.map((term) => ({
+        value: term._id,
+        label: term.term,
+      }));
+    }
+  }, [termsAPI]);
+
+  const sectionsOptions = useMemo(() => {
+    if (sectionsAPI){
+      return sectionsAPI.map((section) => ({
+        value: section._id,
+        label: section.section,
+      }));
+    }
+  }, [sectionsAPI]);
 
   const memoizedStudents = useMemo(() => {
     return students.map((student) => (
@@ -157,6 +195,14 @@ const ClasslistCrudForm = ({
     handleDelete();
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log("post:", post);
+  }, [post]);
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="container mx-auto mt-5 mb-8">
@@ -181,7 +227,7 @@ const ClasslistCrudForm = ({
             label="Section Code"
             id="sectionCode"
             name="sectionCode"
-            options={sectionOptions}
+            options={sectionsOptions}
             value={post?.sectionCode}
             onChange={(e) => {
               setPost({ ...post, sectionCode: e.target.value });
@@ -221,19 +267,16 @@ const ClasslistCrudForm = ({
             required
           />
 
-          <ReusableInput
+          <ReusableDropdown
             label="Term"
-            type="text"
             id="term"
             name="term"
-            placeholder="Enter Term"
-            className="form_input"
+            options={termsOptions}
+            value={post?.term}
             onChange={(e) => {
               setPost({ ...post, term: e.target.value });
-              checkForEmptyValue(e.target.value, "term");
             }}
-            value={post?.term}
-            errorMessage={errMsg.term}
+            placeholder="Select Term"
           />
 
           <ReusableInput
