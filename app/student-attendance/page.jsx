@@ -77,29 +77,31 @@ const StudentAttendance = () => {
         fetch("/api/sections/getAllSections", { cache: "no-store" }),
       ]);
 
-      const termsData = await terms.json();
-      const sectionsData = await sections.json();
+      const termsResponse = await terms.json();
+      const sectionsResponse = await sections.json();
 
-      if(termsData){
+      if(termsResponse){
+        const termsData = termsResponse.data;
         setTermsAPI(termsData);
       }
-      if(sectionsData){
+      if(sectionsResponse){
+        const sectionsData = sectionsResponse.data;
         setSectionsAPI(sectionsData);
       }
     } catch (error) {}
   };
 
   const sectionsOptions = useMemo(() => {
-    return sectionsAPI.map(([_id, section]) => ({
-      value: _id,
-      label: section,
+    return sectionsAPI.map((section) => ({
+      value: section._id,
+      label: section.section,
     }));
   }, [sectionsAPI]);
 
   const termsOptions = useMemo(() => {
-    return termsAPI.map(([_id, term]) => ({
-      value: _id,
-      label: term,
+    return termsAPI.map((term) => ({
+      value: term._id,
+      label: term.term,
     }));
   }, [termsAPI]);
 
@@ -179,9 +181,13 @@ const StudentAttendance = () => {
   }, [session?.user?.id]);
 
   useEffect(() => {
-    console.log("attendances:", attendances);
-    console.log("enrolledStudents:", enrolledStudents);
-  }, [attendances, enrolledStudents]);
+    fetchTermsAndSections();
+  }, []);
+
+  useEffect(() => {
+    console.log("terms:", termsAPI);
+    console.log("sections:", sectionsAPI);
+  }, [termsAPI, sectionsAPI])
 
   // useEffect(() => {
   //   // Create a hashmap for attendance dates and students attended
