@@ -2,6 +2,7 @@ import Audits from "@models/auditModel";
 import User from "@models/userModel";
 import { connectToDB } from "@utils/database";
 import bcryptjs from "bcryptjs";
+import { getToken } from "next-auth/jwt";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -9,6 +10,8 @@ export const fetchCache = "force-no-store";
 
 // GET user
 export const GET = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 
@@ -25,7 +28,10 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE user
 export const PATCH = async (req, { params }) => {
-  const { image, userId, username, password, name, audit, role } = await req.json();
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
+  const { image, userId, username, password, name, audit, role } =
+    await req.json();
   try {
     await connectToDB();
     // Find and update the user with the new data
@@ -82,6 +88,8 @@ export const PATCH = async (req, { params }) => {
 
 // DELETE user
 export const DELETE = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 

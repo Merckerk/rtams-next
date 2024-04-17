@@ -2,6 +2,7 @@ import Student from "@models/studentModel";
 import Audits from "@models/auditModel";
 import { connectToDB } from "@utils/database";
 import bcryptjs from "bcryptjs";
+import { getToken } from "next-auth/jwt";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -9,6 +10,8 @@ export const fetchCache = "force-no-store";
 
 // GET student
 export const GET = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 
@@ -23,6 +26,8 @@ export const GET = async (req, { params }) => {
 
 // EDIT/UPDATE student
 export const PATCH = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   const {
     image,
     studentNumber,
@@ -97,14 +102,14 @@ export const PATCH = async (req, { params }) => {
       target: "student",
       description: audit,
       oldData: oldData,
-      newData: existingStudent.toObject()
-    }
+      newData: existingStudent.toObject(),
+    };
 
     const auditRecord = new Audits(auditData);
     await auditRecord.save();
     const combinedResponse = {
       updatedStudent: existingStudent,
-      audit: auditRecord
+      audit: auditRecord,
     };
     return new Response(JSON.stringify(combinedResponse), { status: 200 });
   } catch (error) {
@@ -117,6 +122,8 @@ export const PATCH = async (req, { params }) => {
 
 // DELETE student
 export const DELETE = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 

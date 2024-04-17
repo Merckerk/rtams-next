@@ -1,12 +1,15 @@
 import Section from "@models/sectionModel";
 import Audits from "@models/auditModel";
 import { connectToDB } from "@utils/database";
+import { getToken } from "next-auth/jwt";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 export const GET = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 
@@ -27,12 +30,15 @@ export const GET = async (req, { params }) => {
 };
 
 export const PATCH = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   const { section, audit } = await req.json();
   try {
     await connectToDB();
     const existingSection = await Section.findById(params.id);
 
-    if (!existingSection) return new Response("Section not found", { status: 404 });
+    if (!existingSection)
+      return new Response("Section not found", { status: 404 });
 
     if (!audit) return new Response("Audit required", { status: 500 });
 
@@ -70,6 +76,8 @@ export const PATCH = async (req, { params }) => {
 };
 
 export const DELETE = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   const reqBody = await req.json();
   const { audit } = reqBody;
   try {
