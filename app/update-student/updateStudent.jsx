@@ -30,6 +30,19 @@ const UpdateStudent = () => {
     audit: "",
   });
 
+  const [errMsg, setErrMsg] = useState({
+    studentNumber: "",
+    nfcUID: "",
+    email: "",
+    name: "",
+    username: "",
+    password: "",
+    repassword: "",
+    section: "",
+    gender: "",
+    audit: "",
+  });
+
   const getStudentDetails = async () => {
     const response = await fetch(`/api/students/${studentId}`);
     const data = await response.json();
@@ -94,9 +107,16 @@ const UpdateStudent = () => {
       });
       if (response.ok) {
         router.push("/students");
+      } else {
+        const errorData = await response.json();
+        if (errorData && errorData.errors) {
+          setErrMsg(errorData.errors);
+        } else {
+          console.log("Error occurred:", response.statusText);
+        }
       }
     } catch (error) {
-      console.log("Error updating student details", error);
+      console.log("awhhhhh");
     } finally {
       setLoading(false);
     }
@@ -130,6 +150,8 @@ const UpdateStudent = () => {
       loading={loading}
       handleSubmit={onUpdateStudent}
       handleDelete={onDeleteStudent}
+      errMsg={errMsg}
+      setErrMsg={setErrMsg}
     />
   );
 };

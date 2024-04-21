@@ -35,8 +35,8 @@ const studentSchema = new Schema({
     required: [true, "Please provide a password."],
   },
   section: {
-    type: String,
-    enum: Object.values(Section),
+    type: mongoose.Schema.ObjectId,
+    ref: "sections",
   },
   load: [
     {

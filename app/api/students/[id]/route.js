@@ -8,7 +8,6 @@ export const revalidate = 0;
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
-// GET student
 export const GET = async (req, { params }) => {
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
@@ -24,10 +23,10 @@ export const GET = async (req, { params }) => {
   }
 };
 
-// EDIT/UPDATE student
 export const PATCH = async (req, { params }) => {
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
+  const reqBody = await req.json();
   const {
     image,
     studentNumber,
@@ -45,18 +44,64 @@ export const PATCH = async (req, { params }) => {
     permanentAddress,
     nameOfSpouse,
     audit,
-  } = await req.json();
+  } = reqBody;
 
   try {
     await connectToDB();
 
     const existingStudent = await Student.findById(params.id);
-
-    if (!audit) return new Response("Please enter reason for edit");
+    const studentNumberCheck = await Student.findOne({ studentNumber });
+    const studentEmailCheck = await Student.findOne({ email });
+    const studentNFCCheck = await Student.findOne({ nfcUID });
+    const studentUsernameCheck = await Student.findOne({ username });
 
     if (!existingStudent) {
       console.log("student doesn't exist");
       return new Response("Student not found", { status: 404 });
+    }
+
+    const errors = {};
+    const requiredFields = [
+      "studentNumber",
+      "nfcUID",
+      "email",
+      "username",
+      "password",
+      "gender",
+      "audit",
+    ];
+
+    for (const field of requiredFields) {
+      if (!reqBody[field]) {
+        errors[field] = `${
+          field.charAt(0).toUpperCase() + field.slice(1)
+        } is required.`;
+      }
+    }
+
+    if (studentNumberCheck) {
+      errors.studentNumber = "Student Number already exist";
+    }
+    if (studentEmailCheck) {
+      errors.email = "Email already exist";
+    }
+    if (studentNFCCheck) {
+      errors.nfcUID = "Student NFC UID already exist";
+    }
+    if (studentUsernameCheck) {
+      errors.username = "Username already exist";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      console.log("gg")
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Missing fields",
+          errors: errors,
+        }),
+        { status: 400 }
+      );
     }
 
     const oldData = {
@@ -120,7 +165,6 @@ export const PATCH = async (req, { params }) => {
   }
 };
 
-// DELETE student
 export const DELETE = async (req, { params }) => {
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });

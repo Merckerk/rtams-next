@@ -32,17 +32,46 @@ export const POST = async (req, res) => {
     const studentNFCCheck = await Student.findOne({ nfcUID });
     const studentUsernameCheck = await Student.findOne({ username });
 
+    const errors = {};
+    const requiredFields = [
+      "studentNumber",
+      "nfcUID",
+      "email",
+      "username",
+      "password",
+      "gender",
+    ];
+
+    for (const field of requiredFields) {
+      if (!reqBody[field]) {
+        errors[field] = `${
+          field.charAt(0).toUpperCase() + field.slice(1)
+        } is required.`;
+      }
+    }
+
     if (studentNumberCheck) {
-      return new Response("Student No already exist", { status: 400 });
+      errors.studentNumber = "Student Number already exist";
     }
     if (studentEmailCheck) {
-      return new Response("Student Email already exist", { status: 400 });
+      errors.email = "Email already exist";
     }
     if (studentNFCCheck) {
-      return new Response("Student NFC ID already exist", { status: 400 });
+      errors.nfcUID = "Student NFC UID already exist";
     }
     if (studentUsernameCheck) {
-      return new Response("Student Username already exist", { status: 400 });
+      errors.username = "Username already exist";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Missing fields",
+          errors: errors,
+        }),
+        { status: 400 }
+      );
     }
 
     const salt = await bcryptjs.genSalt(10);

@@ -4,7 +4,8 @@ import ReusableInput from "@components/reusableInput/ReusableInput";
 import Section from "@enums/section";
 import Gender from "@enums/gender";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import ReusableDropdown from "@components/reusableDropdown/ReusableDropdown";
 
 const StudentCrudForm = ({
   type,
@@ -12,51 +13,69 @@ const StudentCrudForm = ({
   setPost,
   loading,
   handleSubmit,
+  errMsg,
+  setErrMsg,
   handleDelete = () => {},
 }) => {
-  const [errMsg, setErrMsg] = useState({
-    studentNumber: "",
-    nfcUID: "",
-    email: "",
-    name: "",
-    username: "",
-    password: "",
-    repassword: "",
-    section: "",
+  // const [errMsg, setErrMsg] = useState({
+  //   studentNumber: "",
+  //   nfcUID: "",
+  //   email: "",
+  //   name: "",
+  //   username: "",
+  //   password: "",
+  //   repassword: "",
+  //   section: "",
+  // });
+  const [sections, setSections] = useState([]);
+
+  const fetchSections = async () => {
+    try {
+      const response = await fetch("/api/sections/getAllSections", {
+        cache: "no-store",
+      });
+
+      const sectionsResponse = await response.json();
+
+      if (sectionsResponse) {
+        const sectionsData = sectionsResponse.data;
+        setSections(sectionsData);
+      }
+    } catch (error) {}
+  };
+
+  const sectionsOptions = useMemo(() => {
+    return sections.map((section) => ({
+      value: section._id,
+      label: section.section,
+    }));
+  }, [sections]);
+
+  useEffect(() => {
+    fetchSections();
+  }, []);
+
+  const genderOptions = useMemo(() => {
+    return Object.entries(Gender).map(([key, value]) => ({
+      value: key,
+      label: value,
+    }));
   });
+
+  const checkForEmptyValue = (value, param) => {
+    const isValid = !!value;
+    setErrMsg((prevErrMsg) => ({
+      ...prevErrMsg,
+      [param]: isValid ? "" : "This field cannot be empty",
+    }));
+    return isValid;
+  };
 
   const validateEmail = (value) => {
     const isValid = !value || /\S+@\S+\.\S+/.test(value);
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
       email: isValid ? "" : "Invalid email",
-    }));
-    return isValid;
-  };
-
-  const validateName = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      name: isValid ? "" : "User ID is required",
-    }));
-    return isValid;
-  };
-
-  const validateStudentNumber = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      studentNumber: isValid ? "" : "Student Number is required",
-    }));
-    return isValid;
-  };
-
-  const validateUsername = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      username: isValid ? "" : "Username is required",
     }));
     return isValid;
   };
@@ -96,15 +115,6 @@ const StudentCrudForm = ({
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
       section: isValid ? "" : "Invalid gender",
-    }));
-    return isValid;
-  };
-
-  const validateAudit = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      audit: isValid ? "" : "Reason to Edit is required",
     }));
     return isValid;
   };
@@ -158,9 +168,6 @@ const StudentCrudForm = ({
             onChange={convertToBase64}
             value={post?.photo}
           />
-          {errMsg.photo ? (
-            <p className="error_message">{errMsg.photo}</p>
-          ) : null}
         </div>
 
         <ReusableInput
@@ -172,7 +179,7 @@ const StudentCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, studentNumber: e.target.value });
-            validateStudentNumber(e.target.value);
+            checkForEmptyValue(e.target.value, "studentNumber");
           }}
           value={post?.studentNumber}
           errorMessage={errMsg.studentNumber}
@@ -188,7 +195,7 @@ const StudentCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, nfcUID: e.target.value });
-            validateStudentNumber(e.target.value);
+            checkForEmptyValue(e.target.value, "nfcUID");
           }}
           value={post?.nfcUID}
           errorMessage={errMsg.nfcUID}
@@ -220,7 +227,7 @@ const StudentCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, name: e.target.value });
-            validateName(e.target.value);
+            checkForEmptyValue(e.target.value, "name");
           }}
           value={post?.name}
           errorMessage={errMsg.name}
@@ -236,7 +243,7 @@ const StudentCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, username: e.target.value });
-            validateUsername(e.target.value);
+            checkForEmptyValue(e.target.value, "username");
           }}
           value={post?.username}
           errorMessage={errMsg.username}
@@ -275,49 +282,29 @@ const StudentCrudForm = ({
           required
         />
 
-        <select
+        <ReusableDropdown
+          label="Section"
           id="section"
           name="section"
-          className="form_input"
-          onChange={(e) => {
-            const selectedSection = e.target.value;
-            setPost({ ...post, section: selectedSection });
-            validateSection(selectedSection);
-          }}
+          options={sectionsOptions}
           value={post?.section}
-          required
-        >
-          <option value="" disabled selected>
-            Select Section
-          </option>
-          {Object.entries(Section).map(([key, value]) => (
-            <option key={key} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
+          onChange={(e) => {
+            setPost({ ...post, section: e.target.value });
+          }}
+          placeholder="Select Section"
+        />
 
-        <select
+        <ReusableDropdown
+          label="Gender"
           id="gender"
           name="gender"
-          className="form_input"
-          onChange={(e) => {
-            const selectedGender = e.target.value;
-            setPost({ ...post, gender: selectedGender });
-            validateGender(selectedGender);
-          }}
+          options={genderOptions}
           value={post?.gender}
-          required
-        >
-          <option value="" disabled selected>
-            Select Gender
-          </option>
-          {Object.entries(Gender).map(([key, value]) => (
-            <option key={key} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
+          onChange={(e) => {
+            setPost({ ...post, gender: e.target.value });
+          }}
+          placeholder="Select Gender"
+        />
 
         <ReusableInput
           label="Mobile number"
@@ -396,7 +383,7 @@ const StudentCrudForm = ({
               className="form_input"
               onChange={(e) => {
                 setPost({ ...post, audit: e.target.value });
-                validateAudit(e.target.value);
+                checkForEmptyValue(e.target.value, "audit");
               }}
               value={post?.audit}
             />
