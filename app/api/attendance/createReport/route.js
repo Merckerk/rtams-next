@@ -1,8 +1,11 @@
 import { connectToDB } from "@utils/database";
 import Attendances from "@models/attendanceModel";
 import Student from "@models/studentModel";
+import { getToken } from "next-auth/jwt";
 
 export const POST = async (req, res) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 

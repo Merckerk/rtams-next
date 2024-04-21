@@ -1,12 +1,15 @@
 import Student from "@models/studentModel";
 import { connectToDB } from "@utils/database";
+import { getToken } from "next-auth/jwt";
 
 export const PATCH = async (req, { params }) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 
     const { load } = await req.json();
-    
+
     const student = await Student.findById(params.id);
     if (!student) return new Response("Student not found", { status: 404 });
 

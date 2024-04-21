@@ -1,8 +1,11 @@
 import { connectToDB } from "@utils/database";
 import Course from "@models/courseModel";
+import { getToken } from "next-auth/jwt";
+
 export const POST = async (req, res) => {
+  const token = await getToken({ req });
+  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
-    // connect to mongoDB
     await connectToDB();
 
     const reqBody = await req.json();
