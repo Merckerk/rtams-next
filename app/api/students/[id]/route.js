@@ -21,6 +21,7 @@ export const GET = async (req, { params }) => {
 };
 
 export const PATCH = async (req, { params }) => {
+  const reqBody = await req.json();
   const {
     image,
     studentNumber,
@@ -38,7 +39,7 @@ export const PATCH = async (req, { params }) => {
     permanentAddress,
     nameOfSpouse,
     audit,
-  } = await req.json();
+  } = reqBody;
 
   try {
     await connectToDB();
@@ -65,7 +66,9 @@ export const PATCH = async (req, { params }) => {
       "audit",
     ];
 
+    console.log('good here')
     for (const field of requiredFields) {
+      console.log("looping");
       if (!reqBody[field]) {
         errors[field] = `${
           field.charAt(0).toUpperCase() + field.slice(1)
@@ -74,19 +77,24 @@ export const PATCH = async (req, { params }) => {
     }
 
     if (studentNumberCheck) {
+      console.log("snum sussy");
       errors.studentNumber = "Student Number already exist";
     }
     if (studentEmailCheck) {
+      console.log("snum sussy");
       errors.email = "Email already exist";
     }
     if (studentNFCCheck) {
+      console.log("snum sussy");
       errors.nfcUID = "Student NFC UID already exist";
     }
     if (studentUsernameCheck) {
+      console.log("snum sussy");
       errors.username = "Username already exist";
     }
 
     if (Object.keys(errors).length > 0) {
+      console.log("gg")
       return new Response(
         JSON.stringify({
           success: false,
