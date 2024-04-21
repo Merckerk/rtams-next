@@ -13,18 +13,20 @@ const StudentCrudForm = ({
   setPost,
   loading,
   handleSubmit,
+  errMsg, 
+  setErrMsg,
   handleDelete = () => {},
 }) => {
-  const [errMsg, setErrMsg] = useState({
-    studentNumber: "",
-    nfcUID: "",
-    email: "",
-    name: "",
-    username: "",
-    password: "",
-    repassword: "",
-    section: "",
-  });
+  // const [errMsg, setErrMsg] = useState({
+  //   studentNumber: "",
+  //   nfcUID: "",
+  //   email: "",
+  //   name: "",
+  //   username: "",
+  //   password: "",
+  //   repassword: "",
+  //   section: "",
+  // });
   const [sections, setSections] = useState([]);
 
   const fetchSections = async () => {
@@ -193,9 +195,6 @@ const StudentCrudForm = ({
             onChange={convertToBase64}
             value={post?.photo}
           />
-          {errMsg.photo ? (
-            <p className="error_message">{errMsg.photo}</p>
-          ) : null}
         </div>
 
         <ReusableInput

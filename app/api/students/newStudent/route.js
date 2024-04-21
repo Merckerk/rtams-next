@@ -29,14 +29,25 @@ export const POST = async (req, res) => {
     const studentNFCCheck = await Student.findOne({ nfcUID });
     const studentUsernameCheck = await Student.findOne({ username });
 
+    let validityCheck = true;
+    let errors = {
+      studentNumber: "",
+      nfcUID: "",
+      email: "",
+      name: "",
+      username: "",
+      password: "",
+      gender: "",
+    }
+
     if (studentNumberCheck) {
-      return new Response("Student No already exist", { status: 400 });
+      errors.studentNumber = "Student Number already exist"
     }
     if (studentEmailCheck) {
-      return new Response("Student Email already exist", { status: 400 });
+      errors.email = "Student email already exist"
     }
     if (studentNFCCheck) {
-      return new Response("Student NFC ID already exist", { status: 400 });
+      errors.nfcUID = "Student NFC already exist"
     }
     if (studentUsernameCheck) {
       return new Response("Student Username already exist", { status: 400 });

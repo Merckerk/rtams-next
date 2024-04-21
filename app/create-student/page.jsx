@@ -28,6 +28,17 @@ const CreateStudent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [areFieldsValid, setAreFieldsValid] = useState(false);
 
+  const [errMsg, setErrMsg] = useState({
+    studentNumber: "",
+    nfcUID: "",
+    email: "",
+    name: "",
+    username: "",
+    password: "",
+    repassword: "",
+    section: "",
+  });
+
   const onCreateStudent = async () => {
     try {
       setIsLoading(true);
@@ -68,14 +79,14 @@ const CreateStudent = () => {
       const response = await axios.post("api/students/newStudent", postValues);
       if (response) {
         toast.success("Successfully created a student!", response);
-        //LUWIS
         router.push("/students");
-        //LUWIS
       } else {
         toast.error("Failed to create student");
+        console.log("awhhhh pero dito");
       }
     } catch (error) {
       toast.error(error);
+      console.log("awhhhhh");
     } finally {
       setIsLoading(false);
     }
@@ -104,6 +115,8 @@ const CreateStudent = () => {
       setPost={setPost}
       loading={isLoading}
       handleSubmit={onCreateStudent}
+      errMsg={errMsg}
+      setErrMsg={setErrMsg}
     />
   );
 };
