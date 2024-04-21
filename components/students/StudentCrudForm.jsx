@@ -4,7 +4,8 @@ import ReusableInput from "@components/reusableInput/ReusableInput";
 import Section from "@enums/section";
 import Gender from "@enums/gender";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import ReusableDropdown from "@components/reusableDropdown/ReusableDropdown";
 
 const StudentCrudForm = ({
   type,
@@ -23,6 +24,40 @@ const StudentCrudForm = ({
     password: "",
     repassword: "",
     section: "",
+  });
+  const [sections, setSections] = useState([]);
+
+  const fetchSections = async () => {
+    try {
+      const response = await fetch("/api/sections/getAllSections", {
+        cache: "no-store",
+      });
+
+      const sectionsResponse = await response.json();
+
+      if (sectionsResponse) {
+        const sectionsData = sectionsResponse.data;
+        setSections(sectionsData);
+      }
+    } catch (error) {}
+  };
+
+  const sectionsOptions = useMemo(() => {
+    return sections.map((section) => ({
+      value: section._id,
+      label: section.section,
+    }));
+  }, [sections]);
+
+  useEffect(() => {
+    fetchSections();
+  }, []);
+
+  const genderOptions = useMemo(() => {
+    return Object.entries(Gender).map(([key, value]) => ({
+      value: key,
+      label: value,
+    }));
   });
 
   const validateEmail = (value) => {
@@ -275,49 +310,29 @@ const StudentCrudForm = ({
           required
         />
 
-        <select
+        <ReusableDropdown
+          label="Section"
           id="section"
           name="section"
-          className="form_input"
-          onChange={(e) => {
-            const selectedSection = e.target.value;
-            setPost({ ...post, section: selectedSection });
-            validateSection(selectedSection);
-          }}
+          options={sectionsOptions}
           value={post?.section}
-          required
-        >
-          <option value="" disabled selected>
-            Select Section
-          </option>
-          {Object.entries(Section).map(([key, value]) => (
-            <option key={key} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
+          onChange={(e) => {
+            setPost({ ...post, section: e.target.value });
+          }}
+          placeholder="Select Section"
+        />
 
-        <select
+        <ReusableDropdown
+          label="Gender"
           id="gender"
           name="gender"
-          className="form_input"
-          onChange={(e) => {
-            const selectedGender = e.target.value;
-            setPost({ ...post, gender: selectedGender });
-            validateGender(selectedGender);
-          }}
+          options={genderOptions}
           value={post?.gender}
-          required
-        >
-          <option value="" disabled selected>
-            Select Gender
-          </option>
-          {Object.entries(Gender).map(([key, value]) => (
-            <option key={key} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
+          onChange={(e) => {
+            setPost({ ...post, gender: e.target.value });
+          }}
+          placeholder="Select Gender"
+        />
 
         <ReusableInput
           label="Mobile number"
