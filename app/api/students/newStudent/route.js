@@ -47,42 +47,6 @@ export const POST = async (req, res) => {
       }
     }
 
-    // let errors = {
-    //   studentNumber: "",
-    //   nfcUID: "",
-    //   email: "",
-    //   name: "",
-    //   username: "",
-    //   password: "",
-    //   gender: "",
-    // }
-
-    // let haveMissingFields = false;
-
-    // if (!studentNumber) {
-    //   errors.studentNumber = "Student number is required.";
-    //   haveMissingFields = true;
-    // }
-    // if (!nfcUID) {
-    //   errors.nfcUID = "NFC UID is required.";
-    //   haveMissingFields = true;
-    // }
-    // if (!email) {
-    //   errors.email = "Email is required.";
-    //   haveMissingFields = true;
-    // }
-    // if (!username) {
-    //   errors.username = "Username is required.";
-    //   haveMissingFields = true;
-    // }
-    // if (!password) {
-    //   errors.password = "Password is required.";
-    //   haveMissingFields = true;
-    // }
-    // if (!gender) {
-    //   errors.gender = "Gender is required.";
-    //   haveMissingFields = true;
-    // }
     if (studentNumberCheck) {
       errors.studentNumber = "Student Number already exist";
     }

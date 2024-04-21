@@ -30,6 +30,19 @@ const UpdateStudent = () => {
     audit: "",
   });
 
+  const [errMsg, setErrMsg] = useState({
+    studentNumber: "",
+    nfcUID: "",
+    email: "",
+    name: "",
+    username: "",
+    password: "",
+    repassword: "",
+    section: "",
+    gender: "",
+    audit: "",
+  });
+
   const getStudentDetails = async () => {
     const response = await fetch(`/api/students/${studentId}`);
     const data = await response.json();
@@ -130,6 +143,8 @@ const UpdateStudent = () => {
       loading={loading}
       handleSubmit={onUpdateStudent}
       handleDelete={onDeleteStudent}
+      errMsg={errMsg}
+      setErrMsg={setErrMsg}
     />
   );
 };
