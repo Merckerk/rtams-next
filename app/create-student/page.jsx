@@ -37,6 +37,7 @@ const CreateStudent = () => {
     password: "",
     repassword: "",
     section: "",
+    gender: "",
   });
 
   const onCreateStudent = async () => {
@@ -85,8 +86,13 @@ const CreateStudent = () => {
         console.log("awhhhh pero dito");
       }
     } catch (error) {
-      toast.error(error);
-      console.log("awhhhhh");
+      if (error.response && error.response.data && error.response.data.errors) {
+        setErrMsg(error.response.data.errors);
+        console.log("error",error);
+      } else {
+        console.log("An error occurred:", error);
+      }
+      toast.error("Failed to create student");
     } finally {
       setIsLoading(false);
     }

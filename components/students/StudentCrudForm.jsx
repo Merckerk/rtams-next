@@ -13,7 +13,7 @@ const StudentCrudForm = ({
   setPost,
   loading,
   handleSubmit,
-  errMsg, 
+  errMsg,
   setErrMsg,
   handleDelete = () => {},
 }) => {
@@ -62,38 +62,20 @@ const StudentCrudForm = ({
     }));
   });
 
+  const checkForEmptyValue = (value, param) => {
+    const isValid = !!value;
+    setErrMsg((prevErrMsg) => ({
+      ...prevErrMsg,
+      [param]: isValid ? "" : "This field cannot be empty",
+    }));
+    return isValid;
+  };
+
   const validateEmail = (value) => {
     const isValid = !value || /\S+@\S+\.\S+/.test(value);
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
       email: isValid ? "" : "Invalid email",
-    }));
-    return isValid;
-  };
-
-  const validateName = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      name: isValid ? "" : "User ID is required",
-    }));
-    return isValid;
-  };
-
-  const validateStudentNumber = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      studentNumber: isValid ? "" : "Student Number is required",
-    }));
-    return isValid;
-  };
-
-  const validateUsername = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      username: isValid ? "" : "Username is required",
     }));
     return isValid;
   };
@@ -133,15 +115,6 @@ const StudentCrudForm = ({
     setErrMsg((prevErrMsg) => ({
       ...prevErrMsg,
       section: isValid ? "" : "Invalid gender",
-    }));
-    return isValid;
-  };
-
-  const validateAudit = (value) => {
-    const isValid = !!value;
-    setErrMsg((prevErrMsg) => ({
-      ...prevErrMsg,
-      audit: isValid ? "" : "Reason to Edit is required",
     }));
     return isValid;
   };
@@ -206,7 +179,7 @@ const StudentCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, studentNumber: e.target.value });
-            validateStudentNumber(e.target.value);
+            checkForEmptyValue(e.target.value, "studentNumber");
           }}
           value={post?.studentNumber}
           errorMessage={errMsg.studentNumber}
@@ -222,7 +195,7 @@ const StudentCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, nfcUID: e.target.value });
-            validateStudentNumber(e.target.value);
+            checkForEmptyValue(e.target.value, "nfcUID");
           }}
           value={post?.nfcUID}
           errorMessage={errMsg.nfcUID}
@@ -254,7 +227,7 @@ const StudentCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, name: e.target.value });
-            validateName(e.target.value);
+            checkForEmptyValue(e.target.value, "name");
           }}
           value={post?.name}
           errorMessage={errMsg.name}
@@ -270,7 +243,7 @@ const StudentCrudForm = ({
           className="form_input"
           onChange={(e) => {
             setPost({ ...post, username: e.target.value });
-            validateUsername(e.target.value);
+            checkForEmptyValue(e.target.value, "username");
           }}
           value={post?.username}
           errorMessage={errMsg.username}
@@ -410,7 +383,7 @@ const StudentCrudForm = ({
               className="form_input"
               onChange={(e) => {
                 setPost({ ...post, audit: e.target.value });
-                validateAudit(e.target.value);
+                checkForEmptyValue(e.target.value, "audit");
               }}
               value={post?.audit}
             />

@@ -29,28 +29,82 @@ export const POST = async (req, res) => {
     const studentNFCCheck = await Student.findOne({ nfcUID });
     const studentUsernameCheck = await Student.findOne({ username });
 
-    let validityCheck = true;
-    let errors = {
-      studentNumber: "",
-      nfcUID: "",
-      email: "",
-      name: "",
-      username: "",
-      password: "",
-      gender: "",
+    const errors = {};
+    const requiredFields = [
+      "studentNumber",
+      "nfcUID",
+      "email",
+      "username",
+      "password",
+      "gender",
+    ];
+
+    for (const field of requiredFields) {
+      if (!reqBody[field]) {
+        errors[field] = `${
+          field.charAt(0).toUpperCase() + field.slice(1)
+        } is required.`;
+      }
     }
 
+    // let errors = {
+    //   studentNumber: "",
+    //   nfcUID: "",
+    //   email: "",
+    //   name: "",
+    //   username: "",
+    //   password: "",
+    //   gender: "",
+    // }
+
+    // let haveMissingFields = false;
+
+    // if (!studentNumber) {
+    //   errors.studentNumber = "Student number is required.";
+    //   haveMissingFields = true;
+    // }
+    // if (!nfcUID) {
+    //   errors.nfcUID = "NFC UID is required.";
+    //   haveMissingFields = true;
+    // }
+    // if (!email) {
+    //   errors.email = "Email is required.";
+    //   haveMissingFields = true;
+    // }
+    // if (!username) {
+    //   errors.username = "Username is required.";
+    //   haveMissingFields = true;
+    // }
+    // if (!password) {
+    //   errors.password = "Password is required.";
+    //   haveMissingFields = true;
+    // }
+    // if (!gender) {
+    //   errors.gender = "Gender is required.";
+    //   haveMissingFields = true;
+    // }
     if (studentNumberCheck) {
-      errors.studentNumber = "Student Number already exist"
+      errors.studentNumber = "Student Number already exist";
     }
     if (studentEmailCheck) {
-      errors.email = "Student email already exist"
+      errors.email = "Email already exist";
     }
     if (studentNFCCheck) {
-      errors.nfcUID = "Student NFC already exist"
+      errors.nfcUID = "Student NFC UID already exist";
     }
     if (studentUsernameCheck) {
-      return new Response("Student Username already exist", { status: 400 });
+      errors.username = "Username already exist";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Missing fields",
+          errors: errors,
+        }),
+        { status: 400 }
+      );
     }
 
     const salt = await bcryptjs.genSalt(10);
