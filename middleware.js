@@ -29,6 +29,7 @@ export const config = {
     "/students",
     "/courses",
     "/attendances",
+    "/student-attendance",
     "/student-load",
     "/teaching-load",
     "/update-admin",

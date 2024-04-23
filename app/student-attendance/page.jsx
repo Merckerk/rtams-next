@@ -5,6 +5,7 @@ import studentMock from "@mocks/mockStudent";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { CSVDownload, CSVLink } from "react-csv";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -80,11 +81,11 @@ const StudentAttendance = () => {
       const termsResponse = await terms.json();
       const sectionsResponse = await sections.json();
 
-      if(termsResponse){
+      if (termsResponse) {
         const termsData = termsResponse.data;
         setTermsAPI(termsData);
       }
-      if(sectionsResponse){
+      if (sectionsResponse) {
         const sectionsData = sectionsResponse.data;
         setSectionsAPI(sectionsData);
       }
@@ -104,39 +105,6 @@ const StudentAttendance = () => {
       label: term.term,
     }));
   }, [termsAPI]);
-
-  // const fetchData = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     const [attendanceResponse, studentsResponse] = await Promise.all([
-  //       fetch(
-  //         `/api/attendance/fetchCourseReports/${payload.courseCode}/${payload.section}/${payload.term}`
-  //       ),
-  //       fetch(
-  //         `/api/students/getStudentByCS/${payload.courseCode}/${payload.section}`
-  //       ),
-  //     ]);
-
-  //     if (
-  //       attendanceResponse.status === 200 &&
-  //       studentsResponse.status === 200
-  //     ) {
-  //       const attendanceData = await attendanceResponse.json();
-  //       const enrolledStudentsData = await studentsResponse.json();
-  //       console.log("attendance Response:", attendanceData);
-  //       console.log("students Response:", enrolledStudentsData);
-  //       setAttendancesAPI(attendanceData);
-  //       setStudentsAPI(enrolledStudentsData);
-  //     } else {
-  //       console.log("Error fetching both data");
-  //     }
-  //   } catch (error) {
-  //     console.log("Error fetching data", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const getCourses = async () => {
     try {
@@ -187,23 +155,7 @@ const StudentAttendance = () => {
   useEffect(() => {
     console.log("terms:", termsAPI);
     console.log("sections:", sectionsAPI);
-  }, [termsAPI, sectionsAPI])
-
-  // useEffect(() => {
-  //   // Create a hashmap for attendance dates and students attended
-  //   if (attendancesAPI && studentsAPI) {
-  //     const map = {};
-  //     attendancesAPI.forEach((attendance) => {
-  //       const date = attendance.date.split("T")[0]; // Extracting date part only
-  //       if (!map[date]) {
-  //         map[date] = [];
-  //       }
-  //       map[date].push(attendance.studentName);
-  //     });
-  //     //TODO: SORT BY DATE
-  //     setAttendanceMap(map);
-  //   }
-  // }, [attendancesAPI, studentsAPI]);
+  }, [termsAPI, sectionsAPI]);
 
   useEffect(() => {
     console.log("attendances:", attendances);
@@ -227,13 +179,39 @@ const StudentAttendance = () => {
     }));
   }, [coursesAPI]);
 
-  
+  const transformDataToArray = (
+    attendanceData,
+    enrolledStudents,
+    hoursRenderedDataMap
+  ) => {
+    const dates = Object.keys(attendanceData);
 
-  // const checkMinimumHoursRendered = (studentid) => {
-  //   if(true){
+    const headerRow = ["Student Name", "Hours Rendered", ...dates];
 
-  //   }
-  // }
+    const dataRows = enrolledStudents.map((student) => {
+      const rowData = [
+        student.name,
+        hoursRenderedDataMap[student._id]?.hoursRendered || "0",
+      ];
+
+      dates.forEach((date) => {
+        rowData.push(
+          attendanceData[date]?.includes(student.name) ? "Present" : "Absent"
+        );
+      });
+
+      return rowData;
+    });
+    const result = [headerRow, ...dataRows];
+
+    return result;
+  };
+
+  useEffect(() => {
+    console.log("attendance map:", attendanceMap);
+    console.log("studentsAPI:", studentsAPI);
+    console.log("hoursRenderedMap:", hoursRenderedMap);
+  }, [attendanceMap, studentsAPI, hoursRenderedMap]);
 
   return (
     <>
@@ -298,63 +276,83 @@ const StudentAttendance = () => {
       </div>
 
       {Object.keys(attendanceMap).length > 0 && (
-        <TableContainer component={Paper}>
-          <Table
-            className="min-w-[700px] md:min-w-screen-lg"
-            aria-label="admin users table"
-          >
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Student Name</StyledTableCell>
-                <StyledTableCell>Hours Rendered</StyledTableCell>
-                {Object.keys(attendanceMap).map((date) => (
-                  <StyledTableCell key={date} align="left">
-                    {date}
-                  </StyledTableCell>
-                ))}
-              </TableRow>
-            </TableHead>
+        <div>
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-satoshi font-semibold text-gray-900 pb-7">
+              Attendance Reports
+            </h1>
+            <CSVLink
+              data={transformDataToArray(
+                attendanceMap,
+                studentsAPI,
+                hoursRenderedMap
+              )}
+              filename={"attendance-report.csv"}
+              className="black_btn pb-7"
+              target="_blank"
+            >
+              Download Attendance Data
+            </CSVLink>
+          </div>
 
-            <TableBody>
-              {studentsAPI.map((student) => (
-                <StyledTableRow key={student._id}>
-                  <StyledTableCell component="th" scope="row">
-                    {student.name}
-                  </StyledTableCell>
-
-                  <StyledTableCell component="th" scope="row">
-                    {hoursRenderedMap[`${student._id}`]?.minimumAttendance ? (
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                        {hoursRenderedMap[`${student._id}`]?.hoursRendered}
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                        {hoursRenderedMap[`${student._id}`]?.hoursRendered}
-                      </div>
-                    )}
-                  </StyledTableCell>
+          <TableContainer component={Paper}>
+            <Table
+              className="min-w-[700px] md:min-w-screen-lg"
+              aria-label="admin users table"
+            >
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Student Name</StyledTableCell>
+                  <StyledTableCell>Hours Rendered</StyledTableCell>
                   {Object.keys(attendanceMap).map((date) => (
-                    <StyledTableCell align="center" key={date}>
-                      {attendanceMap[date].includes(student.name) ? (
+                    <StyledTableCell key={date} align="left">
+                      {date}
+                    </StyledTableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {studentsAPI.map((student) => (
+                  <StyledTableRow key={student._id}>
+                    <StyledTableCell component="th" scope="row">
+                      {student.name}
+                    </StyledTableCell>
+
+                    <StyledTableCell component="th" scope="row">
+                      {hoursRenderedMap[`${student._id}`]?.minimumAttendance ? (
                         <div className="flex items-center">
                           <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                          <span>Present</span>
+                          {hoursRenderedMap[`${student._id}`]?.hoursRendered}
                         </div>
                       ) : (
                         <div className="flex items-center">
                           <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                          <span>Absent</span>
+                          {hoursRenderedMap[`${student._id}`]?.hoursRendered}
                         </div>
                       )}
                     </StyledTableCell>
-                  ))}
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                    {Object.keys(attendanceMap).map((date) => (
+                      <StyledTableCell align="center" key={date}>
+                        {attendanceMap[date].includes(student.name) ? (
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                            <span>Present</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                            <span>Absent</span>
+                          </div>
+                        )}
+                      </StyledTableCell>
+                    ))}
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
       )}
     </>
   );
