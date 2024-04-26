@@ -186,12 +186,12 @@ const StudentAttendance = () => {
   ) => {
     const dates = Object.keys(attendanceData);
 
-    const headerRow = ["Student Name", "Hours Rendered", ...dates];
+    const headerRow = ["Student Name", "Attendance percentage", ...dates];
 
     const dataRows = enrolledStudents.map((student) => {
       const rowData = [
         student.name,
-        hoursRenderedDataMap[student._id]?.hoursRendered || "0",
+        hoursRenderedDataMap[student._id]?.attendancePercentage || "0",
       ];
 
       dates.forEach((date) => {
@@ -303,7 +303,7 @@ const StudentAttendance = () => {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Student Name</StyledTableCell>
-                  <StyledTableCell>Hours Rendered</StyledTableCell>
+                  <StyledTableCell>Attendance Percentage</StyledTableCell>
                   {Object.keys(attendanceMap).map((date) => (
                     <StyledTableCell key={date} align="left">
                       {date}
@@ -323,12 +323,12 @@ const StudentAttendance = () => {
                       {hoursRenderedMap[`${student._id}`]?.minimumAttendance ? (
                         <div className="flex items-center">
                           <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                          {hoursRenderedMap[`${student._id}`]?.hoursRendered}
+                          {hoursRenderedMap[`${student._id}`]?.attendancePercentage}
                         </div>
                       ) : (
                         <div className="flex items-center">
                           <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                          {hoursRenderedMap[`${student._id}`]?.hoursRendered}
+                          {hoursRenderedMap[`${student._id}`]?.attendancePercentage}
                         </div>
                       )}
                     </StyledTableCell>

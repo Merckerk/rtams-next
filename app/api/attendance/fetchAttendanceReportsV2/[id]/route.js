@@ -54,6 +54,7 @@ export const GET = async (req, { params }) => {
           studentName,
           hoursRendered: 0,
           minimumAttendance: false,
+          attendancePercentage: 0,
         };
       }
       hoursRenderedMap[studentId].hoursRendered += isNaN(hoursRendered)
@@ -78,6 +79,7 @@ export const GET = async (req, { params }) => {
         attendancePercentageThreshold * highestHoursRendered;
 
       student.minimumAttendance = hasAllowedAttendanceRate;
+      student.attendancePercentage = ((student.hoursRendered / highestHoursRendered) * 100.0).toFixed(2);
     });
 
     console.log("hours rendered map", hoursRenderedMap);
