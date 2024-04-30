@@ -39,14 +39,22 @@ const ViewAudit = () => {
   };
 
   const formatToString = (obj) => {
-    let result = '';
-
-  for (const [key, value] of Object.entries(obj)) {
-    result += `${key}: ${JSON.stringify(value)}\n`;
-  }
-
-  return result.trim();
-  }
+    let result = "";
+  
+    if (obj) {
+      for (const [key, value] of Object.entries(obj)) {
+        let stringValue = JSON.stringify(value);
+        if (stringValue.length > 50) {
+          stringValue = stringValue.substring(0, 50) + "...";
+        }
+        result += `${key}: ${stringValue}\n`;
+      }
+      return result.trim();
+    } else {
+      return "No Data";
+    }
+  };
+  
 
   useEffect(() => {
     getAuditDetails();
@@ -60,35 +68,45 @@ const ViewAudit = () => {
         </h1>
 
         <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">Target:</span>
+          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
+            Target:
+          </span>
           <span className="font-satoshi text-base text-gray-700">
             {audit.target}
           </span>
         </div>
 
         <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">Description:</span>
+          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
+            Description:
+          </span>
           <span className="font-satoshi text-base text-gray-700">
             {audit.description}
           </span>
         </div>
 
         <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">Old Data:</span>
+          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
+            Old Data:
+          </span>
           <span className="font-satoshi text-base text-gray-700">
-            {formatToString(audit.oldData)}
+            {formatToString(audit?.oldData)}
           </span>
         </div>
 
         <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">New Data:</span>
+          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
+            New Data:
+          </span>
           <span className="font-satoshi text-base text-gray-700">
-            {formatToString(audit.newData)}
+            {formatToString(audit?.newData)}
           </span>
         </div>
 
         <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">Target:</span>
+          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
+            Date and Time:
+          </span>
           <span className="font-satoshi text-base text-gray-700">
             {audit.changeMade}
           </span>
