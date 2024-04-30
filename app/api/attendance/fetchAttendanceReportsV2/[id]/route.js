@@ -1,5 +1,6 @@
 import Attendances from "@models/attendanceModel";
 import Classlist from "@models/classModel";
+import Section from "@enums/section";
 import Student from "@models/studentModel";
 import { connectToDB } from "@utils/database";
 import { getToken } from "next-auth/jwt";
@@ -22,9 +23,9 @@ export const GET = async (req, { params }) => {
     const classlist = await Classlist.findById(classlistId).populate({
       path: "students",
       select: "name",
-    });
+    }).populate("sectionCode");
 
-    console.log("classlist students:", classlist);
+    // console.log("classlist students:", classlist);
 
     if (!classlist) {
       return new Response("Classlist not found", { status: 404 });
@@ -37,7 +38,7 @@ export const GET = async (req, { params }) => {
       select: "name",
     });
 
-    console.log("attendances: ", attendances);
+    // console.log("attendances: ", attendances);
 
     const map = {};
     const hoursRenderedMap = {};
@@ -62,10 +63,16 @@ export const GET = async (req, { params }) => {
         : hoursRendered;
 
       if (!map[date]) {
-        map[date] = [];
+        map[date] = {
+          totalHours: 0,
+          aveHours: 0,
+          students: [],
+        };
       }
 
-      map[date].push(studentName);
+      map[date]["students"].push(studentId);
+      map[date]["totalHours"] += hoursRendered;
+      map[date]["aveHours"] = map[date]["totalHours"] / map[date]["students"].length;
 
       if (hoursRenderedMap[studentId].hoursRendered > highestHoursRendered) {
         highestHoursRendered = hoursRenderedMap[studentId].hoursRendered;
@@ -79,11 +86,16 @@ export const GET = async (req, { params }) => {
         attendancePercentageThreshold * highestHoursRendered;
 
       student.minimumAttendance = hasAllowedAttendanceRate;
-      student.attendancePercentage = ((student.hoursRendered / highestHoursRendered) * 100.0).toFixed(2);
+      student.attendancePercentage = (
+        (student.hoursRendered / highestHoursRendered) *
+        100.0
+      ).toFixed(2);
     });
 
-    console.log("hours rendered map", hoursRenderedMap);
-    console.log("highest hours rendered", highestHoursRendered);
+    // console.log("hours rendered map", hoursRenderedMap);
+    // console.log("highest hours rendered", highestHoursRendered);
+
+    console.log("map", map);
 
     const returnValue = {
       success: true,
@@ -92,6 +104,10 @@ export const GET = async (req, { params }) => {
       enrolledStudents: classlist.students,
       hoursRenderedDataMap: hoursRenderedMap,
       highestHoursRendered: highestHoursRendered,
+      classlistInfo: {
+        subjectDescription: classlist.subjectDescription,
+        sectionCode: classlist.sectionCode
+      }
     };
 
     return new Response(JSON.stringify(returnValue), { status: 200 });
