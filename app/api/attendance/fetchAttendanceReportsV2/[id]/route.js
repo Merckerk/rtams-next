@@ -25,7 +25,6 @@ export const GET = async (req, { params }) => {
       select: "name",
     }).populate("sectionCode");
 
-    // console.log("classlist students:", classlist);
 
     if (!classlist) {
       return new Response("Classlist not found", { status: 404 });
@@ -38,7 +37,6 @@ export const GET = async (req, { params }) => {
       select: "name",
     });
 
-    // console.log("attendances: ", attendances);
 
     const map = {};
     const hoursRenderedMap = {};
@@ -92,10 +90,6 @@ export const GET = async (req, { params }) => {
       ).toFixed(2);
     });
 
-    // console.log("hours rendered map", hoursRenderedMap);
-    // console.log("highest hours rendered", highestHoursRendered);
-
-    console.log("map", map);
 
     const returnValue = {
       success: true,
