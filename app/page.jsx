@@ -13,7 +13,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  //TODO: MAKE ENUMS
+  //TODO: STAGE BANDAID
   const featureCardProps = [
     {
       featureName: "RTAMS Users",
