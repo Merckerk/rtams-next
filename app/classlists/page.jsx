@@ -81,15 +81,15 @@ const Classlists = () => {
             {classlists.map((classlist) => (
               <StyledTableRow key={classlist._id}>
                 <StyledTableCell component="th" scope="row">
-                  {classlist.sectionCode.section}
+                  {classlist?.sectionCode?.section}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {classlist.subjectCode}
+                  {classlist?.subjectCode}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {classlist.subjectDescription}
+                  {classlist?.subjectDescription}
                 </StyledTableCell>
-                <StyledTableCell align="left">{classlist.term.term}</StyledTableCell>
+                <StyledTableCell align="left">{classlist?.term?.term}</StyledTableCell>
                 <StyledTableCell align="center">
                   <button
                     variant="outlined"

@@ -156,8 +156,8 @@ const StudentAttendance = () => {
 
   const classlistsOptions = useMemo(() => {
     return coursesAPI.map((course) => ({
-      value: course._id,
-      label: `${course.sectionCode.section} - ${course.subjectCode} - ${course.term.term}`,
+      value: course?._id,
+      label: `${course?.sectionCode?.section} - ${course?.subjectCode} - ${course?.term?.term}`,
     }));
   }, [coursesAPI]);
 
@@ -178,7 +178,7 @@ const StudentAttendance = () => {
 
       dates.forEach((date) => {
         rowData.push(
-          attendanceData[date]["students"]?.includes(student.name)
+          attendanceData[date]["students"]?.includes(student._id)
             ? "Present"
             : "Absent"
         );
