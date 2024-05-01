@@ -178,7 +178,7 @@ const StudentAttendance = () => {
 
       dates.forEach((date) => {
         rowData.push(
-          attendanceData[date]["students"]?.includes(student.name)
+          attendanceData[date]["students"]?.includes(student._id)
             ? "Present"
             : "Absent"
         );
