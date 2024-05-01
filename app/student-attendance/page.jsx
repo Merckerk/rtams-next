@@ -156,8 +156,8 @@ const StudentAttendance = () => {
 
   const classlistsOptions = useMemo(() => {
     return coursesAPI.map((course) => ({
-      value: course._id,
-      label: `${course.sectionCode.section} - ${course.subjectCode} - ${course.term.term}`,
+      value: course?._id,
+      label: `${course?.sectionCode?.section} - ${course?.subjectCode} - ${course?.term?.term}`,
     }));
   }, [coursesAPI]);
 
