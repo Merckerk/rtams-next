@@ -106,15 +106,11 @@ export const PATCH = async (req, { params }) => {
     }
 
     if (Object.keys(errors).length > 0) {
-      return new Response(JSON.stringify(errors), { status: 400 });
-    }
-
-    if (Object.keys(errors).length > 0) {
       console.log("gg");
       return new Response(
         JSON.stringify({
           success: false,
-          message: "Missing fields",
+          message: "Invalid Fields",
           errors: errors,
         }),
         { status: 400 }
