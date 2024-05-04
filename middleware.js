@@ -6,10 +6,15 @@ export default withAuth({
       if (
         req.nextUrl.pathname === "/create-admin" ||
         req.nextUrl.pathname === "/create-classlist" ||
+        req.nextUrl.pathname === "/create-student" ||
+
         req.nextUrl.pathname === "/admin-users" ||
         req.nextUrl.pathname === "/classlists" ||
+        req.nextUrl.pathname === "/students" ||
+        
         req.nextUrl.pathname === "/update-admin/:path" ||
-        req.nextUrl.pathname === "/update-classlist/:path"
+        req.nextUrl.pathname === "/update-classlist/:path" ||
+        req.nextUrl.pathname === "/update-student/:path"
       ) {
         return token?.role === "Admin";
       }

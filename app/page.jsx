@@ -8,10 +8,18 @@ import FeatureCard from "@components/FeatureCard";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
+import { useSession } from "next-auth/react";
 
 const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsUserAdmin(session?.user?.role === "Admin");
+  }, [session?.user?.id]);
 
   //TODO: MAKE ENUMS
   const featureCardProps = [
@@ -19,41 +27,49 @@ const Home = () => {
       featureName: "RTAMS Users",
       description: "Add, View and Edit RTAMS Users.",
       routeName: "admin-users",
+      isAdminAccess: true,
     },
     {
       featureName: "Students",
       description: "Add, View and Edit Students.",
       routeName: "students",
+      isAdminAccess: true,
     },
     {
       featureName: "Classlists",
       description: "View, add, edit, and delete classlists.",
       routeName: "classlists",
+      isAdminAccess: true,
     },
     {
       featureName: "Attendances",
       description: "View, add, and edit Attendances.",
       routeName: "attendances",
+      isAdminAccess: false,
     },
     {
       featureName: "Course Attendance",
       description: "View attendances by course, section, and term.",
       routeName: "student-attendance",
+      isAdminAccess: false,
     },
     {
       featureName: "Audit Trails",
       description: "View changes made in the system.",
       routeName: "audit-trails",
+      isAdminAccess: false,
     },
     {
       featureName: "Terms",
       description: "View available terms.",
       routeName: "terms",
+      isAdminAccess: false,
     },
     {
       featureName: "Sections",
       description: "View available sections.",
       routeName: "sections",
+      isAdminAccess: false,
     },
   ];
 
@@ -79,6 +95,8 @@ const Home = () => {
             featureName={feature.featureName}
             description={feature.description}
             routeName={feature.routeName}
+            isAdminAccess={feature.isAdminAccess}
+            isUserAdmin={isUserAdmin}
           />
         ))}
       </div>
