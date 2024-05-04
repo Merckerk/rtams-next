@@ -1,4 +1,5 @@
 import Student from "@models/studentModel";
+import Section from "@enums/section";
 import { connectToDB } from "@utils/database";
 import { getToken } from "next-auth/jwt";
 
@@ -12,7 +13,7 @@ export const GET = async (req, res) => {
   try {
     await connectToDB();
 
-    const Students = await Student.find({}, { image: 0 });
+    const Students = await Student.find({}, { image: 0 }).populate("section");
 
     return new Response(JSON.stringify(Students), { status: 200 });
   } catch (error) {

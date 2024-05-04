@@ -100,7 +100,7 @@ const Students = () => {
                 </StyledTableCell>
                 <StyledTableCell align="left">{student.name}</StyledTableCell>
                 <StyledTableCell align="left">
-                  {student.section}
+                  {student?.section?.section}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <button
