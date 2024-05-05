@@ -14,7 +14,7 @@ export const GET = async (req, res) => {
 
     const Students = await Student.find(
       {},
-      { nfcUID: 1, name: 1, section: 1, _id: 0 }
+      { studentNumber: 1, nfcUID: 1, name: 1, section: 1, _id: 0 }
     );
 
     return new Response(JSON.stringify(Students));
