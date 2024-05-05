@@ -1,7 +1,9 @@
 import { connectToDB } from "@utils/database";
 import Attendances from "@models/attendanceModel";
 import Student from "@models/studentModel";
+import Classlist from "@models/classModel";
 import { getToken } from "next-auth/jwt";
+import Session from "@models/sessionModel";
 
 export const POST = async (req, res) => {
   const token = await getToken({ req });
@@ -12,15 +14,15 @@ export const POST = async (req, res) => {
     const reqBody = await req.json();
     const { nfcUID, course } = reqBody;
 
-    // Find the student based on the NFC UID
     const student = await Student.findOne({ nfcUID });
+    const session = await Session.find({ classlist: course, checked: false });
+
     if (!student) {
       return new Response("Student not found for the given NFC UID.", {
         status: 404,
       });
     }
 
-    // Get the current date and format it
     const currentDate = new Date();
     const formattedDate = `${currentDate.getFullYear()}:${(
       currentDate.getMonth() + 1
@@ -28,10 +30,8 @@ export const POST = async (req, res) => {
       .toString()
       .padStart(2, "0")}:${currentDate.getDate().toString().padStart(2, "0")}`;
 
-    // Get the current time
     const currentTime = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
 
-    // Check if there is an existing attendance for the same student, course, and date
     let existingAttendance = await Attendances.findOne({
       student: student._id,
       course,
@@ -70,6 +70,15 @@ export const POST = async (req, res) => {
         timeIn: currentTime,
         timeOut: null,
       });
+
+      if (!session) {
+        const newSession = new Session({
+          classlist: course,
+          date: formattedDate,
+          checked: false,
+        });
+        const savedSession = await newSession.save();
+      }
 
       const savedReport = await newReport.save();
       return new Response(JSON.stringify(savedReport), { status: 201 });

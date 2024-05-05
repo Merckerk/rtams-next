@@ -10,11 +10,9 @@ const sessionSchema = new Schema({
     type: String,
     required: [true, "date is required"],
   },
-  firstTimeIn: {
-    type: String,
-  },
-  lastTimeOut: {
-    type: String,
+  checked: {
+    type: Boolean,
+    default: false,
   },
 });
 
