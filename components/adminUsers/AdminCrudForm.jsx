@@ -12,18 +12,10 @@ const AdminCrudForm = ({
   setPost,
   loading,
   handleSubmit,
+  errMsg,
+  setErrMsg = () => {},
   handleDelete = () => {},
 }) => {
-  const [errMsg, setErrMsg] = useState({
-    name: "",
-    userId: "",
-    username: "",
-    password: "",
-    repassword: "",
-    role: "",
-    audit: "",
-  });
-
   const checkForEmptyValue = (value, param) => {
     const isValid = !!value;
     setErrMsg((prevErrMsg) => ({
@@ -116,8 +108,16 @@ const AdminCrudForm = ({
     return Object.entries(Role).map(([key, value]) => ({
       value: key,
       label: value,
-    }))
+    }));
   });
+
+  useEffect(() => {
+    console.log("from admin crud err:", errMsg);
+  }, [errMsg]);
+
+  useEffect(() => {
+    console.log("post vals", post);
+  }, [post])
 
   return (
     <div className="container mx-auto mt-5 mb-8">
@@ -160,9 +160,6 @@ const AdminCrudForm = ({
             onChange={convertToBase64}
             value={post?.photo}
           />
-          {errMsg.photo ? (
-            <p className="error_message">{errMsg.photo}</p>
-          ) : null}
         </div>
 
         <ReusableInput
@@ -177,7 +174,7 @@ const AdminCrudForm = ({
             checkForEmptyValue(e.target.value, "name");
           }}
           value={post?.name}
-          errorMessage={errMsg.name}
+          errorMessage={errMsg?.name}
           required
         />
 
@@ -193,7 +190,23 @@ const AdminCrudForm = ({
             checkForEmptyValue(e.target.value, "userId");
           }}
           value={post?.userId}
-          errorMessage={errMsg.userId}
+          errorMessage={errMsg?.userId}
+          required
+        />
+
+        <ReusableInput
+          label="Email"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter User Email"
+          className="form_input"
+          onChange={(e) => {
+            setPost({ ...post, email: e.target.value });
+            checkForEmptyValue(e.target.value, "email");
+          }}
+          value={post?.email}
+          errorMessage={errMsg?.email}
           required
         />
 
@@ -209,7 +222,7 @@ const AdminCrudForm = ({
             checkForEmptyValue(e.target.value, "username");
           }}
           value={post?.username}
-          errorMessage={errMsg.username}
+          errorMessage={errMsg?.username}
           required
         />
 
@@ -225,7 +238,7 @@ const AdminCrudForm = ({
             validatePassword(e.target.value);
           }}
           value={post?.password}
-          errorMessage={errMsg.password}
+          errorMessage={errMsg?.password}
         />
 
         <ReusableInput
@@ -240,7 +253,7 @@ const AdminCrudForm = ({
             validateRepassword(e.target.value);
           }}
           value={post?.repassword}
-          errorMessage={errMsg.repassword}
+          errorMessage={errMsg?.repassword}
         />
 
         <ReusableDropdown
@@ -272,8 +285,8 @@ const AdminCrudForm = ({
               }}
               value={post?.audit}
             />
-            {errMsg.audit ? (
-              <p className="error_message">{errMsg.audit}</p>
+            {errMsg?.audit ? (
+              <p className="error_message">{errMsg?.audit}</p>
             ) : null}
           </label>
         ) : null}

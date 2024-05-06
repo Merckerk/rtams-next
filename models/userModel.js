@@ -15,6 +15,11 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   username: {
     type: String,
     required: [true, "Please provide a username"],
@@ -27,7 +32,7 @@ const userSchema = new Schema({
   role: {
     type: String,
     enum: ["User", "Admin"],
-    required: [true, "Please provide a role"],
+    default: "User",
   },
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,

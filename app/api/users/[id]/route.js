@@ -30,8 +30,13 @@ export const GET = async (req, { params }) => {
 export const PATCH = async (req, { params }) => {
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
-  const { image, userId, username, password, name, audit, role } =
-    await req.json();
+
+  const reqBody = await req.json();
+  const { image, userId, email, username, password, name, audit, role } =
+    reqBody;
+  
+  console.log("Recieved:", reqBody);
+
   try {
     await connectToDB();
     // Find and update the user with the new data
@@ -43,10 +48,50 @@ export const PATCH = async (req, { params }) => {
       return new Response("Cannot edit/update this user.", { status: 500 });
     }
 
+    const errors = {};
+    const requiredFields = ["userId", "email", "username"];
+
+    for (const field of requiredFields) {
+      if (!reqBody[field]) {
+        errors[field] = `${
+          field.charAt(0).toUpperCase() + field.slice(1)
+        } is required.`;
+      }
+    }
+
+    const [userIdCheck, userNameCheck, emailCheck] = await Promise.all([
+      User.findOne({ userId }),
+      User.findOne({ username }),
+      User.findOne({ email }),
+    ]);
+
+    if (userIdCheck && userIdCheck._id.toString() !== params.id) {
+      errors.userId = "User Id already exist.";
+    }
+    if (userNameCheck && userNameCheck._id.toString() !== params.id) {
+      errors.username = "Username already exist.";
+    }
+    if (emailCheck && emailCheck._id.toString() !== params.id) {
+      errors.email = "Email already exist.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      console.log("gg");
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Invalid Fields",
+          errors: errors,
+        }),
+        { status: 400 }
+      );
+    }
+
     const oldData = {
       image: existingUser?.image,
       name: existingUser?.name,
       userId: existingUser?.userId,
+      email: existingUser?.email,
       username: existingUser?.username,
       password: existingUser?.password,
       role: existingUser?.role,
@@ -60,6 +105,7 @@ export const PATCH = async (req, { params }) => {
     existingUser.image = image;
     existingUser.name = name;
     existingUser.userId = userId;
+    existingUser.email = email;
     existingUser.username = username;
     existingUser.password = hashedPassword || existingUser.password;
     existingUser.role = role;

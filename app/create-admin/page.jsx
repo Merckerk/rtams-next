@@ -11,6 +11,7 @@ const CreateUser = () => {
     image: "",
     name: "",
     userId: "",
+    email: "",
     username: "",
     password: "",
     repassword: "",
@@ -21,27 +22,50 @@ const CreateUser = () => {
   //TODO: MAKE THIS FUNCTIONAL
   const [areFieldsValid, setAreFieldsValid] = useState(false);
 
+  const [errMsg, setErrMsg] = useState({
+    name: "",
+    userId: "",
+    email: "",
+    username: "",
+    password: "",
+    repassword: "",
+    role: "",
+    audit: "",
+  });
+
   const onCreateUser = async () => {
     try {
       setIsLoading(true);
       if (post.password !== post.repassword)
         throw new Error("Passwords do not match");
       else {
-        const { image, name, userId, username, password, role } = post;
+        const { image, name, userId, email, username, password, role } = post;
         const postValues = {
           image,
           name,
           userId,
+          email,
           username,
           password,
           role,
         };
         const response = await axios.post("api/users/create", postValues);
-        toast.success("Successfully created an admin user!");
-        router.push("/login");
+        if (response) {
+          toast.success("Successfully created an admin user!");
+          router.push("/login");
+        } else {
+          toast.error("Failed to create admin");
+        }
       }
     } catch (error) {
-      toast.error(error);
+      console.log("hahahahah ggs")
+      if (error.response && error.response.data && error.response.data.errors) {
+        setErrMsg(error.response.data.errors);
+        console.log("error", error);
+      } else {
+        console.log("An error occurred:", error);
+      }
+      toast.error("Failed to create admin");
     } finally {
       setIsLoading(false);
     }
@@ -69,6 +93,8 @@ const CreateUser = () => {
       setPost={setPost}
       loading={isLoading}
       handleSubmit={onCreateUser}
+      errMsg={errMsg}
+      setErrMsg={setErrMsg}
     />
   );
 };
