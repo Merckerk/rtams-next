@@ -15,14 +15,21 @@ const AttendanceReportForm = ({
   loading,
   handleSubmit,
   handleDelete = () => {},
-  coursesAPI,
-  nfcAPI
+  nfcAPI,
+  filteredStudents,
+  coursesAPI
 }) => {
   const [errMsg, setErrMsg] = useState({
     courseCode: "",
     nfcUID: "",
     date: "",
   });
+
+
+
+  useEffect(() => {
+    console.log("courses:", coursesAPI);
+  }, [coursesAPI]);
 
   const validateCourseCode = (value) => {
     const isValid = !!value;
@@ -107,9 +114,9 @@ const AttendanceReportForm = ({
           <option value="disabled">Select Student</option>
 
           {/* Map of nfcUID for options */}
-          {nfcAPI.map((nfcAPI) => (
-            <option key={nfcAPI._id} value={nfcAPI.nfcUID}>
-              {`${nfcAPI.studentNumber} - ${nfcAPI.name}`}
+          {filteredStudents.map((student) => (
+            <option key={student._id} value={student.nfcUID}>
+              {`${student.studentNumber} - ${student.name}`}
             </option>
           ))}
         </select>

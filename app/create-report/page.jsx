@@ -48,13 +48,13 @@ const createAttendance = () => {
       if (session?.user) {
         if (session?.user?.role === "Admin") {
           console.log("le good 1 admin");
-          coursesResponse = await fetch("api/classlist/getAllClasslists", {
+          coursesResponse = await fetch("api/classlist/getClasslistsForAttendance/admin", {
             cache: "no-store",
           });
         } else {
           console.log("le good 1 user");
           coursesResponse = await fetch(
-            `api/classlist/getClasslistsByFaculty/${session?.user?.id}`,
+            `api/classlist/getClasslistsForAttendance/user/${session?.user?.id}`,
             {
               cache: "no-store",
             }
@@ -88,8 +88,6 @@ const createAttendance = () => {
       getAllStudents();
     }
   }, [session?.user?.id]);
-
-  const filterStudentsByClasslist = () => {};
 
   const onCreateReport = async () => {
     try {
@@ -154,6 +152,29 @@ const createAttendance = () => {
     console.log("course:", post.course);
   }, [post.course]);
 
+  useEffect(() => {
+    console.log("courses from le api:", coursesAPI);
+  }, [coursesAPI]);
+
+  useEffect(() => {
+    if (post.course){
+      const selectedCourse = coursesAPI.find(course => course._id === post.course)
+      if (selectedCourse){
+        setFilteredStudents(selectedCourse.students);
+      } else{
+        setFilteredStudents([]);
+      }
+    }
+  }, [post.course, coursesAPI]);
+
+  useEffect(() => {
+    console.log("filtered students changes:", filteredStudents);
+  }, [filteredStudents]);
+
+  useEffect(() => {
+    console.log("nfc to post:", post.nfcUID);
+  }, [post.nfcUID]);
+
   // !REWRITE LATER AFTER REHAUL
   // useEffect(() => {
   //   console.log("post values:", post);
@@ -182,8 +203,9 @@ const createAttendance = () => {
         setPost={setPost}
         loading={isLoading}
         handleSubmit={onCreateReport}
-        coursesAPI={coursesAPI}
+        filteredStudents={filteredStudents}
         nfcAPI={nfcAPI}
+        coursesAPI={coursesAPI}
       />
 
       <StudentsTable
