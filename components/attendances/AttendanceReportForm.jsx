@@ -15,47 +15,14 @@ const AttendanceReportForm = ({
   loading,
   handleSubmit,
   handleDelete = () => {},
+  coursesAPI,
+  nfcAPI
 }) => {
   const [errMsg, setErrMsg] = useState({
     courseCode: "",
     nfcUID: "",
     date: "",
   });
-  const [coursesAPI, setCoursesAPI] = useState([]);
-  const [nfcAPI, setNFC_API] = useState([]);
-
-  const fetchCoursesData = async () => {
-    const response = await fetch("/api/classlist/getAllClasslists", {
-      cache: "no-store",
-    });
-    const data = await response.json();
-
-    if (data) {
-      const classlistData = data.data;
-      setCoursesAPI(classlistData);
-    } else {
-    }
-  };
-
-  const fetchNFC = async () => {
-    const response = await axios.get("/api/students/fetchNFC");
-    if (response) {
-      setNFC_API(response.data);
-    } else {
-    }
-  };
-
-  useEffect(() => {
-    fetchCoursesData();
-  }, []);
-
-  useEffect(() => {
-    fetchNFC();
-  }, []);
-
-  useEffect(() => {
-    console.log("courses:", coursesAPI);
-  }, [coursesAPI]);
 
   const validateCourseCode = (value) => {
     const isValid = !!value;
@@ -105,6 +72,19 @@ const AttendanceReportForm = ({
           required
         /> */}
 
+        {/* Course Code Selector */}
+        <ReusableDropdown
+          label="Classlist"
+          id="classlist"
+          name="classlist"
+          options={classlistsOptions}
+          value={post?.course}
+          onChange={(e) => {
+            setPost({ ...post, course: e.target.value });
+          }}
+          placeholder="Select Classlist"
+        />
+
         {/* NFC UID Selector */}
         <label
           htmlFor="student"
@@ -135,18 +115,6 @@ const AttendanceReportForm = ({
         </select>
         <span className="error_message">{errMsg.nfcUID}</span>
 
-        {/* Course Code Selector */}
-        <ReusableDropdown
-          label="Classlist"
-          id="classlist"
-          name="classlist"
-          options={classlistsOptions}
-          value={post?.course}
-          onChange={(e) => {
-            setPost({ ...post, course: e.target.value });
-          }}
-          placeholder="Select Classlist"
-        />
 
         {/* <div className="form_group">
           <label

@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import Term from "@models/termModel";
+import Section from "@models/sectionModel";
 import Classlist from "@models/classModel";
 import { connectToDB } from "@utils/database";
 import { getToken } from "next-auth/jwt";
@@ -17,7 +19,7 @@ export const GET = async (req, { params }) => {
         user: params.id,
       },
       { _id: 1, sectionCode: 1, subjectCode: 1, subjectDescription: 1, term: 1 }
-    );
+    ).populate("term").populate("sectionCode");
 
     // res.setHeader('Cache-Control', 'no-store, must-revalidate');
     const returnValue = {

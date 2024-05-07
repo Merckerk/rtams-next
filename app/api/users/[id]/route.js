@@ -8,14 +8,12 @@ export const revalidate = 0;
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
-// GET user
 export const GET = async (req, { params }) => {
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
 
-    //Find the user according to user_id sent by client
     const user = await User.findById(params.id);
     if (!user) return new Response("User Not Found.", { status: 404 });
 
@@ -26,7 +24,6 @@ export const GET = async (req, { params }) => {
   }
 };
 
-// EDIT/UPDATE user
 export const PATCH = async (req, { params }) => {
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
@@ -39,7 +36,6 @@ export const PATCH = async (req, { params }) => {
 
   try {
     await connectToDB();
-    // Find and update the user with the new data
     const existingUser = await User.findById(params.id);
 
     if (!existingUser) return new Response("User not found", { status: 404 });
@@ -97,11 +93,9 @@ export const PATCH = async (req, { params }) => {
       role: existingUser?.role,
     };
 
-    //re-hash password here
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = !password ? "" : await bcryptjs.hash(password, salt);
 
-    // Response if user is updated successfully
     existingUser.image = image;
     existingUser.name = name;
     existingUser.userId = userId;
@@ -132,7 +126,6 @@ export const PATCH = async (req, { params }) => {
   }
 };
 
-// DELETE user
 export const DELETE = async (req, { params }) => {
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
