@@ -2,8 +2,13 @@ import { connectToDB } from "@utils/database";
 import Attendances from "@models/attendanceModel";
 import Student from "@models/studentModel";
 import Classlist from "@models/classModel";
+import User from "@models/userModel";
 import { getToken } from "next-auth/jwt";
 import Session from "@models/sessionModel";
+
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export const POST = async (req, res) => {
   const t0 = performance.now();
@@ -15,9 +20,11 @@ export const POST = async (req, res) => {
     const reqBody = await req.json();
     const { nfcUID, course } = reqBody;
 
+    console.log("course:", course);
+
     const student = await Student.findOne({ nfcUID });
     const session = await Session.find({ classlist: course, checked: false });
-    const classlist = await Classlist.findOne({ course });
+    const classlist = await Classlist.findOne({ _id: course });
 
     if (!student) {
       return new Response("Student not found for the given NFC UID.", {
@@ -28,6 +35,8 @@ export const POST = async (req, res) => {
     if (!classlist) {
       return new Response("Classlist not found", { status: 404 });
     }
+
+    console.log("class faculty:", classlist)
 
     if (!classlist.students.includes(student._id)) {
       return new Response("Student not enrolled in this course", {
@@ -50,6 +59,18 @@ export const POST = async (req, res) => {
       date: formattedDate,
     });
 
+    if (session.length === 0) {
+      console.log("making new session");
+      const newSession = new Session({
+        faculty: classlist.user,
+        classlist: course,
+        date: formattedDate,
+        checked: false,
+      });
+      const savedSession = await newSession.save();
+      console.log("new session:", savedSession);
+    }
+    
     if (existingAttendance) {
       if (existingAttendance.timeIn && !existingAttendance.timeOut) {
         existingAttendance.timeOut = currentTime;
@@ -82,16 +103,6 @@ export const POST = async (req, res) => {
         timeIn: currentTime,
         timeOut: null,
       });
-
-      if (session.length === 0) {
-        const newSession = new Session({
-          faculty: classlist.user,
-          classlist: course,
-          date: formattedDate,
-          checked: false,
-        });
-        const savedSession = await newSession.save();
-      }
 
       const savedReport = await newReport.save();
       return new Response(JSON.stringify(savedReport), { status: 201 });
