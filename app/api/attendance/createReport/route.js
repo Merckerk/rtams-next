@@ -6,6 +6,7 @@ import { getToken } from "next-auth/jwt";
 import Session from "@models/sessionModel";
 
 export const POST = async (req, res) => {
+  const t0 = performance.now();
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
@@ -16,10 +17,21 @@ export const POST = async (req, res) => {
 
     const student = await Student.findOne({ nfcUID });
     const session = await Session.find({ classlist: course, checked: false });
+    const classlist = await Classlist.findOne({ course });
 
     if (!student) {
       return new Response("Student not found for the given NFC UID.", {
         status: 404,
+      });
+    }
+
+    if (!classlist) {
+      return new Response("Classlist not found", { status: 404 });
+    }
+
+    if (!classlist.students.includes(student._id)) {
+      return new Response("Student not enrolled in this course", {
+        status: 500,
       });
     }
 
@@ -71,8 +83,9 @@ export const POST = async (req, res) => {
         timeOut: null,
       });
 
-      if (!session) {
+      if (session.length === 0) {
         const newSession = new Session({
+          faculty: classlist.user,
           classlist: course,
           date: formattedDate,
           checked: false,
@@ -88,5 +101,8 @@ export const POST = async (req, res) => {
     return new Response("Failed to generate an attendance report.", {
       status: 500,
     });
+  } finally {
+    const t1 = performance.now();
+    console.log(`performance metric: ${t1 - t0} mills`);
   }
 };

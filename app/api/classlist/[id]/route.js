@@ -26,7 +26,6 @@ export const GET = async (req, { params }) => {
 
     return new Response(JSON.stringify(returnValue), { status: 200 });
   } catch (error) {
-    console.log(error);
     return new Response("Internal Server Error.", { status: 500 });
   }
 };
@@ -92,7 +91,6 @@ export const PATCH = async (req, { params }) => {
 
     return new Response(JSON.stringify(combinedResponse), { status: 200 });
   } catch (error) {
-    console.log(error);
     return new Response("Failed to update classlist.", { status: 500 });
   }
 };
@@ -119,7 +117,7 @@ export const DELETE = async (req, { params }) => {
     const auditRecord = new Audits(auditData);
     await auditRecord.save();
 
-    console.log("good here1");
+    ("good here1");
 
     const combinedResponse = {
       success: true,
@@ -129,7 +127,6 @@ export const DELETE = async (req, { params }) => {
       },
     };
 
-    console.log("good here");
     return new Response(JSON.stringify(combinedResponse), { status: 200 });
   } catch (error) {
     return new Response(

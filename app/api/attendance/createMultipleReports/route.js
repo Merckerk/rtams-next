@@ -53,7 +53,6 @@ export const POST = async (req, res) => {
           });
 
           if (existingAttendance) {
-            console.log("Attendance is existing already.");
             return {
               status: 409,
               body: {
