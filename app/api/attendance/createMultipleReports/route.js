@@ -3,6 +3,10 @@ import Student from "@models/studentModel";
 import Attendances from "@models/attendanceModel";
 import { getToken } from "next-auth/jwt";
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 export const POST = async (req, res) => {
   const token = await getToken({ req });
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
@@ -53,7 +57,6 @@ export const POST = async (req, res) => {
           });
 
           if (existingAttendance) {
-            console.log("Attendance is existing already.");
             return {
               status: 409,
               body: {

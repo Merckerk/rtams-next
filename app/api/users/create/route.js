@@ -9,21 +9,49 @@ export const POST = async (req, res) => {
   try {
     await connectToDB();
     const reqBody = await req.json();
-    const { image, name, userId, username, password, role } = reqBody;
+    const { image, name, userId, email, username, password, role } = reqBody;
 
-    const userIdCheck = await User.findOne({ userId });
-    const userNameCheck = await User.findOne({ username });
+    const errors = {};
+    const requiredFields = [
+      "userId",
+      "email",
+      "username",
+      "password",
+    ];
 
-    if (userIdCheck) {
-      return new Response("UserID already exists.", { status: 400 });
+    for (const field of requiredFields){
+      if (!reqBody[field]) {
+        errors[field] = `${
+          field.charAt(0).toUpperCase() + field.slice(1)
+        } is required.`;
+      }
     }
 
-    if (userNameCheck) {
-      return new Response("Username already exists.", { status: 400 });
-    }
+    const [
+      userIdCheck,
+      userNameCheck,
+      emailCheck,
+    ] = await Promise.all([
+      User.findOne({ userId }),
+      User.findOne({ username }),
+      User.findOne({ email }),
+    ]);
 
-    if (!userId || !username || !password || !role) {
-      return new Response("Incomplete payload values.", { status: 400 });
+    if (userIdCheck) errors.userId = "User Id already exist."
+    if (userNameCheck) errors.username = "Username already exist."
+    if (emailCheck) errors.email = "Email already exist."
+
+
+    if (Object.keys(errors).length > 0) {
+      console.log("gg");
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Invalid Fields",
+          errors: errors,
+        }),
+        { status: 400 }
+      );
     }
 
     const salt = await bcryptjs.genSalt(10);
@@ -33,6 +61,7 @@ export const POST = async (req, res) => {
       image,
       name,
       userId,
+      email,
       username,
       password: hashedPassword,
       role,

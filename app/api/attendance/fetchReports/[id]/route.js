@@ -13,16 +13,13 @@ export const GET = async (req, { params }) => {
   if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
   try {
     await connectToDB();
-    console.log("id:", params.id);
 
     const attendanceReports = await Attendances.find().populate("course");
 
     const filteredReports = attendanceReports.filter((report) => {
-      console.log(report?.course?.user?.toString());
       return report?.course?.user?.toString() === params?.id?.toString();
     });
 
-    console.log("good here2");
 
     return new Response(JSON.stringify(filteredReports));
   } catch (error) {

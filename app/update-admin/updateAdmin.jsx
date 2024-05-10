@@ -12,14 +12,25 @@ const UpdateAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState({
     image: "",
-    email: "",
     name: "",
     userId: "",
+    email: "",
     username: "",
     password: "",
     repassword: "",
     role: "",
     audit: ""
+  });
+
+  const [errMsg, setErrMsg] = useState({
+    name: "",
+    userId: "",
+    email: "",
+    username: "",
+    password: "",
+    repassword: "",
+    role: "",
+    audit: "",
   });
 
   const getUserDetails = async () => {
@@ -38,8 +49,6 @@ const UpdateAdmin = () => {
       audit: ""
     });
   };
-
-  
 
   useEffect(() => {
     if (userId) {
@@ -60,6 +69,7 @@ const UpdateAdmin = () => {
           image: post.image,
           name: post.name,
           userId: post.userId,
+          email: post.email,
           username: post.username,
           password: post.password,
           role: post.role,
@@ -68,6 +78,13 @@ const UpdateAdmin = () => {
       });
       if (response.ok) {
         router.push("/admin-users");
+      } else {
+        const errorData = await response.json();
+        if (errorData && errorData.errors) {
+          setErrMsg(errorData.errors);
+        } else {
+          console.log("Error occurred:", response.statusText);
+        }
       }
     } catch (error) {
       console.log("Error updating user details", error);
@@ -103,6 +120,8 @@ const UpdateAdmin = () => {
       loading={loading}
       handleSubmit={(e) => onUpdateUser(e)}
       handleDelete={onDeleteUser}
+      errMsg={errMsg}
+      setErrMsg={setErrMsg}
     />
   );
 };
