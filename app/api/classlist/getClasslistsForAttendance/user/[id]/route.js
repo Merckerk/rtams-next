@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Term from "@models/termModel";
 import Section from "@models/sectionModel";
+import Student from "@models/studentModel";
 import Classlist from "@models/classModel";
 import { connectToDB } from "@utils/database";
 import { getToken } from "next-auth/jwt";
@@ -18,8 +19,14 @@ export const GET = async (req, { params }) => {
       {
         user: params.id,
       },
-      { _id: 1, sectionCode: 1, subjectCode: 1, subjectDescription: 1, term: 1 }
-    ).populate("term").populate("sectionCode");
+      { _id: 1, sectionCode: 1, subjectCode: 1, subjectDescription: 1, term: 1, students: 1 }
+    )
+      .populate("term")
+      .populate("sectionCode")
+      .populate({
+        path: "students",
+        select: "name studentNumber nfcUID",
+      });
 
     // res.setHeader('Cache-Control', 'no-store, must-revalidate');
     const returnValue = {
@@ -29,6 +36,6 @@ export const GET = async (req, { params }) => {
     return new Response(JSON.stringify(returnValue), { status: 200 });
   } catch (error) {
     console.log(error);
-    return new Response("Failed to fetch admin users.", { status: 500 });
+    return new Response("Failed to fetch students users.", { status: 500 });
   }
 };

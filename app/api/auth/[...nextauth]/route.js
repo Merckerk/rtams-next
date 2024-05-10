@@ -10,7 +10,6 @@ const authOptions = {
       name: "credentials",
       credentials: {},
       async authorize(credentials) {
-        console.log("recieved creds", credentials);
         const { username, password } = credentials;
 
         try {
@@ -19,35 +18,27 @@ const authOptions = {
 
           //Error handling if username does not exist
           if (!user) {
-            console.log("User not found");
             return null;
           }
 
           //Check password if correct
           const validPassword = await bcryptjs.compare(password, user.password);
 
-          console.log("Password comparison result:", validPassword);
 
           if (!validPassword) {
-            console.log("Invalid password");
             return null;
           } else {
-            console.log("Valid password");
           }
 
-          console.log(user, typeof user);
 
           const returnValue = {
             id: user._id,
             name: user.name,
             role: user.role ?? "User",
           };
-          // const userWithoutImage = { ...user.toObject() };
-          // delete userWithoutImage.image;
 
           return returnValue;
         } catch (error) {
-          console.error("Error during authorization:", error);
           return null;
         }
       },

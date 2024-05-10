@@ -83,7 +83,6 @@ const CreateStudent = () => {
         router.push("/students");
       } else {
         toast.error("Failed to create student");
-        console.log("awhhhh pero dito");
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
@@ -99,7 +98,6 @@ const CreateStudent = () => {
   };
 
   useEffect(() => {
-    console.log(post);
     if (
       !post.email ||
       !post.studentNumber ||

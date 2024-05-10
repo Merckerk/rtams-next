@@ -15,43 +15,17 @@ const AttendanceReportForm = ({
   loading,
   handleSubmit,
   handleDelete = () => {},
+  nfcAPI,
+  filteredStudents,
+  coursesAPI
 }) => {
   const [errMsg, setErrMsg] = useState({
     courseCode: "",
     nfcUID: "",
     date: "",
   });
-  const [coursesAPI, setCoursesAPI] = useState([]);
-  const [nfcAPI, setNFC_API] = useState([]);
 
-  const fetchCoursesData = async () => {
-    const response = await fetch("/api/classlist/getAllClasslists", {
-      cache: "no-store",
-    });
-    const data = await response.json();
 
-    if (data) {
-      const classlistData = data.data;
-      setCoursesAPI(classlistData);
-    } else {
-    }
-  };
-
-  const fetchNFC = async () => {
-    const response = await axios.get("/api/students/fetchNFC");
-    if (response) {
-      setNFC_API(response.data);
-    } else {
-    }
-  };
-
-  useEffect(() => {
-    fetchCoursesData();
-  }, []);
-
-  useEffect(() => {
-    fetchNFC();
-  }, []);
 
   useEffect(() => {
     console.log("courses:", coursesAPI);
@@ -105,6 +79,19 @@ const AttendanceReportForm = ({
           required
         /> */}
 
+        {/* Course Code Selector */}
+        <ReusableDropdown
+          label="Classlist"
+          id="classlist"
+          name="classlist"
+          options={classlistsOptions}
+          value={post?.course}
+          onChange={(e) => {
+            setPost({ ...post, course: e.target.value });
+          }}
+          placeholder="Select Classlist"
+        />
+
         {/* NFC UID Selector */}
         <label
           htmlFor="student"
@@ -127,26 +114,14 @@ const AttendanceReportForm = ({
           <option value="disabled">Select Student</option>
 
           {/* Map of nfcUID for options */}
-          {nfcAPI.map((nfcAPI) => (
-            <option key={nfcAPI._id} value={nfcAPI.nfcUID}>
-              {`${nfcAPI.studentNumber} - ${nfcAPI.name}`}
+          {filteredStudents.map((student) => (
+            <option key={student._id} value={student.nfcUID}>
+              {`${student.studentNumber} - ${student.name}`}
             </option>
           ))}
         </select>
         <span className="error_message">{errMsg.nfcUID}</span>
 
-        {/* Course Code Selector */}
-        <ReusableDropdown
-          label="Classlist"
-          id="classlist"
-          name="classlist"
-          options={classlistsOptions}
-          value={post?.course}
-          onChange={(e) => {
-            setPost({ ...post, course: e.target.value });
-          }}
-          placeholder="Select Classlist"
-        />
 
         {/* <div className="form_group">
           <label

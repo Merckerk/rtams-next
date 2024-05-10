@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import AttendanceReportForm from "@components/attendances/AttendanceReportForm";
@@ -7,6 +8,7 @@ import toast from "react-hot-toast";
 import StudentsTable from "@components/attendances/StudentsTable";
 
 const createAttendance = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const [post, setPost] = useState({
     nfcUID: "",
@@ -18,6 +20,8 @@ const createAttendance = () => {
   const [areFieldsValid, setAreFieldsValid] = useState(false);
   const [studentsAPI, setStudentsAPI] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
+  const [coursesAPI, setCoursesAPI] = useState([]);
+  const [nfcAPI, setNFC_API] = useState([]);
 
   const getAllStudents = async () => {
     try {
@@ -37,13 +41,53 @@ const createAttendance = () => {
     }
   };
 
-  useEffect(() => {
-    getAllStudents();
-  }, []);
+  const fetchCoursesData = async () => {
+    try {
+      let coursesResponse;
+      console.log("le good 1");
+      if (session?.user) {
+        if (session?.user?.role === "Admin") {
+          console.log("le good 1 admin");
+          coursesResponse = await fetch("api/classlist/getClasslistsForAttendance/admin", {
+            cache: "no-store",
+          });
+        } else {
+          console.log("le good 1 user");
+          coursesResponse = await fetch(
+            `api/classlist/getClasslistsForAttendance/user/${session?.user?.id}`,
+            {
+              cache: "no-store",
+            }
+          );
+        }
+      }
 
-  // useEffect(() => {
-  //   console.log("students:", studentsAPI);
-  // }, [studentsAPI]);
+      const response = await coursesResponse.json();
+
+      if (response) {
+        const coursesData = response.data;
+        setCoursesAPI(coursesData);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchNFC = async () => {
+    const response = await axios.get("/api/students/fetchNFC");
+    if (response) {
+      setNFC_API(response.data);
+    } else {
+    }
+  };
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetchCoursesData();
+      fetchNFC();
+      getAllStudents();
+    }
+  }, [session?.user?.id]);
 
   const onCreateReport = async () => {
     try {
@@ -105,8 +149,31 @@ const createAttendance = () => {
   // };
 
   useEffect(() => {
-    console.log("course:", post.course)
+    console.log("course:", post.course);
   }, [post.course]);
+
+  useEffect(() => {
+    console.log("courses from le api:", coursesAPI);
+  }, [coursesAPI]);
+
+  useEffect(() => {
+    if (post.course){
+      const selectedCourse = coursesAPI.find(course => course._id === post.course)
+      if (selectedCourse){
+        setFilteredStudents(selectedCourse.students);
+      } else{
+        setFilteredStudents([]);
+      }
+    }
+  }, [post.course, coursesAPI]);
+
+  useEffect(() => {
+    console.log("filtered students changes:", filteredStudents);
+  }, [filteredStudents]);
+
+  useEffect(() => {
+    console.log("nfc to post:", post.nfcUID);
+  }, [post.nfcUID]);
 
   // !REWRITE LATER AFTER REHAUL
   // useEffect(() => {
@@ -136,6 +203,9 @@ const createAttendance = () => {
         setPost={setPost}
         loading={isLoading}
         handleSubmit={onCreateReport}
+        filteredStudents={filteredStudents}
+        nfcAPI={nfcAPI}
+        coursesAPI={coursesAPI}
       />
 
       <StudentsTable
