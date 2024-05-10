@@ -8,7 +8,7 @@ const sessionSchema = new Schema({
   },
   classlist: {
     type: mongoose.Schema.ObjectId,
-    ref: "classlist",
+    ref: "classlists",
   },
   date: {
     type: String,
