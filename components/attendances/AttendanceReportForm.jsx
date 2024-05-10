@@ -107,15 +107,15 @@ const AttendanceReportForm = ({
 
         {/* NFC UID Selector */}
         <label
-          htmlFor="nfcUID"
+          htmlFor="student"
           className="form_label font-satoshi font-semibold text-base text-gray-700"
         >
-          NFC UID
+          Student
         </label>
 
         <select
-          id="nfcUID"
-          name="nfcUID"
+          id="student"
+          name="student"
           onChange={(e) => {
             setPost({ ...post, nfcUID: e.target.value });
             validateUID(e.target.value);
@@ -124,12 +124,12 @@ const AttendanceReportForm = ({
           required
         >
           {/* Default Option */}
-          <option value="disabled">Select UID</option>
+          <option value="disabled">Select Student</option>
 
           {/* Map of nfcUID for options */}
           {nfcAPI.map((nfcAPI) => (
             <option key={nfcAPI._id} value={nfcAPI.nfcUID}>
-              {nfcAPI.nfcUID}
+              {`${nfcAPI.studentNumber} - ${nfcAPI.name}`}
             </option>
           ))}
         </select>

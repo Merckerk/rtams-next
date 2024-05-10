@@ -50,10 +50,6 @@ export const PATCH = async (req, { params }) => {
     await connectToDB();
 
     const existingStudent = await Student.findById(params.id);
-    const studentNumberCheck = await Student.findOne({ studentNumber });
-    const studentEmailCheck = await Student.findOne({ email });
-    const studentNFCCheck = await Student.findOne({ nfcUID });
-    const studentUsernameCheck = await Student.findOne({ username });
 
     if (!existingStudent) {
       console.log("student doesn't exist");
@@ -66,7 +62,6 @@ export const PATCH = async (req, { params }) => {
       "nfcUID",
       "email",
       "username",
-      "password",
       "gender",
       "audit",
     ];
@@ -79,25 +74,43 @@ export const PATCH = async (req, { params }) => {
       }
     }
 
-    if (studentNumberCheck) {
-      errors.studentNumber = "Student Number already exist";
+    const [
+      studentNumberCheck,
+      studentEmailCheck,
+      studentNFCCheck,
+      studentUsernameCheck,
+    ] = await Promise.all([
+      Student.findOne({ studentNumber }),
+      Student.findOne({ email }),
+      Student.findOne({ nfcUID }),
+      Student.findOne({ username }),
+    ]);
+
+    if (studentNumberCheck && studentNumberCheck._id.toString() !== params.id) {
+      errors.studentNumber = "Student Number already exists";
     }
-    if (studentEmailCheck) {
-      errors.email = "Email already exist";
+
+    if (studentEmailCheck && studentEmailCheck._id.toString() !== params.id) {
+      errors.email = "Email already exists";
     }
-    if (studentNFCCheck) {
-      errors.nfcUID = "Student NFC UID already exist";
+
+    if (studentNFCCheck && studentNFCCheck._id.toString() !== params.id) {
+      errors.nfcUID = "Student NFC UID already exists";
     }
-    if (studentUsernameCheck) {
-      errors.username = "Username already exist";
+
+    if (
+      studentUsernameCheck &&
+      studentUsernameCheck._id.toString() !== params.id
+    ) {
+      errors.username = "Username already exists";
     }
 
     if (Object.keys(errors).length > 0) {
-      console.log("gg")
+      console.log("gg");
       return new Response(
         JSON.stringify({
           success: false,
-          message: "Missing fields",
+          message: "Invalid Fields",
           errors: errors,
         }),
         { status: 400 }
