@@ -3,6 +3,7 @@ import Attendances from "@models/attendanceModel";
 import Session from "@models/sessionModel";
 import User from "@models/userModel";
 import Classlist from "@models/classModel";
+import Student from "@models/studentModel";
 import { transporter } from "@utils/nodemailer";
 
 export const revalidate = 0;
