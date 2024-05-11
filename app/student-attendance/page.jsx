@@ -177,11 +177,15 @@ const StudentAttendance = () => {
       ];
 
       dates.forEach((date) => {
-        rowData.push(
-          attendanceData[date]["students"]?.includes(student.name)
-            ? "Present"
-            : "Absent"
+        const present = attendanceData[date]["students"]?.some(
+          (studentData) => {
+            return (
+              studentData.studentId === student._id &&
+              studentData.hoursRendered > 0
+            );
+          }
         );
+        rowData.push(present ? "Present" : "Absent");
       });
 
       return rowData;
@@ -227,86 +231,6 @@ const StudentAttendance = () => {
               </CSVLink>
             )}
           </div>
-
-          {Object.keys(attendanceMap).length > 0 && (
-            <>
-              <div>
-                <TableContainer component={Paper}>
-                  <Table
-                    className="min-w-[700px] md:min-w-screen-lg"
-                    aria-label="admin users table"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell>Student Name</StyledTableCell>
-                        <StyledTableCell>Attendance Percentage</StyledTableCell>
-                        {Object.keys(attendanceMap).map((date) => (
-                          <StyledTableCell key={date} align="left">
-                            {date}
-                          </StyledTableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                      {studentsAPI.map((student) => (
-                        <StyledTableRow key={student._id}>
-                          <StyledTableCell component="th" scope="row">
-                            {student.name}
-                          </StyledTableCell>
-
-                          <StyledTableCell component="th" scope="row">
-                            {hoursRenderedMap[`${student._id}`]
-                              ?.minimumAttendance ? (
-                              <div className="flex items-center">
-                                <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                                {
-                                  hoursRenderedMap[`${student._id}`]
-                                    ?.attendancePercentage
-                                }
-                              </div>
-                            ) : (
-                              <div className="flex items-center">
-                                <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                                {
-                                  hoursRenderedMap[`${student._id}`]
-                                    ?.attendancePercentage
-                                }
-                              </div>
-                            )}
-                          </StyledTableCell>
-                          {Object.keys(attendanceMap).map((date) => (
-                            <StyledTableCell align="center" key={date}>
-                              {attendanceMap[date]["students"].includes(
-                                student._id
-                              ) ? (
-                                <div className="flex items-center">
-                                  <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                                  <span>Present</span>
-                                </div>
-                              ) : (
-                                <div className="flex items-center">
-                                  <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
-                                  <span>Absent</span>
-                                </div>
-                              )}
-                            </StyledTableCell>
-                          ))}
-                        </StyledTableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <LineChart
-                  chartInfo={`${classlistInfo.subjectDescription} - ${classlistInfo.sectionCode.section}`}
-                  labels={Object.keys(attendanceMap)}
-                  data={Object.values(attendanceMap).map(
-                    (entry) => entry.aveHours
-                  )}
-                />
-              </div>
-            </>
-          )}
 
           <h2 className="text-l font-satoshi text-gray-900">
             Enter course, section and term to get tabulated attendance data.
@@ -357,7 +281,99 @@ const StudentAttendance = () => {
           >
             {loading ? "Processing" : `Get Attendances`}
           </button>
+          {Object.keys(attendanceMap).length > 0 && (
+            <>
+              <div>
+                <h1 className="text-3xl font-satoshi font-semibold text-gray-900">
+                  Average Minutes Rendered
+                </h1>
+                <LineChart
+                  chartInfo={`${classlistInfo.subjectDescription} - ${classlistInfo.sectionCode.section}`}
+                  labels={Object.keys(attendanceMap)}
+                  data={Object.values(attendanceMap).map(
+                    (entry) => entry.aveHours
+                  )}
+                />
+              </div>
+            </>
+          )}
         </div>
+
+        {Object.keys(attendanceMap).length > 0 && (
+          <div className="mt-9">
+            <TableContainer component={Paper} className="max-h-[500px]">
+              <Table
+                className="min-w-[700px] md:min-w-screen-lg"
+                aria-label="admin users table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Student Name</StyledTableCell>
+                    <StyledTableCell>Attendance Percentage</StyledTableCell>
+                    {Object.keys(attendanceMap).map((date) => (
+                      <StyledTableCell key={date} align="left">
+                        {date}
+                      </StyledTableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {studentsAPI.map((student) => (
+                    <StyledTableRow key={student._id}>
+                      <StyledTableCell component="th" scope="row">
+                        {student.name}
+                      </StyledTableCell>
+
+                      <StyledTableCell component="th" scope="row">
+                        {hoursRenderedMap[`${student._id}`]
+                          ?.minimumAttendance ? (
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                            {
+                              hoursRenderedMap[`${student._id}`]
+                                ?.attendancePercentage
+                            }
+                          </div>
+                        ) : (
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                            {
+                              hoursRenderedMap[`${student._id}`]
+                                ?.attendancePercentage
+                            }
+                          </div>
+                        )}
+                      </StyledTableCell>
+                      {Object.keys(attendanceMap).map((date) => (
+                        <StyledTableCell align="center" key={date}>
+                          {attendanceMap[date]["students"].some(
+                            (studentData) => {
+                              return (
+                                studentData.studentId === student._id &&
+                                studentData.hoursRendered > 0
+                              );
+                            }
+                          ) ? (
+                            <div className="flex items-center">
+                              <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                              <span>Present</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center">
+                              <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                              <span>Absent</span>
+                            </div>
+                          )}
+                        </StyledTableCell>
+                      ))}
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        )}
       </div>
     </>
   );
