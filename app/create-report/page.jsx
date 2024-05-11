@@ -44,15 +44,12 @@ const createAttendance = () => {
   const fetchCoursesData = async () => {
     try {
       let coursesResponse;
-      console.log("le good 1");
       if (session?.user) {
         if (session?.user?.role === "Admin") {
-          console.log("le good 1 admin");
           coursesResponse = await fetch("api/classlist/getClasslistsForAttendance/admin", {
             cache: "no-store",
           });
         } else {
-          console.log("le good 1 user");
           coursesResponse = await fetch(
             `api/classlist/getClasslistsForAttendance/user/${session?.user?.id}`,
             {
@@ -114,47 +111,6 @@ const createAttendance = () => {
       setIsLoading(false);
     }
   };
-
-  // const onCreateMultipleReports = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const { nfcUids, student, studentName, courseCode, term, section } = post;
-  //     const postValues = {
-  //       nfcUids,
-  //       student,
-  //       studentName,
-  //       student,
-  //       studentName,
-  //       courseCode,
-  //       term,
-  //       section,
-  //     };
-
-  //     const response = await axios.post(
-  //       "api/attendance/createMultipleReports",
-  //       postValues
-  //     );
-
-  //     if (response) {
-  //       toast.success("Successfully created multiple attendance entries!");
-  //       router.push("/attendances");
-  //     } else {
-  //       alert("Attendance sending failed");
-  //     }
-  //   } catch (error) {
-  //     toast.error(error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  useEffect(() => {
-    console.log("course:", post.course);
-  }, [post.course]);
-
-  useEffect(() => {
-    console.log("courses from le api:", coursesAPI);
-  }, [coursesAPI]);
 
   useEffect(() => {
     if (post.course){

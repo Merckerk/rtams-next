@@ -35,6 +35,7 @@ const StudentAttendance = () => {
   const [classlistInfo, setClasslistInfo] = useState({});
 
   const [coursesAPI, setCoursesAPI] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   const [payload, setPayload] = useState({
     courseCode: "",
@@ -136,6 +137,7 @@ const StudentAttendance = () => {
       if (response) {
         const coursesData = response.data;
         setCoursesAPI(coursesData);
+        setFilteredCourses(coursesData);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -155,11 +157,11 @@ const StudentAttendance = () => {
   }, []);
 
   const classlistsOptions = useMemo(() => {
-    return coursesAPI.map((course) => ({
+    return filteredCourses.map((course) => ({
       value: course?._id,
       label: `${course?.sectionCode?.section} - ${course?.subjectCode} - ${course?.term?.term}`,
     }));
-  }, [coursesAPI]);
+  }, [filteredCourses]);
 
   const transformDataToArray = (
     attendanceData,
@@ -204,6 +206,30 @@ const StudentAttendance = () => {
   useEffect(() => {
     console.log("classlist info", classlistInfo);
   }, [classlistInfo]);
+
+  useEffect(() => {
+    const filterCourses = (course) => {
+      if (payload.term && payload.section) {
+        return (
+          course.sectionCode._id === payload.section &&
+          course.term._id === payload.term
+        );
+      } else if (payload.term) {
+        return course.term._id === payload.term;
+      } else if (payload.section) {
+        return course.sectionCode._id === payload.section;
+      }
+      return true;
+    };
+  
+    const filteredCourses = coursesAPI.filter(filterCourses);
+    setFilteredCourses(filteredCourses);
+  }, [payload.term, payload.section]);
+  
+
+  useEffect(() => {
+    console.log("courses:", coursesAPI);
+  }, [coursesAPI]);
 
   return (
     <>
