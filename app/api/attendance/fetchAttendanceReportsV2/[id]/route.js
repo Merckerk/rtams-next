@@ -47,6 +47,8 @@ export const GET = async (req, { params }) => {
       const studentId = attendance.student._id;
       const studentName = attendance.student.name;
       const hoursRendered = parseInt(attendance.hoursRendered);
+      const timeIn = attendance?.timeIn;
+      const timeOut = attendance?.timeOut;
 
       if (!hoursRenderedMap[studentId]) {
         hoursRenderedMap[studentId] = {
@@ -68,7 +70,14 @@ export const GET = async (req, { params }) => {
         };
       }
 
-      map[date]["students"].push(studentId);
+      const studentAttendanceData = {
+        studentId: studentId,
+        timeIn: timeIn,
+        timeOut: timeOut,
+        hoursRendered: hoursRendered,
+      }
+
+      map[date]["students"].push(studentAttendanceData);
       map[date]["totalHours"] += hoursRendered;
       map[date]["aveHours"] = map[date]["totalHours"] / map[date]["students"].length;
 
