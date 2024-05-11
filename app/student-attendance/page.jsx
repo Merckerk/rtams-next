@@ -205,6 +205,20 @@ const StudentAttendance = () => {
     console.log("classlist info", classlistInfo);
   }, [classlistInfo]);
 
+  useEffect(() => {
+    if(payload.term && !payload.section){
+      const filteredByTerm = coursesAPI.filter((course) => course.term._id == payload.term);
+      console.log("filtered by term:",filteredByTerm)
+    }else if(!payload.term && payload.section){
+      const filteredBySection = coursesAPI.filter((course) => course.sectionCode._id == payload.section);
+      console.log("filtered by section:", filteredBySection);
+    }
+  }, [payload.term, payload.section]);
+
+  useEffect(() => {
+    console.log("courses:", coursesAPI)
+  }, [coursesAPI]);
+
   return (
     <>
       <div className="container mx-auto mt-5 mb-8">
