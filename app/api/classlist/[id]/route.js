@@ -58,6 +58,7 @@ export const PATCH = async (req, { params }) => {
       subjectDescription: existingClasslist.subjectDescription,
       term: existingClasslist.term,
       schedule: existingClasslist.schedule,
+      flagged: existingClasslist.flagged,
       students: existingClasslist.students,
     };
 
