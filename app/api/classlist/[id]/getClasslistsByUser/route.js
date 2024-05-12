@@ -1,6 +1,7 @@
 import Classlist from "@models/classModel";
 import { connectToDB } from "@utils/database";
 import { getToken } from "next-auth/jwt";
+import Section from "@enums/section";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ export const GET = async (req, { params }) => {
   try {
     await connectToDB();
 
-    const classlist = await Classlist.find({ user: params.id });
+    const classlist = await Classlist.find({ user: params.id }).populate("sectionCode");
     if (!classlist)
       return new Response("Classlist Not Found.", { status: 404 });
 

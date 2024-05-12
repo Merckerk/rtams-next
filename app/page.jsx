@@ -42,6 +42,12 @@ const Home = () => {
       isAdminAccess: true,
     },
     {
+      featureName: "Teaching Load",
+      description: "View teaching load and attendance status",
+      routeName: "teaching-load",
+      isAdminAccess: false,
+    },
+    {
       featureName: "Attendances",
       description: "View, add, and edit Attendances.",
       routeName: "attendances",

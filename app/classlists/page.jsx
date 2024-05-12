@@ -75,6 +75,9 @@ const Classlists = () => {
               </StyledTableCell>
               <StyledTableCell align="center">Term</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
+              <StyledTableCell align="center">
+                Attendance Status
+              </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -89,18 +92,33 @@ const Classlists = () => {
                 <StyledTableCell align="left">
                   {classlist?.subjectDescription}
                 </StyledTableCell>
-                <StyledTableCell align="left">{classlist?.term?.term}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {classlist?.term?.term}
+                </StyledTableCell>
                 <StyledTableCell align="center">
                   <button
                     variant="outlined"
                     color="primary"
-                    style={{ marginRight: "30px" }}
+                    // style={{ marginRight: "30px" }}
                     onClick={() => {
                       handleEdit(classlist);
                     }}
                   >
                     View
                   </button>
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {!classlist?.flagged ? (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                      <span>Clear</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full mr-1" />
+                      <span>Warning</span>
+                    </div>
+                  )}
                 </StyledTableCell>
               </StyledTableRow>
             ))}

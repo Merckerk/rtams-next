@@ -76,8 +76,6 @@ export const GET = async (req, res) => {
         await session.save();
       }
 
-      
-
       await transporter.sendMail({
         from: process.env.NM_EMAIL,
         to: flaggedEmails,
