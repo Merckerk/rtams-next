@@ -64,14 +64,17 @@ export const GET = async (req, res) => {
 
         if (hasFailedStudent) {
           flaggedClasses.push(classlist);
+          classlist.flagged = true;
           flaggedEmails.push(classlist.user.email);
+        }else{
+          classlist.flagged = false;
         }
 
-        // session.checked = true;
-        // await session.save();
-      }
+        await classlist.save();
 
-      
+        session.checked = true;
+        await session.save();
+      }
 
       await transporter.sendMail({
         from: process.env.NM_EMAIL,

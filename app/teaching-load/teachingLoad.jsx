@@ -18,11 +18,12 @@ import ReusableInput from "@components/reusableInput/ReusableInput";
 import Link from "next/link";
 import axios from "axios";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const TeachingLoad = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const userId = searchParams.get("userid");
+  const { data: session } = useSession();
 
   const [loading, setLoading] = useState(false);
 
@@ -44,8 +45,8 @@ const TeachingLoad = () => {
   const fetchData = async () => {
     try {
       const [coursesResponse, userDetailsResponse] = await Promise.all([
-        fetch(`/api/classlist/${userId}/getClasslistsByUser`),
-        fetch(`/api/users/${userId}`),
+        fetch(`/api/classlist/${session?.user?.id}/getClasslistsByUser`),
+        fetch(`/api/users/${session?.user?.id}`),
       ]);
 
       const coursesData = await coursesResponse.json();
@@ -56,12 +57,11 @@ const TeachingLoad = () => {
       }
 
       if (userData) {
-        console.log("user found")
+        console.log("user found");
         setUserDetailsAPI({
           image: userData.image,
           name: userData.name,
           username: userData.username,
-
         });
       }
     } catch (error) {
@@ -72,13 +72,14 @@ const TeachingLoad = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [userId]);
+    if (session?.user?.id) {
+      fetchData();
+    }
+  }, [session?.user?.id]);
 
   useEffect(() => {
     console.log("teachingload:", coursesAPI);
   }, [coursesAPI]);
-
 
   // ! DO NOT DELETE THE COMMENTS IN THIS FILE
   // const handleEditLoad = async () => {
@@ -169,11 +170,10 @@ const TeachingLoad = () => {
             <TableRow>
               <StyledTableCell>Subject Code</StyledTableCell>
               <StyledTableCell align="left">Section Code</StyledTableCell>
+              <StyledTableCell align="center">Description</StyledTableCell>
+              <StyledTableCell align="center">Schedule</StyledTableCell>
               <StyledTableCell align="center">
-                Description
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                Schedule
+                Attendance Status
               </StyledTableCell>
             </TableRow>
           </TableHead>
@@ -184,13 +184,26 @@ const TeachingLoad = () => {
                   {course.subjectCode}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {course.sectionCode}
+                  {course?.sectionCode?.section}
                 </StyledTableCell>
-                <StyledTableCell align="center">
+                <StyledTableCell align="left">
                   {course.subjectDescription}
                 </StyledTableCell>
-                <StyledTableCell align="center">
+                <StyledTableCell align="left">
                   {course.schedule}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {!course?.flagged ? (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                      <span>Clear</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full mr-1" />
+                      <span>Warning</span>
+                    </div>
+                  )}
                 </StyledTableCell>
               </StyledTableRow>
             ))}

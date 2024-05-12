@@ -30,6 +30,7 @@ export const POST = async (req, res) => {
       subjectDescription,
       term,
       schedule,
+      flagged: false,
       students,
     });
 
