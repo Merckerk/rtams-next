@@ -2,10 +2,6 @@ import mongoose, { Schema, model, models } from "mongoose";
 import { date } from "yup";
 
 const sessionSchema = new Schema({
-  faculty: {
-    type: mongoose.Schema.ObjectId,
-    ref: "users"
-  },
   classlist: {
     type: mongoose.Schema.ObjectId,
     ref: "classlists",

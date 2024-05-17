@@ -62,7 +62,6 @@ export const POST = async (req, res) => {
     if (session.length === 0) {
       console.log("making new session");
       const newSession = new Session({
-        faculty: classlist.user,
         classlist: course,
         date: formattedDate,
         checked: false,
