@@ -36,7 +36,7 @@ export const POST = async (req, res) => {
       return new Response("Classlist not found", { status: 404 });
     }
 
-    console.log("class faculty:", classlist)
+    console.log("class faculty:", classlist);
 
     if (!classlist.students.includes(student._id)) {
       return new Response("Student not enrolled in this course", {
@@ -69,7 +69,7 @@ export const POST = async (req, res) => {
       const savedSession = await newSession.save();
       console.log("new session:", savedSession);
     }
-    
+
     if (existingAttendance) {
       if (existingAttendance.timeIn && !existingAttendance.timeOut) {
         existingAttendance.timeOut = currentTime;
