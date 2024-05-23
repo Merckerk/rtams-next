@@ -70,28 +70,30 @@ export const PATCH = async (req, { params }) => {
     }
 
     // Validation for timeInHours and timeOutHours
-  if (timeInHoursNum < 0 || timeInHoursNum > 23) {
-    errors["timeInHours"] = "Invalid Input."
-  }
+    if (!(timeInHoursNum >= 0 && timeInHoursNum <= 23)) {
+      errors["timeInHours"] = "Invalid Input. Hours must be between 0 and 23.";
+    }
 
-  if (
-    timeOutHoursNum !== null &&
-    (timeOutHoursNum < 0 || timeOutHoursNum > 23)
-  ) {
-    errors["timeOutHours"] = "Invalid Input."
-  }
+    if (
+      timeOutHoursNum !== null &&
+      !(timeOutHoursNum >= 0 && timeOutHoursNum <= 23)
+    ) {
+      errors["timeOutHours"] = "Invalid Input. Hours must be between 0 and 23.";
+    }
 
-  // Validation for timeInMinutes and timeOutMinutes
-  if (timeInMinutesNum < 0 || timeInMinutesNum > 59) {
-    errors["timeInMinutes"] = "Invalid Input."
-  }
+    // Validation for timeInMinutes and timeOutMinutes
+    if (!(timeInMinutesNum >= 0 && timeInMinutesNum <= 59)) {
+      errors["timeInMinutes"] =
+        "Invalid Input. Minutes must be between 0 and 59.";
+    }
 
-  if (
-    timeOutMinutesNum !== null &&
-    (timeOutMinutesNum < 0 || timeOutMinutesNum > 59)
-  ) {
-    errors["timeOutMinutes"] = "Invalid Input."
-  }
+    if (
+      timeOutMinutesNum !== null &&
+      !(timeOutMinutesNum >= 0 && timeOutMinutesNum <= 59)
+    ) {
+      errors["timeOutMinutes"] =
+        "Invalid Input. Minutes must be between 0 and 59.";
+    }
 
     if (Object.keys(errors).length > 0) {
       return new Response(

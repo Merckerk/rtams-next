@@ -126,8 +126,8 @@ const UpdateAttendance = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          timeInHours: post.timeInMinutes,
-          timeInMinutes: post.timeInHours,
+          timeInHours: post.timeInHours,
+          timeInMinutes: post.timeInMinutes,
           timeOutHours: post.timeOutHours,
           timeOutMinutes: post.timeOutMinutes,
         }),
