@@ -170,12 +170,14 @@ const StudentAttendance = () => {
   ) => {
     const dates = Object.keys(attendanceData);
 
-    const headerRow = ["Student Name", "Attendance percentage", ...dates];
+    const headerRow = ["Student Name", "Attendance percentage", "Days present percentage", ...dates];
 
     const dataRows = enrolledStudents.map((student) => {
+      const studentData = hoursRenderedDataMap[student._id];
       const rowData = [
         student.name,
-        hoursRenderedDataMap[student._id]?.attendancePercentage || "0",
+        `${studentData?.attendancePercentage ?? 0}%`,
+        `${studentData?.daysAttendancePercentage ?? 0}%`
       ];
 
       dates.forEach((date) => {
