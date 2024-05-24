@@ -335,6 +335,7 @@ const StudentAttendance = () => {
                 <TableHead>
                   <TableRow>
                     <StyledTableCell>Student Name</StyledTableCell>
+                    <StyledTableCell>Days Attended</StyledTableCell>
                     <StyledTableCell>Attendance Percentage</StyledTableCell>
                     {Object.keys(attendanceMap).map((date) => (
                       <StyledTableCell key={date} align="left">
@@ -353,20 +354,43 @@ const StudentAttendance = () => {
 
                       <StyledTableCell component="th" scope="row">
                         {hoursRenderedMap[`${student._id}`]
-                          ?.minimumAttendance ? (
+                          ?.minimumDaysAttendance ? (
                           <div className="flex items-center">
                             <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
                             {
-                              hoursRenderedMap[`${student._id}`]
-                                ?.attendancePercentage
+                              `${hoursRenderedMap[`${student._id}`]
+                                ?.daysAttendancePercentage ?? 0}%`
+
                             }
                           </div>
                         ) : (
                           <div className="flex items-center">
                             <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
                             {
-                              hoursRenderedMap[`${student._id}`]
-                                ?.attendancePercentage
+                              `${hoursRenderedMap[`${student._id}`]
+                                ?.daysAttendancePercentage ?? 0}%`
+
+                            }
+                          </div>
+                        )}
+                      </StyledTableCell>
+
+                      <StyledTableCell component="th" scope="row">
+                        {hoursRenderedMap[`${student._id}`]
+                          ?.minimumAttendance ? (
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
+                            {
+                              `${hoursRenderedMap[`${student._id}`]
+                                ?.attendancePercentage ?? 0}%`
+                            }
+                          </div>
+                        ) : (
+                          <div className="flex items-center">
+                            <div className="w-2 h-2 bg-red-500 rounded-full mr-1" />
+                            {
+                              `${hoursRenderedMap[`${student._id}`]
+                                ?.attendancePercentage ?? 0}%`
                             }
                           </div>
                         )}
