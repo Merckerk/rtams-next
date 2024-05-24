@@ -9,7 +9,11 @@ export const fetchCache = "force-no-store";
 
 export const GET = async (req, res) => {
   const token = await getToken({ req });
-  if (!token) return new Response("heh. Nice try, guy! >:DD", { status: 500 });
+  if (!token || token.role !== "Admin") {
+    console.log("Access denied: invalid role");
+    return new Response("heh. Nice try, guy! >:DD", { status: 403 });
+  }
+
   try {
     await connectToDB();
 
