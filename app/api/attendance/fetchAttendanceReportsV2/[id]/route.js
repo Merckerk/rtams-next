@@ -20,11 +20,12 @@ export const GET = async (req, { params }) => {
       return new Response("ClasslistId not supplied", { status: 404 });
     }
 
-    const classlist = await Classlist.findById(classlistId).populate({
-      path: "students",
-      select: "name",
-    }).populate("sectionCode");
-
+    const classlist = await Classlist.findById(classlistId)
+      .populate({
+        path: "students",
+        select: "name",
+      })
+      .populate("sectionCode");
 
     if (!classlist) {
       return new Response("Classlist not found", { status: 404 });
@@ -37,10 +38,10 @@ export const GET = async (req, { params }) => {
       select: "name",
     });
 
-
     const map = {};
     const hoursRenderedMap = {};
     let highestHoursRendered = 0;
+    let totalDays = 0;
 
     attendances.forEach((attendance) => {
       const date = attendance.date;
@@ -56,11 +57,18 @@ export const GET = async (req, { params }) => {
           hoursRendered: 0,
           minimumAttendance: false,
           attendancePercentage: 0,
+          daysPresent: 0,
+          minimumDaysAttendance: false,
+          daysAttendancePercentage: 0,
         };
       }
-      hoursRenderedMap[studentId].hoursRendered += isNaN(hoursRendered)
-        ? 0
-        : hoursRendered;
+
+      if (isNaN(hoursRendered)) {
+        hoursRenderedMap[studentId].hoursRendered += 0;
+      } else {
+        hoursRenderedMap[studentId].hoursRendered += hoursRendered;
+        hoursRenderedMap[studentId].daysPresent += 1;
+      }
 
       if (!map[date]) {
         map[date] = {
@@ -75,15 +83,20 @@ export const GET = async (req, { params }) => {
         timeIn: timeIn,
         timeOut: timeOut,
         hoursRendered: hoursRendered,
-      }
+      };
 
       map[date]["students"].push(studentAttendanceData);
       map[date]["totalHours"] += hoursRendered;
-      map[date]["aveHours"] = map[date]["totalHours"] / map[date]["students"].length;
+      map[date]["aveHours"] =
+        map[date]["totalHours"] / map[date]["students"].length;
 
       if (hoursRenderedMap[studentId].hoursRendered > highestHoursRendered) {
         highestHoursRendered = hoursRenderedMap[studentId].hoursRendered;
       }
+    });
+
+    Object.values(map).forEach((day) => {
+      totalDays += day.totalHours > 0 ? 1 : 0;
     });
 
     const attendancePercentageThreshold = 0.8;
@@ -92,13 +105,22 @@ export const GET = async (req, { params }) => {
         student.hoursRendered >=
         attendancePercentageThreshold * highestHoursRendered;
 
+      const hasAllowedAttendanceDayRate =
+        student.daysPresent >=
+        attendancePercentageThreshold * totalDays;
+
       student.minimumAttendance = hasAllowedAttendanceRate;
       student.attendancePercentage = (
         (student.hoursRendered / highestHoursRendered) *
         100.0
       ).toFixed(2);
-    });
 
+      student.minimumDaysAttendance = hasAllowedAttendanceDayRate;
+      student.daysAttendancePercentage = (
+        (student.daysPresent / totalDays) *
+        100.0
+      ).toFixed(2);
+    });
 
     const returnValue = {
       success: true,
@@ -107,10 +129,11 @@ export const GET = async (req, { params }) => {
       enrolledStudents: classlist.students,
       hoursRenderedDataMap: hoursRenderedMap,
       highestHoursRendered: highestHoursRendered,
+      totalDays: totalDays,
       classlistInfo: {
         subjectDescription: classlist.subjectDescription,
-        sectionCode: classlist.sectionCode
-      }
+        sectionCode: classlist.sectionCode,
+      },
     };
 
     return new Response(JSON.stringify(returnValue), { status: 200 });

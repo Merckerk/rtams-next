@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import InfoDisplay from "@components/infoDisplay/infoDisplay";
 
 const ViewAudit = () => {
   const searchParams = useSearchParams();
@@ -71,51 +72,6 @@ const ViewAudit = () => {
         <InfoDisplay label="Old Data" value={formatToString(audit?.oldData)} />
         <InfoDisplay label="New Data" value={formatToString(audit?.newData)} />
         <InfoDisplay label="Date and Time" value={audit.changeMade} />
-
-        {/* <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
-            Target:
-          </span>
-          <span className="font-satoshi text-base text-gray-700">
-            {audit.target}
-          </span>
-        </div>
-
-        <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
-            Description:
-          </span>
-          <span className="font-satoshi text-base text-gray-700">
-            {audit.description}
-          </span>
-        </div>
-
-        <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
-            Old Data:
-          </span>
-          <span className="font-satoshi text-base text-gray-700">
-            {formatToString(audit?.oldData)}
-          </span>
-        </div>
-
-        <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
-            New Data:
-          </span>
-          <span className="font-satoshi text-base text-gray-700">
-            {formatToString(audit?.newData)}
-          </span>
-        </div>
-
-        <div class="glassmorphism-wrapper bg-white rounded-xl border border-gray-200 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] p-5">
-          <span className="font-satoshi font-semibold text-base text-gray-900 mr-2">
-            Date and Time:
-          </span>
-          <span className="font-satoshi text-base text-gray-700">
-            {audit.changeMade}
-          </span>
-        </div> */}
       </div>
     </div>
   );
