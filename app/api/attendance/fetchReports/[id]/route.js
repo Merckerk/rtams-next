@@ -21,7 +21,7 @@ export const GET = async (req, { params }) => {
     });
 
 
-    return new Response(JSON.stringify(filteredReports));
+    return new Response(JSON.stringify(filteredReports.reverse()));
   } catch (error) {
     return new Response(
       "Failed to fetch attendance reports from the database.",

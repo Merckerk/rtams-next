@@ -14,7 +14,7 @@ export const GET = async (req, res) => {
 
     const attendanceReports = await Attendances.find();
 
-    return new Response(JSON.stringify(attendanceReports));
+    return new Response(JSON.stringify(attendanceReports.reverse()));
   } catch (error) {
     return new Response(
       "Failed to fetch attendance reports from the database.",
