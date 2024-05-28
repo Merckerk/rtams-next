@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import { setLoggedInImage } from "@app/redux/features/loggedInUser/loggedInUserSlice";
 import { useSession } from "next-auth/react";
 
+
+
 const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -21,66 +23,74 @@ const Home = () => {
     setIsUserAdmin(session?.user?.role === "Admin");
   }, [session?.user?.id]);
 
-  //TODO: STAGE BANDAID
   const featureCardProps = [
     {
       featureName: "RTAMS Users",
       description: "Add, View and Edit RTAMS Users.",
       routeName: "admin-users",
       isAdminAccess: true,
+      iconImage: "/assets/images/user.png"
     },
     {
       featureName: "Students",
       description: "Add, View and Edit Students.",
       routeName: "students",
       isAdminAccess: true,
+      iconImage: "/assets/images/student.png"
     },
     {
       featureName: "Classlists",
       description: "View, add, edit, and delete classlists.",
       routeName: "classlists",
       isAdminAccess: true,
+      iconImage: "/assets/images/class.png"
     },
     {
       featureName: "Teaching Load",
       description: "View teaching load and attendance status",
       routeName: "teaching-load",
       isAdminAccess: false,
+      iconImage: "/assets/images/teachingload.png"
     },
     {
       featureName: "Attendances",
       description: "View, add, and edit Attendances.",
       routeName: "attendances",
       isAdminAccess: false,
+      iconImage: "/assets/images/attendance.png"
     },
     {
       featureName: "Course Attendance",
       description: "View attendances by course, section, and term.",
       routeName: "student-attendance",
       isAdminAccess: false,
+      iconImage: "/assets/images/courseattendance.png"
     },
     {
       featureName: "Audit Trails",
       description: "View changes made in the system.",
       routeName: "audit-trails",
       isAdminAccess: false,
+      iconImage: "/assets/images/audit.png"
     },
     {
       featureName: "Terms",
       description: "View available terms.",
       routeName: "terms",
       isAdminAccess: false,
+      iconImage: "/assets/images/term.png"
     },
     {
       featureName: "Sections",
       description: "View available sections.",
       routeName: "sections",
       isAdminAccess: false,
+      iconImage: "/assets/images/section.png"
     },
   ];
 
   return (
-    <section className="w-full flex-center flex-col">
+    <section className="w-full flex-center flex-col mb-4">
       <h1 className="head_text text-center">
         Welcome to
         <br className="max-md:hidden" />
@@ -103,6 +113,7 @@ const Home = () => {
             routeName={feature.routeName}
             isAdminAccess={feature.isAdminAccess}
             isUserAdmin={isUserAdmin}
+            iconImage={feature.iconImage}
           />
         ))}
       </div>

@@ -39,10 +39,10 @@ const NavBar = () => {
     <nav className="flex-between w-full mb-16 pt-3">
       <Link href="/" className="flex gap-2 flex-center">
         <Image
-          src="/assets/images/rtams-logo.svg"
+          src="/assets/images/rtamslogo.png"
           alt="rtams logo"
-          width={30}
-          height={30}
+          width={60}
+          height={60}
           className="object-contain"
         />
         <p className="logo_text">RTAMS</p>
