@@ -91,9 +91,10 @@ export const GET = async (req, res) => {
       };
 
       return new Response(JSON.stringify(returnValue), { status: 200 });
+    } else{
+      return new Response(JSON.stringify(sessions), { status: 200 });
     }
 
-    return new Response("no sessions", { status: 500 });
   } catch (error) {
     return new Response(`${error}`, { status: 500 });
   }

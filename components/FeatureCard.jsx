@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const FeatureCard = ({
   featureName,
@@ -9,6 +10,7 @@ const FeatureCard = ({
   routeName,
   isAdminAccess,
   isUserAdmin,
+  iconImage
 }) => {
   const pathName = usePathname();
   const router = useRouter();
@@ -25,10 +27,15 @@ const FeatureCard = ({
       >
         <div className="flex flex-col">
           <div className="flex flex-row gap-6 mb-2">
-            <div className="feature-image">
-              {/* Placeholder image (red square) */}
+            <Image 
+              src={iconImage}
+              alt="Feature Icon"
+              width={40}
+              height={40}
+            />
+            {/* <div className="feature-image">
               <div className="w-16 h-16 bg-red-500"></div>
-            </div>
+            </div> */}
             <h3 className="flex items-center font-satoshi font-semibold text-gray-900">
               {featureName}
             </h3>
