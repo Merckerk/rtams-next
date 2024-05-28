@@ -70,7 +70,7 @@ const Home = () => {
       featureName: "Audit Trails",
       description: "View changes made in the system.",
       routeName: "audit-trails",
-      isAdminAccess: false,
+      isAdminAccess: true,
       iconImage: "/assets/images/audit.png"
     },
     {
