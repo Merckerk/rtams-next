@@ -31,7 +31,7 @@ export const PATCH = async (req, { params }) => {
   const reqBody = await req.json();
   const { image, userId, email, username, password, name, audit, role } =
     reqBody;
-  
+
   console.log("Recieved:", reqBody);
 
   try {
@@ -132,9 +132,34 @@ export const DELETE = async (req, { params }) => {
   try {
     await connectToDB();
 
-    if (User.findById(params.id).userId == "owners")
+    const existingUser = await User.findById(params.id);
+
+    if (existingUser.userId == "owners")
       return new Response("Cannot delete this user.", { status: 500 });
 
+    const oldData = {
+      image: existingUser?.image,
+      name: existingUser?.name,
+      userId: existingUser?.userId,
+      email: existingUser?.email,
+      username: existingUser?.username,
+      password: existingUser?.password,
+      role: existingUser?.role,
+    };
+
+    const newData = {
+      user: "deleted user",
+    };
+
+    const auditData = {
+      target: "user",
+      description: "delete user",
+      oldData: oldData,
+      newData: newData,
+    };
+
+    const auditRecord = new Audits(auditData);
+    await auditRecord.save();
     await User.findByIdAndRemove(params.id);
 
     return new Response("User deleted successfully.", { status: 200 });

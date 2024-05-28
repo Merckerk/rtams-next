@@ -16,7 +16,7 @@ export const GET = async (req, res) => {
     const returnValue = {
       success: true,
       message: "Audit retrieval successful",
-      data: audits,
+      data: audits.reverse(),
     };
 
     return new Response(JSON.stringify(returnValue), { status: 200 });

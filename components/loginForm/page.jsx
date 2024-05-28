@@ -29,11 +29,11 @@ const Login = () => {
       });
 
       if (!res?.error) {
-        //LUWIS
         router.push("/");
         router.refresh();
-        //LUWIS
         return;
+      }else{
+        alert("Invalid Username or Password");
       }
       // setTimeout(() => router.replace("/"), 500);
     } catch (error) {
