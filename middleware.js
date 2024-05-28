@@ -11,10 +11,12 @@ export default withAuth({
         req.nextUrl.pathname === "/admin-users" ||
         req.nextUrl.pathname === "/classlists" ||
         req.nextUrl.pathname === "/students" ||
+        req.nextUrl.pathname === "/audit-trails" ||
         
         req.nextUrl.pathname === "/update-admin/:path" ||
         req.nextUrl.pathname === "/update-classlist/:path" ||
-        req.nextUrl.pathname === "/update-student/:path"
+        req.nextUrl.pathname === "/update-student/:path" ||
+        req.nextUrl.pathname === "/view-audit/:path"
       ) {
         return token?.role === "Admin";
       }

@@ -13,7 +13,7 @@ export const GET = async (req, res) => {
   try {
     await connectToDB();
     //Find all users that are Admins
-    const adminUsers = await User.find({}, { image: 0, password: 0 });
+    const adminUsers = await User.find({}, { name: 1, role: 1 });
 
     // res.setHeader('Cache-Control', 'no-store, must-revalidate');
     return new Response(JSON.stringify(adminUsers), { status: 200 });

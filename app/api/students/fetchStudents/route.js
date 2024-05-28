@@ -13,7 +13,7 @@ export const GET = async (req, res) => {
   try {
     await connectToDB();
 
-    const Students = await Student.find({}, { image: 0 }).populate("section");
+    const Students = await Student.find({}, { studentNumber: 1, name: 1, section: 1 }).populate("section");
 
     return new Response(JSON.stringify(Students), { status: 200 });
   } catch (error) {
