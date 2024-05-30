@@ -31,6 +31,8 @@ export const GET = async (req, { params }) => {
       return new Response("Classlist not found", { status: 404 });
     }
 
+    console.log(classlist);
+
     const attendances = await Attendances.find({
       course: classlist._id,
     }).populate({
@@ -44,9 +46,16 @@ export const GET = async (req, { params }) => {
     let totalDays = 0;
 
     attendances.forEach((attendance) => {
+      const student = attendance.student;
       const date = attendance.date;
-      const studentId = attendance.student._id;
-      const studentName = attendance.student.name;
+
+      if (student === null) {
+        console.warn(`Skipping attendance record due to missing student reference.`);
+        return;
+      }
+      
+      const studentId = student._id;
+      const studentName = student.name;
       const hoursRendered = parseInt(attendance.hoursRendered);
       const timeIn = attendance?.timeIn;
       const timeOut = attendance?.timeOut;
