@@ -184,6 +184,22 @@ export const DELETE = async (req, { params }) => {
   try {
     await connectToDB();
 
+    const oldData = await Student.findById(params.id);
+    
+    const auditData = {
+      target: "student",
+      description: "deleted student",
+      oldData: oldData,
+      newData: { student: "deleted student"},
+    };
+
+    const auditRecord = new Audits(auditData);
+    await auditRecord.save();
+    const combinedResponse = {
+      updatedStudent: existingStudent,
+      audit: auditRecord,
+    };
+
     await Student.findByIdAndRemove(params.id);
 
     return new Response("Student successfully removed from the database.", {
