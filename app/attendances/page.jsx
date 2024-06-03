@@ -115,7 +115,7 @@ const AttendanceReports = () => {
                   {report.nfcUID}
                 </StyledTableCell>
                 <StyledTableCell align="center" component="th" scope="row">
-                  {report.studentName}
+                  {report?.student?.name}
                 </StyledTableCell>
                 <StyledTableCell align="center">{report.date}</StyledTableCell>
                 <StyledTableCell align="center">
