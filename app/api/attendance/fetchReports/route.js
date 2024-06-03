@@ -1,6 +1,7 @@
 import Attendances from "@models/attendanceModel";
 import { connectToDB } from "@utils/database";
 import { getToken } from "next-auth/jwt";
+import Student from "@models/studentModel";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ export const GET = async (req, res) => {
   try {
     await connectToDB();
 
-    const attendanceReports = await Attendances.find();
+    const attendanceReports = await Attendances.find().populate({path: "student", select: "name"});
 
     return new Response(JSON.stringify(attendanceReports.reverse()));
   } catch (error) {

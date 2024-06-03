@@ -14,7 +14,7 @@ export const GET = async (req, { params }) => {
   try {
     await connectToDB();
 
-    const attendanceReports = await Attendances.find().populate("course");
+    const attendanceReports = await Attendances.find().populate("course").populate({path: "student", select: "name"});
 
     const filteredReports = attendanceReports.filter((report) => {
       return report?.course?.user?.toString() === params?.id?.toString();
